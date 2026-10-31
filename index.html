@@ -1,0 +1,1854 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>기출 지우개 2</title>
+<meta name="description" content="공인중개사 1차 기출 선지를 OX로 넘기며 확실한 것은 지우고 모르는 것만 남기는 폰 공부 앱">
+<meta name="theme-color" content="#f6f4ee">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="기출 지우개 2">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script>
+// 화면 밝기(10-24 PD): 자동(폰 설정을 따름)·밝게·어둡게. 이 기기에만 두고 동기화하지 않는다(폰은 어둡게, PC는 밝게일 수 있어서).
+// 그리기 전에 <html data-theme>를 정해 둬야 켤 때 번쩍이지 않는다.
+const THEME_MQ=matchMedia('(prefers-color-scheme: dark)');
+function themePref(){ try{ return localStorage.getItem('jiugae2-theme')||'auto'; }catch(e){ return 'auto'; } }
+function applyTheme(){
+  const p=themePref(), dark=p==='dark'||(p==='auto'&&THEME_MQ.matches);
+  document.documentElement.dataset.theme=dark?'dark':'light';
+  const m=document.querySelector('meta[name=theme-color]'); if(m) m.content=dark?'#15161a':'#f6f4ee';
+}
+applyTheme(); if(THEME_MQ.addEventListener) THEME_MQ.addEventListener('change',applyTheme);
+</script>
+<style>
+:root{
+  --bg:#f6f4ee; --card:#ffffff; --ink:#15150f; --ink2:#55534b; --muted:#8a877c; --line:#e3e0d6;
+  --o:#1b7f5a; --o-bg:#e4f4ec; --x:#c8322b; --x-bg:#fbe8e6; --acc:#2f63d0; --acc-bg:#e7eefb; --warn:#b26a00; --warn-bg:#fff2dc;
+  --del:#6b6b6b; --focus:#e8e6df; --cc:rgba(255,212,0,.6); color-scheme:light;
+}
+:root[data-theme="dark"]{ --bg:#15161a; --card:#1f2127; --ink:#f0eee6; --ink2:#c2bfb5; --muted:#8c897f; --line:#33363e;
+  --o:#4cc38a; --o-bg:#173427; --x:#ff6b61; --x-bg:#3a1f1d; --acc:#7aa2ff; --acc-bg:#1f2a44; --warn:#ffb84d; --warn-bg:#3a2d14; --focus:#5a6175; --cc:rgba(255,200,0,.32); color-scheme:dark; }
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;font-size:17px;line-height:1.5}
+/* 한글은 어절(띄어쓰기) 단위로만 줄을 바꾼다(10-24 PD: 'X건/물', '소/멸한다'처럼 낱말 가운데서 끊겨 띄어쓰기가 틀린 듯 보였다). 화면보다 긴 낱말만 쪼갠다 */
+body{word-break:keep-all;overflow-wrap:break-word}
+.tw td,.tw th{overflow-wrap:anywhere} /* 표 칸은 좁아서, 칸보다 긴 낱말(중앙부동산가격공시위원회)만 쪼개 표가 화면을 넘지 않게 */
+body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 16px 8px;border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.top h1{font-size:18px;margin:0;font-weight:800}
+.top .sub{font-size:13px;color:var(--muted)}
+.bar{height:6px;background:var(--line);border-radius:3px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc);width:0%}
+main{padding:14px 16px;max-width:680px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--acc-bg);color:var(--acc);margin-right:6px;font-weight:700}
+.tag.A{background:#fde7ef;color:#b4134a} .tag.B{background:var(--warn-bg);color:var(--warn)} .tag.C{background:var(--line);color:var(--ink2)} .tag.T{background:var(--acc-bg);color:var(--acc)}
+[data-theme="dark"] .tag.A{background:#3b1626;color:#ff8ab4}
+.qstem{font-size:14px;color:var(--ink2);margin:8px 0 4px}
+.passage{font-size:14px;color:var(--ink2);background:var(--bg);border-left:3px solid var(--line);padding:6px 10px;margin:6px 0;border-radius:6px;white-space:pre-wrap}
+.choice{font-size:19px;font-weight:600;margin:10px 0 14px;line-height:1.55}
+.choice .red{color:var(--x);text-decoration:line-through;text-decoration-thickness:2px}
+.choice .hl{background:#fff3a3;color:#000;border-radius:3px;padding:0 2px}
+.choice .focus{background:var(--focus);border-radius:4px;padding:1px 3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.btns{display:flex;gap:10px}
+.btn{flex:1;border:0;border-radius:14px;padding:16px 10px;font-size:20px;font-weight:800;cursor:pointer;color:#fff;touch-action:manipulation}
+.btn.o{background:var(--o)} .btn.x{background:var(--x)} .btn.n{background:var(--acc)} .btn.g{background:var(--del)}
+.btn.small{font-size:15px;padding:12px 8px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.verdict{font-size:22px;font-weight:900;margin:4px 0}
+.verdict.ok{color:var(--o)} .verdict.bad{color:var(--x)}
+.reason{margin:8px 0;font-size:16px}
+.law{font-size:13px;color:var(--muted)}
+.fix{font-size:15px;background:var(--o-bg);color:var(--o);padding:6px 10px;border-radius:8px;margin:6px 0;font-weight:700}
+.calc{font-size:14px;white-space:pre-wrap;background:var(--bg);padding:8px 10px;border-radius:8px}
+.tip{font-size:14px;background:var(--warn-bg);color:var(--warn);padding:6px 10px;border-radius:8px;margin-top:6px}
+.muted{color:var(--muted);font-size:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.stat div{background:var(--bg);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:22px}
+.stat span{font-size:12px;color:var(--muted)}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav.tabs button{flex:1;border:0;background:transparent;padding:10px 4px 8px;font-size:12px;color:var(--muted);cursor:pointer}
+nav.tabs button.on{color:var(--acc);font-weight:800}
+nav.tabs button b{display:block;font-size:20px;line-height:1.1}
+/* 패턴 듣기(10-25): 아래 탭 바로 위 재생 막대. 화면을 다시 그려도 계속 재생되게 main 밖(body)에 둔다 */
+#aplayer{position:fixed;left:0;right:0;bottom:calc(59px + env(safe-area-inset-bottom));z-index:6;max-width:680px;margin:0 auto;background:var(--card);border-top:1px solid var(--line);display:none;align-items:center;gap:2px;padding:6px 8px}
+#aplayer.on{display:flex}
+body.aplay{padding-bottom:calc(128px + env(safe-area-inset-bottom))}
+#aplayer .pg{position:absolute;top:-1px;left:0;height:2px;background:var(--acc);width:0}
+#aplayer button{border:0;background:transparent;color:var(--ink);font-size:19px;padding:6px 7px;cursor:pointer;touch-action:manipulation}
+#aplayer .ti{flex:1;min-width:0;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;padding:0 4px}
+#aplayer .ti small{display:block;font-size:11px;color:var(--muted);font-weight:600}
+#aplayer button.rt{font-size:13px;font-weight:800;color:var(--acc);border:1.5px solid var(--line);border-radius:999px;padding:3px 8px}
+/* 소제목별 듣기(10-25 PD): 결론·소제목 오른쪽 ▶ = 그 부분부터. 지금 읽는 부분은 파란 테두리 */
+.psrow{display:flex;align-items:flex-start;gap:8px} .psrow h2{flex:1}
+.pblk .ph{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.psec{flex:none;width:30px;height:30px;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:999px;font-size:11px;cursor:pointer;padding:0 0 0 2px;touch-action:manipulation}
+.psrow .psec{margin-top:4px}
+.sech .psec{margin-right:auto} .oxi .h .psec{margin-top:-1px}
+.secnow{outline:2px solid var(--acc);outline-offset:3px;border-radius:12px}
+details{margin-top:6px} summary{cursor:pointer;color:var(--acc);font-size:14px;font-weight:700}
+.list button{width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;font-size:15px;color:var(--ink);cursor:pointer}
+.list .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.pill{display:inline-block;min-width:30px;text-align:center;border-radius:8px;padding:1px 6px;font-size:12px;font-weight:700;background:var(--line)}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:15px}
+.exam .q{margin:14px 0 6px;font-weight:700}
+.exam .opt{display:block;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;margin:6px 0;font-size:15px;color:var(--ink)}
+.exam .opt.sel{border-color:var(--acc);background:var(--acc-bg)}
+.exam .opt.right{border-color:var(--o);background:var(--o-bg)} .exam .opt.wrongsel{border-color:var(--x);background:var(--x-bg)}
+.sticky-bottom{position:sticky;bottom:calc(72px + env(safe-area-inset-bottom));background:var(--bg);padding:8px 0}
+textarea{width:100%;min-height:80px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px;font-size:13px}
+.tok{width:100%;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:12px;font-size:16px;margin-top:6px}
+#syncdot{cursor:pointer} #syncdot.err{color:var(--x);font-weight:800}
+.card a{color:var(--acc);font-weight:700}
+.hide{display:none !important}
+.note{font-size:13px;color:var(--ink2);background:var(--bg);border-radius:10px;padding:8px 10px;margin-top:8px}
+.center{text-align:center}
+h2{font-size:17px;margin:14px 0 8px}
+.ask{margin:12px 0 2px;font-size:15px;padding:8px 10px;border-radius:10px}
+.ask span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.ask.truth{background:var(--o-bg)} .ask.pick{background:var(--acc-bg)}
+.ask.member{background:var(--acc-bg);font-size:18px;font-weight:800;line-height:1.45}
+.qimg{display:block;width:100%;height:auto;margin:10px 0;border-radius:8px;background:#fff;border:1px solid var(--line)}
+.opts{margin:8px 0}.opt-r{font-size:14px;padding:6px 0;border-bottom:1px solid var(--line)}.opt-r.ok{color:var(--o)}
+a.btn{display:block;text-align:center;text-decoration:none}
+.card.help{border-color:var(--acc)} .card.easy{border-color:var(--o)}
+.ins{color:var(--o);font-weight:800;background:var(--o-bg);border-radius:4px;padding:0 4px;margin-left:3px}
+.kind{font-size:13px;color:var(--x);margin:2px 0 6px;font-weight:700}
+.trap{font-size:14px;background:var(--warn-bg);color:var(--ink);padding:8px 10px;border-radius:8px;margin:6px 0}
+.box{font-size:15px;padding:8px 10px;border-radius:8px;margin:8px 0 0;line-height:1.55}
+.box b:not(.kw){display:inline-block;margin-right:6px}
+.box.issue{background:var(--acc-bg)} .box.intent{background:var(--x-bg)}
+.note.pre{white-space:pre-wrap}
+/* 해설 강조: 개념어 굵게(.kw), O/X를 가르는 결론 형광 밑줄(.cc), 조문·판례 번호 작은 회색(.lw) */
+b.kw{font-weight:800}
+.note .kw,.wy .kw,.oxi .kw,.qref .kw{color:var(--ink)}
+.cc{font-weight:800;color:var(--ink);background:linear-gradient(transparent 56%,var(--cc) 56%);-webkit-box-decoration-break:clone;box-decoration-break:clone;padding:0 1px}
+.tip .cc,.opt-r.ok .cc{color:inherit}
+/* 어두운 화면에선 반투명 밑줄이 희미해서(10-24 PD) 앞면 형광펜(.hl)처럼 밝은 노랑 바탕에 검은 글자로 칠한다 */
+[data-theme="dark"] .cc,[data-theme="dark"] .tip .cc,[data-theme="dark"] .opt-r.ok .cc{background:#ffe680;color:#1a1a00;border-radius:3px;padding:0 2px}
+.trap .hl{background:#fff3a3;color:#000;border-radius:3px;padding:0 2px}
+.lw{font-size:.8em;color:var(--muted);font-weight:500;letter-spacing:-.01em}
+/* ===== 개념서 ===== */
+.seg{display:flex;background:var(--line);border-radius:12px;padding:3px;gap:3px;margin-bottom:10px}
+.seg button{flex:1;border:0;background:transparent;padding:9px 10px;border-radius:9px;font-size:15px;font-weight:800;color:var(--ink2);cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.search{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:11px 12px;font-size:16px;margin-bottom:10px}
+.cont{display:block;width:100%;text-align:left;border:0;background:var(--acc);color:#fff;border-radius:12px;padding:12px 14px;font-size:15px;font-weight:800;margin-bottom:10px;cursor:pointer}
+.cont span{display:block;font-size:12px;font-weight:600;opacity:.85}
+.linkbtn{border:0;background:transparent;color:var(--acc);font-weight:800;font-size:14px;cursor:pointer;padding:4px 0}
+.chap{padding:0;overflow:hidden}
+.chap>.hd{display:block;width:100%;text-align:left;border:0;background:transparent;color:var(--ink);padding:14px 16px;cursor:pointer}
+.chap>.hd b{font-size:16px}
+.chap>.hd .meta{font-size:12px;color:var(--muted);margin-top:3px}
+.chap .pbar{height:4px;background:var(--line);border-radius:2px;margin-top:8px;overflow:hidden}.chap .pbar i{display:block;height:100%;background:var(--o)}
+.chap .secs{border-top:1px solid var(--line);padding:2px 12px 6px}
+.chap .intro{font-size:14px;color:var(--ink2);padding:10px 4px 6px;line-height:1.6}
+.srow{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);padding:11px 4px;cursor:pointer;font-size:15px}
+.srow:last-child{border-bottom:0}
+.srow .t{flex:1;line-height:1.4}.srow .f{font-size:12px;color:var(--muted);white-space:nowrap}
+.srow.read .t{color:var(--muted)}.srow .ck{color:var(--o);font-weight:900;width:14px}
+.reader .crumb{font-size:13px;color:var(--muted);margin:2px 0 4px}
+.reader h2.st{font-size:22px;margin:4px 0 6px;line-height:1.35}
+.reader .lawl{font-size:13px;color:var(--muted);margin-bottom:6px}
+.one{background:var(--acc-bg);border-radius:12px;padding:12px 14px;font-size:16.5px;font-weight:700;line-height:1.6;margin:12px 0}
+.one small{display:block;font-size:12px;color:var(--acc);font-weight:800;margin-bottom:2px}
+.concept{list-style:none;padding:0;margin:6px 0}
+.concept li{position:relative;padding:7px 0 7px 14px;line-height:1.7;font-size:16px;border-bottom:1px dashed var(--line)}
+.concept li:last-child{border-bottom:0}
+.concept li::before{content:'';position:absolute;left:1px;top:17px;width:5px;height:5px;border-radius:50%;background:var(--acc)}
+.concept li.sub{padding-left:28px;font-size:15px;color:var(--ink2);border-bottom:0;padding-top:2px}
+.concept li.sub::before{left:16px;top:12px;background:var(--muted)}
+.tw{overflow-x:auto;margin:12px 0;-webkit-overflow-scrolling:touch}
+.tw table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}
+.tw caption{caption-side:top;text-align:left;font-weight:800;font-size:14px;padding:0 0 6px;color:var(--ink)}
+.tw th,.tw td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top;min-width:64px}
+.tw th{background:var(--bg);font-weight:800;font-size:13px}
+.tw td:first-child{font-weight:700}
+/* 표 행 풀어 쓴 문장(10-25 PD): 행 아래 병합 칸. 패턴 오디오는 표를 이 문장으로만 읽는다 */
+.tw tr.trs td{font-weight:500;font-size:13.5px;color:var(--ink2);background:var(--bg);line-height:1.6;border-top:0}
+.tw tr.trs .psec{float:left;margin:0 8px 2px 0}  /* 넓은 표는 옆으로 밀리니 ▶는 문장 왼쪽(늘 보이게) */
+.sech{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 0 4px}
+.sech h3{font-size:16px;margin:0}
+.chipbtn{border:1px solid var(--line);background:var(--card);color:var(--ink2);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+.chipbtn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.oxl{list-style:none;padding:0;margin:4px 0}
+.oxi{padding:11px 0;border-bottom:1px solid var(--line);cursor:default}
+.oxi .h{display:flex;gap:10px;align-items:flex-start}
+.oxb{flex:0 0 auto;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;margin-top:1px}
+.oxb.O{background:var(--o)}.oxb.X{background:var(--x)}.oxb.q{background:var(--line);color:var(--ink2)}
+.oxi .tx{flex:1;font-size:15.5px;line-height:1.65}
+.oxi .rd{display:inline-block;font-size:12px;color:var(--muted);font-weight:800;margin-right:5px}
+.lawc{display:inline-block;font-size:11.5px;font-weight:800;padding:1px 6px;border-radius:6px;margin-right:5px;vertical-align:1px;line-height:1.5;white-space:nowrap}
+.lawc.lh{background:var(--acc-bg);color:var(--acc)} .lawc.ls{background:var(--warn-bg);color:var(--warn)} .lawc.lm{background:var(--line);color:var(--ink2)}
+.oxi .cs{font-size:13.5px;color:var(--ink2);background:var(--bg);border-left:3px solid var(--acc);border-radius:6px;padding:5px 9px;margin:0 0 6px;line-height:1.55}
+.oxi .cs b{color:var(--acc);font-size:12px;margin-right:4px}
+.oxi .re{font-size:11px;color:var(--muted);margin-left:4px}
+.oxi .more{margin:6px 0 0 38px}
+.oxi .fx{font-size:15px;background:var(--o-bg);color:var(--ink);padding:6px 10px;border-radius:8px;line-height:1.6}
+.oxi .fx ins{text-decoration:none;color:var(--o);font-weight:900}
+.oxi del{color:var(--x);text-decoration:line-through;text-decoration-thickness:2px}
+.oxi .wy{font-size:14px;color:var(--ink2);margin-top:5px;line-height:1.6}
+.oxi .nw{font-size:13px;background:var(--warn-bg);color:var(--warn);padding:4px 8px;border-radius:6px;margin-top:5px}
+.oxi .al{font-size:12px;color:var(--muted);margin-top:4px}
+.hideans .oxi{cursor:pointer}
+.hideans .oxi:not(.open) .oxb{background:var(--line);color:var(--line)}
+.hideans .oxi.did:not(.open) .oxb.O{background:var(--o);color:#fff}.hideans .oxi.did:not(.open) .oxb.X{background:var(--x);color:#fff}
+.tag.rd0{background:var(--line);color:var(--ink2)}.tag.rd1{background:var(--o-bg);color:var(--o)}
+.prd{font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap;margin-right:auto}.prd.on{color:var(--o)}
+.hideans .oxi:not(.open) .more{display:none}
+.dot{display:inline-block;font-size:11px;padding:1px 6px;border-radius:6px;margin-left:4px;font-weight:800;vertical-align:1px}
+.dot.del{background:var(--line);color:var(--ink2)}.dot.miss{background:var(--x-bg);color:var(--x)}.dot.ok{background:var(--o-bg);color:var(--o)}
+.trapbox{background:var(--warn-bg);border-radius:12px;padding:10px 14px;margin:14px 0}
+.trapbox b:not(.kw){display:block;color:var(--warn);font-size:14px;margin-bottom:4px}
+.trapbox li{font-size:15px;line-height:1.6;margin:3px 0}
+.memo{background:#fff3a3;color:#1a1a00;border-radius:12px;padding:12px 14px;font-weight:800;margin:14px 0;line-height:1.6;font-size:16px}
+.memo small{display:block;font-size:12px;opacity:.7;margin-bottom:2px}
+[data-theme="dark"] .memo{background:#463d0c;color:#fff4bf}
+.warnbox{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:8px 12px;font-size:14px;margin:10px 0}
+.calcb{border:1.5px solid var(--acc);border-radius:12px;padding:10px 14px;margin:12px 0}
+.calcb .nm{font-weight:800;font-size:15px}
+.calcb .fm{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--bg);padding:8px 10px;border-radius:8px;font-size:14.5px;font-weight:700;white-space:pre-wrap;margin:6px 0;line-height:1.55}
+.calcb ol{padding-left:20px;margin:6px 0;font-size:15px;line-height:1.6}
+.calcb .ct{font-size:14px;color:var(--x);margin-top:4px}
+.calcb .ex{font-size:12px;color:var(--muted)}
+.backbar{display:flex;gap:8px;margin-bottom:10px}
+.pn{display:flex;gap:8px;margin-top:12px}
+.pn button{flex:1;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 12px;font-size:13px;cursor:pointer;line-height:1.4}
+.pn button span{display:block;font-size:11px;color:var(--muted)}
+.pn button.nx{text-align:right}
+.qref{font-size:14px;padding:5px 0;border-bottom:1px solid var(--line);line-height:1.5}
+.hit{font-size:13px;color:var(--ink2);margin-top:2px}
+.hit mark{background:#fff3a3;color:#000;border-radius:2px}
+.bookbtn{display:block;width:100%;text-align:left;border:1.5px solid var(--acc);background:var(--acc-bg);color:var(--acc);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:800;margin-top:10px;cursor:pointer}
+/* ===== 패턴 ===== */
+.tag.S{background:var(--ink);color:var(--bg)}
+.patbtn{display:block;width:100%;text-align:left;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:800;margin-top:10px;cursor:pointer}
+.patbtn span{font-weight:600;color:var(--muted)}
+.pbar2{height:6px;background:var(--line);border-radius:3px;margin-top:10px;overflow:hidden}.pbar2 i{display:block;height:100%;background:var(--o)}
+.pwhen{background:var(--acc-bg);border-radius:12px;padding:10px 14px;margin:12px 0;font-size:15px;line-height:1.6}
+.pwhen small{display:block;font-size:12px;color:var(--acc);font-weight:800;margin-bottom:2px}
+.prule{list-style:none;padding:0;margin:10px 0}
+.prule li{padding:9px 12px;margin:6px 0;border-radius:10px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--ink);font-size:16px;font-weight:600;line-height:1.65}
+/* 패턴 위쪽: 주제 이름 → 결론 몇 줄 → 신호 칩 → 요점(조건 → 판정 한 줄씩). 괄호는 예시라 작은 회색, O/X는 배지 */
+.pname{font-size:13px;font-weight:800;color:var(--acc);margin:8px 0 0}
+.reader h2.phead{font-size:20px;line-height:1.4;margin:2px 0 8px}
+.phead span{display:block}
+.psig{margin:12px 0 6px}
+.psig small{display:block;font-size:12px;color:var(--muted);font-weight:800;margin-bottom:5px}
+.psig span.sg{display:inline-block;background:var(--acc-bg);border-radius:8px;padding:3px 9px;margin:0 5px 6px 0;font-size:14px;line-height:1.45}
+.pblk{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px 2px;margin:8px 0}
+.pblk .ph{font-size:13px;font-weight:800;color:var(--acc);margin:1px 0}
+.pblk ul{list-style:none;margin:0;padding:0}
+.pblk li{padding:7px 0;border-top:1px solid var(--line);font-size:15.5px;line-height:1.55}
+.pblk li:first-child{border-top:0}
+.pc{color:var(--ink2)}
+.pr{font-weight:800}
+i.ar{font-style:normal;color:var(--muted);margin:0 5px}
+.px{font-size:12.5px;color:var(--muted);font-weight:500}
+.px .lw{font-size:1em}
+.pf{display:block;font-size:12.5px;color:var(--muted);font-weight:400;line-height:1.5;margin-top:2px}
+.okx{display:inline-block;min-width:1.45em;text-align:center;font-size:12px;font-weight:900;line-height:1.5;border-radius:5px;padding:0 3px;vertical-align:1px}
+.okx.O{background:var(--o-bg);color:var(--o)} .okx.X{background:var(--x-bg);color:var(--x)}
+.srow .t small{display:block;font-size:12.5px;color:var(--muted);line-height:1.4;margin-top:2px}
+.pexc{background:var(--warn-bg);border-radius:12px;padding:8px 14px;margin:10px 0;font-size:15px;line-height:1.6}
+.pexc b:not(.kw){display:block;color:var(--warn);font-size:13px}
+.lesson{padding:10px 0;border-bottom:1px solid var(--line)}
+.lesson:last-child{border-bottom:0}
+.lesson .k{font-size:12px;color:var(--muted);font-weight:800}
+.lesson .say{font-size:15.5px;font-weight:800;line-height:1.55;margin:2px 0}
+.lesson .so{font-size:14px;color:var(--ink2);line-height:1.6}
+.hb{display:flex;align-items:center;gap:8px;font-size:13px;margin:6px 0}
+.hb .nm{flex:0 0 108px;line-height:1.3}
+.hb .tr{flex:1;height:10px;background:var(--line);border-radius:0 5px 5px 0;overflow:hidden}
+.hb .tr i{display:block;height:100%;background:var(--acc);border-radius:0 4px 4px 0}
+.hb .pc{flex:0 0 34px;text-align:right;font-variant-numeric:tabular-nums;font-weight:800}
+.hbex{font-size:11.5px;color:var(--muted);margin:-3px 0 6px 116px;line-height:1.4}
+.choice del{color:var(--x);text-decoration:line-through;text-decoration-thickness:2px}
+.fix ins{text-decoration:none;font-weight:900;border-bottom:2px solid var(--o)}
+/* 바로잡기(10-19): 빨강 = 출제자가 바꿔친 말, 주황 칸 = 그럴듯하게 지어낸 말, 회색 = 바로잡으며 연결만 다듬은 곳 */
+del.f{color:var(--warn);text-decoration:line-through;text-decoration-thickness:1.5px;background:var(--warn-bg);border-radius:4px;padding:0 2px}
+/* 연결만 다듬은 곳(10-24 PD: 지운 말과 고친 말이 둘 다 회색이라 구별이 안 됐다): 지운 말은 흐린 회색 줄, 고친 말은 초록 점선 */
+del.l{color:var(--muted);opacity:.75;text-decoration:line-through;text-decoration-thickness:2px}
+.ins.l{color:var(--o);font-weight:700;background:transparent;padding:0;margin-left:3px;border-bottom:1.5px dashed var(--o);border-radius:0}
+.edkey{font-size:12px;color:var(--muted);margin:0 0 6px}
+.edkey .f{color:var(--warn)} .edkey .c{color:var(--x)}
+.fake{font-size:14px;background:var(--warn-bg);color:var(--ink);padding:8px 10px;border-radius:8px;margin:6px 0;line-height:1.6}
+.fake b{color:var(--warn);margin-right:4px}
+.oxi .fk{font-size:13.5px;background:var(--warn-bg);color:var(--ink);padding:5px 9px;border-radius:6px;margin-top:5px;line-height:1.55}
+.oxi .fk b{color:var(--warn);margin-right:4px}
+.vb{display:flex;gap:6px;align-items:flex-end;height:64px;margin:8px 0 2px}
+.vb div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:11px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.vb i{display:block;width:100%;background:var(--acc);border-radius:4px 4px 0 0;margin-top:2px}
+.vbl{display:flex;gap:6px;font-size:12px;color:var(--muted)}.vbl span{flex:1;text-align:center}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+/* ===== 연속 기록·회독 ===== */
+.streak{font-size:15px;font-weight:800;padding:8px 10px;border-radius:10px;margin:6px 0 4px;background:var(--bg);color:var(--ink2);letter-spacing:-.2px}
+.streak.ok{background:var(--o-bg);color:var(--o)} .streak.up{background:var(--acc-bg);color:var(--acc)} .streak.bad{background:var(--x-bg);color:var(--x)}
+.prog{border:1.5px solid var(--acc)}
+.prog .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.prog .ps{font-size:14px;font-weight:800;color:var(--acc)}
+.prog .big{font-size:34px;font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.prog .big small{font-size:15px;font-weight:800;color:var(--ink2);letter-spacing:0;margin-left:6px}
+.sbar{display:flex;height:16px;background:var(--line);border-radius:8px;overflow:hidden;margin:10px 0 6px}
+.sbar i{display:block;height:100%}
+.sbar .d,.leg .d::before{background:var(--o)} .sbar .s,.leg .s::before{background:var(--acc)}
+.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.leg span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;background:var(--line)}
+.passes{display:flex;gap:6px;margin:10px 0 0}
+.passes span{flex:1;text-align:center;font-size:12.5px;padding:6px 0;border-radius:9px;background:var(--bg);color:var(--muted);font-weight:800;font-variant-numeric:tabular-nums}
+.passes span.on{background:var(--acc-bg);color:var(--acc)} .passes span.ok{background:var(--o-bg);color:var(--o)}
+.prog .gr{font-size:12.5px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+.prog .pace{font-size:13.5px;color:var(--ink2);background:var(--bg);border-radius:10px;padding:7px 10px;margin-top:8px;line-height:1.55}
+.bar{display:flex} .bar #bar{background:var(--o)} .bar #bar2{display:block;height:100%;background:var(--acc);width:0%}
+/* 지우기 시험(10-20): 논점 자리를 바꿨을 수도 그대로 뒀을 수도 있는 문장 */
+.choice ins{text-decoration:none;font-weight:900;border-bottom:2px solid var(--o)}
+.flipnote{font-size:15px;background:var(--bg);padding:8px 10px;border-radius:8px;margin:6px 0;line-height:1.6}
+.flipnote>b{display:block;font-size:13px;color:var(--ink2);margin-bottom:2px}
+.flipnote .fix{margin:4px 0} .flipnote .wy2{font-size:14.5px;margin:4px 0 6px} .flipnote .og{border-top:1px solid var(--line);padding-top:6px;margin-top:6px}
+.flipnote del:not([class]){color:var(--x);text-decoration:line-through;text-decoration-thickness:2px}
+.flipnote .hl{background:#fff3a3;color:#000;border-radius:3px;padding:0 2px}
+/* 타시험(10-26): 다른 시험이 올해 먼저 낸 논점. 형광펜(mark.tk) = 출제자가 바꿔 치는 자리, 가린 채 줄을 눌러 확인 */
+mark.tk{background:linear-gradient(transparent 40%,#fff3a3 40%,#fff3a3 92%,transparent 92%);color:inherit;padding:0 1px;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+[data-theme="dark"] mark.tk{background:linear-gradient(transparent 40%,rgba(255,200,0,.35) 40%,rgba(255,200,0,.35) 92%,transparent 92%)}
+.hideans .tsi:not(.open) mark.tk{background:var(--line);color:transparent;border-radius:4px}
+.tsi .tx{font-size:16px;line-height:1.7}
+.tsi .more{margin:6px 0 0}
+.tsx{font-size:14px;background:var(--x-bg);border-radius:8px;padding:5px 9px;margin-top:4px;color:var(--ink2);line-height:1.55}
+.tsx b{color:var(--x);margin-right:6px;font-size:12.5px}
+.tsx del{color:var(--x);text-decoration-thickness:2px}
+.tsm{font-size:12.5px;color:var(--muted);margin-top:5px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;line-height:1.5}
+.tsm .tag{margin-right:0}
+.tag.r1{background:var(--x);color:#fff}.tag.r2{background:var(--x-bg);color:var(--x)}.tag.r3,.tag.r0{background:var(--line);color:var(--ink2)}
+.tag.nw{background:var(--x-bg);color:var(--x)}.tag.gd{background:var(--line);color:var(--ink2)}.tag.fr{background:var(--acc-bg);color:var(--acc)}
+.oth{font-size:12.5px;font-weight:800;color:var(--muted);padding:12px 4px 2px;border-bottom:1px solid var(--line)}
+.srow .tag{flex:0 0 auto}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1 id="title">기출 지우개 2</h1><div class="sub"><span id="subtitle">불러오는 중</span><span id="syncdot"></span></div></div>
+  <div class="bar"><i id="bar"></i><i id="bar2"></i></div>
+</header>
+<main id="main"></main>
+<nav class="tabs">
+  <button data-v="today" class="on"><b>▶</b>오늘</button>
+  <button data-v="pat"><b>★</b>패턴</button>
+  <button data-v="other"><b>⇄</b>타시험</button>
+  <button data-v="book"><b>▤</b>개념</button>
+  <button data-v="concepts"><b>☰</b>논점</button>
+  <button data-v="exam"><b>✎</b>실전</button>
+  <button data-v="stats"><b>▦</b>현황</button>
+  <button data-v="settings"><b>⚙</b>설정</button>
+</nav>
+<script>
+/* ===== 데이터 ===== */
+const CIRC='①②③④⑤';
+let D=null;              // cards.json
+// 사본(10-31): 지금 앱(gichul-jiugae)과 같은 출처(jjangguss-prog.github.io)라 localStorage를 같이 쓴다. 기록이 섞이지 않게 저장 키는 모두 jiugae2·jiugae2-*, 동기화 파일은 jiugae2-sync.json
+const SKEY='jiugae2', APP='jiugae2', ORIG_KEY='jiugae', ORIG_SYNC='jiugae-sync'; // ORIG_* = 지금 앱 기록·토큰. 설정의 '지금 앱 기록 가져오기'가 읽기만 한다
+let S=load();            // 진행 상태
+const EXAM_DATE=new Date('2026-10-31T00:00:00+09:00'), EXAM_DAY='2026-10-31';
+
+function load(){ try{ return JSON.parse(localStorage.getItem(SKEY)||'{}'); }catch(e){ return {}; } }
+function save(){ stamp(); try{ localStorage.setItem(SKEY,JSON.stringify(S)); }catch(e){} }
+function today(){ const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+function daysLeft(){ return Math.max(0,Math.ceil((EXAM_DATE-new Date())/86400000)); }
+function normalize(){
+  S.cards=S.cards||{};      // id -> {st:0새/1학습/2지움, k:근거까지 안 날짜들[], kt:마지막으로 센 시각(ms), last:날짜, due:날짜, miss:틀린 수, seen:본 수}
+  S.log=S.log||[];          // {d,subj,ok,id,ts:시각,v:기기}
+  S.exam=S.exam||{};        // round -> {answers:{}, score, date}
+  S.minutes=S.minutes||60;
+  S.daily=S.daily||{};      // 이 기기의 date -> {new:0, rev:0, sec:0}
+  S.confused=S.confused||{}; // id -> 처음 누른 날짜(이해 안 된 카드)
+  S.book=S.book||{read:{},last:'',hide:false,subj:'civ'}; S.book.read=S.book.read||{}; // read: 섹션 id -> {n:읽은 날 수, d:마지막 날}
+  S.pat=S.pat||{};          // 패턴 id -> {n:본 날 수, d:마지막 본 날} (예전 기록은 '외웠다' 누른 날짜 문자열)
+  S.rep=S.rep||{};          // 또 나온 문장 ref -> {n:본 수, ok:맞힌 수, l:마지막 1맞음/0틀림, d:날짜}
+  S.tsx=S.tsx||{};          // 타시험 카드 id(K1·R1…) -> {n:본 날 수, d:마지막 본 날} (동기화 단위 s/)
+  S.ddo=S.ddo||{};          // 다른 기기의 daily (동기화로 받음)
+  S._epoch=S._epoch||0;     // '처음부터'·붙여넣어 불러오기를 누른 시각
+  if(!S._ts) S._ts=legacyTs(); // 동기화 단위 -> 바뀐 시각
+  S.log.forEach((l,i)=>{ if(!l.ts){ l.ts=dayMs(l.d)+i; l.v=DEV; } });
+}
+
+/* ===== 기기 간 동기화 =====
+   기록을 단위(카드 한 장, 실전 한 번, 개념서 섹션 하나, 설정 하나)로 나눠 바뀐 시각을 S._ts에 적고,
+   기기끼리 합칠 때 단위마다 더 늦게 바뀐 쪽을 쓴다. 하루 공부량은 기기마다 따로 쌓아 더하고, 판단 기록은 합집합.
+   저장소는 PD의 GitHub 비공개 gist(사본은 jiugae2-sync.json, 지금 앱의 jiugae-sync.json과 따로). 토큰은 기록과 따로 이 기기에만 둔다(설정의 복사 글에 안 섞이게). */
+const DEV=(()=>{ try{ let d=localStorage.getItem('jiugae2-dev'); if(!d){ d=Math.random().toString(36).slice(2,10); localStorage.setItem('jiugae2-dev',d); } return d; }catch(e){ return 'tmp'; } })();
+const NOTUNIT=['cards','exam','confused','book','pat','rep','tsx','log','daily','ddo','dataver','notice','_ts','_epoch'];
+const UNIT_DEF={'p/minutes':'60','b/last':'""','b/hide':'false','b/subj':'"civ"'}; // 처음 값은 다른 기기 값에 진다
+let SNAP=null; // 지난 save() 때의 단위들
+function dayMs(d){ const x=Date.parse((d||'')+'T00:00:00+09:00'); return isNaN(x)?1:x; }
+function blankCard(s){ return !s||(!s.st&&!s.seen&&!s.miss&&!s.last&&!(s.k&&s.k.length)); }
+function units(st){
+  const u={}, J=JSON.stringify;
+  for(const [k,v] of Object.entries(st.cards||{})) if(!blankCard(v)) u['c/'+k]=J(v);
+  for(const [k,v] of Object.entries(st.exam||{})) u['x/'+k]=J(v);
+  for(const [k,v] of Object.entries(st.confused||{})) u['f/'+k]=J(v);
+  for(const [k,v] of Object.entries(st.book||{})){ if(k==='read'){ for(const [i,d] of Object.entries(v||{})) u['r/'+i]=J(d); } else u['b/'+k]=J(v); }
+  for(const [k,v] of Object.entries(st.pat||{})) u['t/'+k]=J(v);
+  for(const [k,v] of Object.entries(st.rep||{})) u['e/'+k]=J(v);
+  for(const [k,v] of Object.entries(st.tsx||{})) u['s/'+k]=J(v);
+  for(const [k,v] of Object.entries(st)) if(!NOTUNIT.includes(k)) u['p/'+k]=J(v);
+  return u;
+}
+function setUnit(key,json){
+  const p=key[0], k=key.slice(2);
+  const o=p==='c'?S.cards:p==='x'?S.exam:p==='f'?S.confused:p==='r'?S.book.read:p==='b'?S.book:p==='t'?S.pat:p==='e'?S.rep:p==='s'?(S.tsx||(S.tsx={})):S;
+  if(json===undefined) delete o[k]; else o[k]=JSON.parse(json);
+}
+// 동기화 전부터 있던 기록: 카드는 마지막 본 날짜(같은 날이면 본 수), 나머지는 적힌 날짜로 시각을 매긴다
+function legacyTs(){
+  const ts={};
+  for(const [key,j] of Object.entries(units(S))){
+    const v=JSON.parse(j), p=key[0];
+    ts[key]=p==='c'?(v.last?dayMs(v.last)+Math.min(v.seen||0,999):1)
+      :p==='x'?(v&&v.date?dayMs(v.date):1)
+      :(p==='f'||p==='r'||p==='t')&&typeof v==='string'?dayMs(v)
+      :(p==='e'||p==='t'||p==='r'||p==='s')&&v&&v.d?dayMs(v.d)+Math.min(v.n||0,999)
+      :UNIT_DEF[key]===j?0:1;
+  }
+  return ts;
+}
+// save() 때마다 지난 저장과 비교해 바뀐 단위에 지금 시각을 찍고, 새 판단 기록에 시각·기기를 붙인다
+function stamp(){
+  if(!SNAP) return;
+  const now=Date.now(), cur=units(S);
+  for(const k in cur) if(cur[k]!==SNAP[k]) S._ts[k]=now;
+  for(const k in SNAP) if(!(k in cur)) S._ts[k]=now;
+  let i=S.log.length; while(i>0&&!S.log[i-1].ts) i--;
+  for(let n=now;i<S.log.length;i++,n++){ S.log[i].ts=n; S.log[i].v=DEV; }
+  SNAP=cur; markDirty();
+}
+function allDaily(){
+  const o={};
+  for(const m of [S.daily,...Object.values(S.ddo)]) for(const [d,v] of Object.entries(m||{})){ const w=o[d]||(o[d]={new:0,rev:0,sec:0}); w.new+=v.new||0; w.rev+=v.rev||0; w.sec+=v.sec||0; }
+  return o;
+}
+function maxDaily(a,b){
+  const o=Object.assign({},a);
+  for(const [d,v] of Object.entries(b||{})){ const w=o[d]||{}; o[d]={new:Math.max(w.new||0,v.new||0),rev:Math.max(w.rev||0,v.rev||0),sec:Math.max(w.sec||0,v.sec||0)}; }
+  return o;
+}
+// 원격 기록 R을 S에 합친다. 바뀐 것이 있으면 true
+function mergeRemote(R){
+  const re=R.epoch||0;
+  if(re<S._epoch) return false; // 이 기기에서 '처음부터'·불러오기를 더 늦게 눌렀다: 원격은 덮어쓴다
+  if(re>S._epoch){              // 다른 기기에서 눌렀다: 그 기록을 통째로 받는다
+    const dv=S.dataver, dd=R.dd||{};
+    S=Object.assign({},R.s,{dataver:dv,_epoch:re,_ts:Object.assign({},R.ts),log:R.log||[],daily:dd[DEV]||{},ddo:{}});
+    for(const [d,m] of Object.entries(dd)) if(d!==DEV) S.ddo[d]=m;
+    normalize(); SNAP=units(S); return true;
+  }
+  let ch=false; const lu=units(S), ru=units(R.s||{}), rt=R.ts||{};
+  for(const key in rt){
+    if(rt[key]>(S._ts[key]||0)){ if(ru[key]!==lu[key]){ setUnit(key,ru[key]); ch=true; } S._ts[key]=rt[key]; }
+  }
+  for(const [d,m] of Object.entries(R.dd||{})){
+    if(d===DEV) continue;
+    const b=JSON.stringify(S.ddo[d]||{}); S.ddo[d]=maxDaily(S.ddo[d],m); if(JSON.stringify(S.ddo[d])!==b) ch=true;
+  }
+  const have=new Set(S.log.map(l=>l.v+'|'+l.ts)); let add=0;
+  for(const l of R.log||[]) if(l.ts&&!have.has(l.v+'|'+l.ts)){ S.log.push(l); add++; }
+  if(add){ S.log.sort((a,b)=>a.ts-b.ts); if(S.log.length>3000) S.log=S.log.slice(-3000); ch=true; }
+  SNAP=units(S);
+  return ch;
+}
+// 합친 뒤에도 원격에 없는 것이 이 기기에 남았나(그러면 올린다)
+function localAhead(R){
+  if((R.epoch||0)!==S._epoch) return true;
+  const rt=R.ts||{}; for(const k in S._ts) if(S._ts[k]>(rt[k]||0)) return true;
+  const rk=new Set((R.log||[]).map(l=>l.v+'|'+l.ts)); if(S.log.slice(-LOGN).some(l=>!rk.has(l.v+'|'+l.ts))) return true;
+  const dd=R.dd||{}; if(JSON.stringify(S.daily)!==JSON.stringify(dd[DEV]||{})) return true;
+  for(const [d,m] of Object.entries(S.ddo)) for(const [day,v] of Object.entries(m)){ const w=(dd[d]||{})[day]; if(!w||w.new<v.new||w.rev<v.rev||w.sec<v.sec) return true; }
+  return false;
+}
+let SY=(()=>{ try{ return JSON.parse(localStorage.getItem('jiugae2-sync')||'{}'); }catch(e){ return {}; } })(); // {token, gist, last, err}
+function saveSY(){ try{ localStorage.setItem('jiugae2-sync',JSON.stringify({token:SY.token,gist:SY.gist,last:SY.last,err:SY.err})); }catch(e){} }
+const GH='https://api.github.com', SFILE='jiugae2-sync.json', LOGN=1000; // 판단 기록은 최근 1000개만 오간다(정확도는 과목별 최근 120개로 계산)
+let lastTag='', lastText='', lastUpd='', lastVer='', missedVer=''; // 마지막으로 받거나 올린 gist의 ETag·내용·서버 시각·판: 안 바뀌었으면 다시 받지 않는다
+async function gh(path,opt){
+  opt=opt||{};
+  const r=await fetch(GH+path,{method:opt.method||'GET',cache:'no-store',
+    headers:Object.assign({Authorization:'Bearer '+SY.token,Accept:'application/vnd.github+json'},opt.body?{'Content-Type':'application/json'}:{},opt.headers||{}),
+    body:opt.body?JSON.stringify(opt.body):undefined});
+  if(!r.ok&&r.status!==304){ const e=new Error('GitHub '+r.status); e.status=r.status; throw e; }
+  return r;
+}
+async function ghFind(){
+  for(let p=1;p<=5;p++){ const L=await (await gh(`/gists?per_page=100&page=${p}`)).json(); const g=L.find(g=>g.files&&g.files[SFILE]); if(g) return g.id; if(L.length<100) break; }
+  return null;
+}
+async function ghRead(id){
+  const r=await gh('/gists/'+id,{headers:lastTag&&lastText?{'If-None-Match':lastTag}:{}});
+  if(r.status!==304){
+    const g=await r.json(), f=g.files&&g.files[SFILE]; if(!f) return null;
+    // 이미 본 것보다 옛 판이 왔다(캐시에서 나온 응답 등): 이걸로 합쳐 올리면 다른 기기 기록을 덮어쓴다(10-31)
+    if(lastUpd&&g.updated_at&&g.updated_at<lastUpd){ const e=new Error('stale'); e.stale=true; throw e; }
+    lastText=f.truncated?await fetch(f.raw_url,{cache:'no-store'}).then(x=>x.text()):f.content; lastTag=r.headers.get('ETag')||'';
+    if(g.updated_at) lastUpd=g.updated_at;
+    lastVer=g.history&&g.history[0]?g.history[0].version:'';
+  }
+  return JSON.parse(lastText);
+}
+// 지난 판 하나를 받는다. 판 주소는 바뀌지 않아 캐시가 낡을 일이 없다
+async function ghRev(id,ver){
+  const g=await (await gh('/gists/'+id+'/'+ver)).json(), f=g.files&&g.files[SFILE]; if(!f) return null;
+  return JSON.parse(f.truncated?await fetch(f.raw_url,{cache:'no-store'}).then(x=>x.text()):f.content);
+}
+async function ghWrite(id,text){
+  const base=lastVer;
+  const r=await gh(id?'/gists/'+id:'/gists',{method:id?'PATCH':'POST',body:id?{files:{[SFILE]:{content:text}}}:{description:'기출 지우개 2 공부 기록 (동기화용, 지우지 마세요)',public:false,files:{[SFILE]:{content:text}}}});
+  const g=await r.json(); lastText=text; lastTag=r.headers.get('ETag')||''; if(g.updated_at) lastUpd=g.updated_at;
+  const h=g.history||[]; lastVer=h[0]?h[0].version:'';
+  // 바로 앞 판이 내가 합친 판이 아니다: 받고 올리는 사이 다른 기기가 올렸다(10-31 00:47, 같은 초에 두 기기가 올림)
+  missedVer=base&&h[1]&&h[1].version!==base?h[1].version:'';
+  return g.id;
+}
+function payload(){
+  const s={};
+  for(const [k,v] of Object.entries(S)) if(!['log','daily','ddo','dataver','notice','_ts','_epoch'].includes(k)) s[k]=v;
+  s.cards={}; for(const [k,v] of Object.entries(S.cards)) if(!blankCard(v)) s.cards[k]=v;
+  return JSON.stringify({app:APP,v:1,at:Date.now(),from:DEV,epoch:S._epoch,s,ts:S._ts,log:S.log.slice(-LOGN),dd:Object.assign({},S.ddo,{[DEV]:S.daily})});
+}
+let syncP=null, syncAgain=false, dirtyT=null;
+function markDirty(){ if(!SY.token||dirtyT) return; dirtyT=setTimeout(()=>{ dirtyT=null; syncNow(); },120000); }
+// 받아서 합치고, 이 기기에만 있는 게 있으면 올린다
+function syncNow(){
+  if(!SY.token||!D) return Promise.resolve();
+  if(syncP){ syncAgain=true; return syncP; }
+  clearTimeout(dirtyT); dirtyT=null; SY.busy=true; syncUI();
+  syncP=(async()=>{
+    if(!SY.gist){ SY.gist=await ghFind(); lastTag=lastText=''; }
+    let R=null;
+    for(let i=0;i<3;i++){
+      const t0=Date.now();
+      if(SY.gist){ try{ R=await ghRead(SY.gist); }catch(e){ if(e.status!==404) throw e; SY.gist=null; lastTag=lastText=''; } }
+      if(Date.now()-t0<20000) break;
+      lastTag=''; // 받는 사이 폰이 잠들었다 깨면(10-30 밤 4시간) 그 응답은 낡았을 수 있다: 처음부터 다시 받는다
+    }
+    let ch=R&&R.app===APP?mergeRemote(R):false;
+    if(ch){ try{ localStorage.setItem(SKEY,JSON.stringify(S)); }catch(e){} }
+    if(!SY.gist) SY.gist=await ghWrite(null,payload());
+    else if(!R||localAhead(R)){
+      await ghWrite(SY.gist,payload());
+      // 내가 덮은 판에 이 기기에 없던 기록이 있었으면 그 판을 받아 합치고 다시 올린다
+      for(let i=0;i<3&&missedVer;i++){
+        const M=await ghRev(SY.gist,missedVer); missedVer='';
+        if(M&&M.app===APP&&mergeRemote(M)){ ch=true; try{ localStorage.setItem(SKEY,JSON.stringify(S)); }catch(e){} await ghWrite(SY.gist,payload()); }
+      }
+    }
+    SY.last=Date.now(); SY.err='';
+    if(ch) afterMerge();
+  })().catch(e=>{
+    if(e.stale) syncAgain=true;
+    SY.err=e.stale?'받은 기록이 옛것이라 이번엔 올리지 않았습니다. 잠시 뒤 다시 맞춥니다.'
+      :e.status===401?'토큰이 틀렸거나 만료됐습니다. 새 토큰으로 다시 연결하세요.'
+      :e.status===403||e.status===404?`GitHub가 거절했습니다(${e.status}). 토큰에 gist 권한이 있는지 확인하세요.`
+      :e.status===429?'GitHub가 잠시 막았습니다. 조금 뒤 저절로 다시 합니다.'
+      :e.status?'GitHub 오류 '+e.status:'인터넷이 안 됩니다. 연결되면 저절로 맞춥니다.';
+  }).finally(()=>{ SY.busy=false; saveSY(); syncP=null; syncUI(); if(syncAgain){ syncAgain=false; markDirty(); } });
+  return syncP;
+}
+function afterMerge(){ migrate(); if((view==='today'&&!session)||view==='stats'||view==='settings') render(); else header(); }
+function syncWhen(){ const t=new Date(SY.last); return (t.toDateString()===new Date().toDateString()?'오늘 ':`${t.getMonth()+1}/${t.getDate()} `)+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0'); }
+function syncStatus(){ return SY.busy?'맞추는 중…':SY.err?`<span style="color:var(--x)">${esc(SY.err)}</span>`:SY.last?'마지막 동기화 '+syncWhen():'아직 안 맞춤'; }
+function syncUI(){
+  const el=document.getElementById('syncdot');
+  if(el){ el.textContent=!SY.token?'':SY.busy?' · ⟳':SY.err?' · ☁!':' · ☁'; el.className=SY.err?'err':''; el.title=SY.token?syncStatus().replace(/<[^>]+>/g,''):''; }
+  const st=document.getElementById('syncst'); if(st) st.innerHTML=syncStatus();
+}
+document.getElementById('syncdot').onclick=()=>{ if(SY.token) goView('settings'); };
+document.addEventListener('visibilitychange',()=>{
+  if(!SY.token||!D) return;
+  if(document.visibilityState==='hidden'){ if(dirtyT) syncNow(); }       // 다른 앱·기기로 넘어가기 전에 올린다
+  else if(Date.now()-(SY.last||0)>15000) syncNow();                         // 돌아오면 다른 기기 기록을 받는다
+});
+window.addEventListener('online',()=>{ if(SY.token&&D) syncNow(); });
+normalize(); SNAP=units(S);
+
+function cardState(id){ return S.cards[id]||(S.cards[id]={st:0,k:[],last:'',due:'',miss:0,seen:0}); }
+
+/* ===== 큐 만들기 ===== */
+// five = '5문제만'(10-24 PD: 15분 29장은 정오 판단하고 해설까지 읽으면 택도 없다). 한 번에 5장, 복습 2·새 카드 3이고 모자라면 서로 채운다.
+// 지운 카드 검사는 오늘 검사한 게 3장이 될 때까지만 그중 한 자리에 끼운다(하루 시간 분량은 '시작'마다 3장).
+function buildQueue(five){
+  const t=today(), now=Date.now(); const d=S.daily[t]||(S.daily[t]={new:0,rev:0,sec:0});
+  const review=[], fresh=[], audit=[]; let wait=0, next=0;
+  for(const c of D.cards){
+    const s=cardState(c.id);
+    if(s.st===2){ audit.push(c); continue; }
+    // 1/3·2/3 카드는 맞힌 지 1시간이 지나면 나온다(예전 규칙이 적어 둔 내일·모레 due는 안 본다). 0/3은 due 날짜대로
+    if(s.st===1){ if(!s.k.length){ if(s.due<=t) review.push(c); } else { const at=readyAt(s); if(at<=now) review.push(c); else { wait++; if(!next||at<next) next=at; } } }
+    else fresh.push(c);
+  }
+  mixTsx(fresh);
+  // 복습: 틀린 수 많은 것 먼저
+  review.sort((a,b)=>cardState(b.id).miss-cardState(a.id).miss);
+  // 지운 카드 몰래 검사: 하루 3장
+  shuffle(audit); const auditPick=audit.slice(0,3);
+  if(five){
+    const aud=auditPick.length&&auditToday()<3?1:0, n=5-aud;
+    const f=Math.min(fresh.length, n-Math.min(review.length,2)), r=Math.min(review.length, n-f);
+    const q=[...review.slice(0,r), ...fresh.slice(0,f)];
+    if(aud) q.splice(Math.min(q.length,2),0,auditPick[0]);
+    return {q, review:review.length, fresh:fresh.length, deleted:audit.length, wait, next};
+  }
+  // 분량: 60분이면 복습 최대 45 + 새 카드 35 정도. 시간에 비례
+  const m=S.minutes; const revN=Math.round(m*0.7), newN=Math.round(m*1.0);
+  const q=[...review.slice(0,revN), ...fresh.slice(0,newN)];
+  // 검사 카드는 중간중간 끼움
+  auditPick.forEach((c,i)=>q.splice(Math.min(q.length, 5+i*8),0,c));
+  return {q, review:review.length, fresh:fresh.length, deleted:audit.length, wait, next};
+}
+// 타시험 OX 카드(사본 10-31, 타시험/ox카드.py): 다른 시험이 올해 낸 논점을 옳은 문장(O)·틀린 문장(X) 한 쌍으로.
+// 안 본 카드에서 기출 카드 사이사이에 고르게 끼운다(기출 n장 : 타시험 m장이면 그 비율대로). 타시험 카드끼리는 파일 순서 그대로:
+// 한 쌍 중 한 장을 먼저 다 내고 나머지 짝은 그 뒤라, 같은 논점의 O·X가 한자리에 붙어 나오지 않는다.
+const isTsx=c=>c.id.slice(0,2)==='T-';
+function mixTsx(fresh){
+  const G=fresh.filter(c=>!isTsx(c)), T=fresh.filter(isTsx);
+  if(!G.length||!T.length) return fresh;
+  const at=(i,n)=>(i+0.5)/n, out=[]; let i=0, j=0;
+  while(i<G.length||j<T.length){ if(j>=T.length||(i<G.length&&at(i,G.length)<=at(j,T.length))) out.push(G[i++]); else out.push(T[j++]); }
+  fresh.splice(0,fresh.length,...out); return fresh;
+}
+function qLabel(Q){ return Q.tsx?`타시험 ${Q.tsx.src}`:`${Q.round}회 ${Q.no}번`; }
+function auditToday(){ const t=today(); return S.log.filter(l=>l.d===t&&l.au).length; } // 판단 기록이라 다른 기기에서 검사한 것도 센다
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
+
+/* ===== 화면 공통 ===== */
+const main=document.getElementById('main');
+let view='today', session=null;
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>{ if(b.dataset.v==='book'&&view==='book'){ bk.sec=null; bk.memo=false; bk.from=null; } if(b.dataset.v==='other'&&view==='other') ot.id=null; view=b.dataset.v; document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x===b)); render(); });
+function goView(v){ view=v; document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v===v)); render(); }
+function esc(s){ return (s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+// 해설 글: **개념어** 굵게, ⟪결론⟫ 형광 밑줄(표시는 앱/강조.py가 넣는다). 조문·판례 번호는 작은 회색으로 물린다.
+const LREF=String.raw`(?:[가-힣]{1,15}법\s*)?제?\d{1,4}조(?:의\s?\d+)?(?!\s*원)(?:\s*제?\d+항)?(?:\s*제?\d+호)?(?:\s*(?:본문|단서|전단|후단))?(?:\s*준용)?`;
+const LCASE=String.raw`대판\s*\d{4}\.\s*\d{1,2}\.\s*\d{1,2}\.?\s*\d{2,4}[가-힣]{1,3}\d+(?:\s*전원합의체)?`;
+const LAWRE=new RegExp(String.raw`\((?:\s*(?:${LREF}|${LCASE}|판례|전원합의체)\s*[,·/]?)+\)|${LREF}|${LCASE}`,'g');
+function md(t){ return esc(t).replace(LAWRE,'<span class="lw">$&</span>').replace(/\*\*(.+?)\*\*/g,'<b class="kw">$1</b>').replace(/⟪(.+?)⟫/g,'<span class="cc">$1</span>'); }
+function plain(t){ return (t||'').replace(/\*\*|[⟪⟫]/g,''); }
+function header(){
+  const p=passInfo();
+  document.getElementById('subtitle').textContent=`D-${daysLeft()} · ${p.live?`${p.pass}회독 ${pct(p.pct)}`:'다 지움'} · 지움 ${p.del}`;
+  document.getElementById('bar').style.width=(100*p.del/p.total).toFixed(2)+'%';
+  document.getElementById('bar2').style.width=(100*p.done/p.total).toFixed(2)+'%';
+}
+// 회독: n회독 = 지우지 않은 카드를 전부 n번 이상 본 상태. 지운 카드는 어느 회독에서나 끝난 것으로 친다.
+// 지금 회독 = 지우지 않은 카드 중 가장 적게 본 횟수 + 1
+function passInfo(){
+  const total=D.cards.length, seen=[], byG={}; let del=0;
+  for(const c of D.cards){
+    const s=S.cards[c.id], g=D.questions[c.q].grade, G=byG[g]||(byG[g]={t:0,del:0,seen:[]}); G.t++;
+    if(s&&s.st===2){ del++; G.del++; } else { const n=s?s.seen||0:0; seen.push(n); G.seen.push(n); }
+  }
+  const live=seen.length, pass=live?Math.min(...seen)+1:0;
+  const doneAt=k=>seen.filter(x=>x>=k).length, done=live?doneAt(pass):0;
+  return {total, del, live, pass, done, pct:100*(del+done)/total, at:k=>100*(del+doneAt(k))/total, byG};
+}
+function pct(x){ return (x>0&&x<1?x.toFixed(1):Math.floor(x))+'%'; }
+// 본 기록(패턴 S.pat, 개념서 섹션 S.book.read): {n:본 날 수, d:마지막 본 날}. 열면 저절로 적고 하루에 한 번만 센다.
+// '외웠다'·'다 읽었다' 버튼은 부담이라 없앴다(10-20). 예전 기록(버튼 누른 날짜 문자열)은 그날 한 번 본 것으로 읽는다.
+function seenRec(v){ return !v?{n:0,d:''}:typeof v==='string'?{n:1,d:v}:v; }
+function markSeen(o,id){ const s=seenRec(o[id]), t=today(); if(s.d===t) return false; o[id]={n:s.n+1, d:t}; return true; }
+// 회독: 지금 회독 = 가장 적게 본 것의 본 날 수 + 1, done = 이번 회독에 본 수
+function seenPass(o,ids){ const ns=ids.map(id=>seenRec(o[id]).n), pass=Math.min(...ns)+1; return {pass, done:ns.filter(n=>n>=pass).length, total:ns.length}; }
+function render(){ header(); window.scrollTo(0,0); ({today:renderToday, pat:renderPat, other:renderOther, book:renderBook, concepts:renderConcepts, exam:renderExam, stats:renderStats, settings:renderSettings})[view](); }
+
+/* ===== 오늘 ===== */
+let NOTE='';
+function renderToday(){
+  if(session){ renderCard(); return; }
+  const info=buildQueue(); const t=today(); const d=allDaily()[t];
+  const acc=accuracy();
+  const pi=passInfo(); if(pi.live&&pi.pass>(S.passMax||1)){ S.notice=(S.notice?S.notice+' ':'')+`🎉 ${pi.pass-1}회독 끝! 이제 ${pi.pass}회독째입니다.`; S.passMax=pi.pass; }
+  if(S.notice){ NOTE=(NOTE?NOTE+' ':'')+S.notice; delete S.notice; save(); } // 개념서·패턴을 늦게 불러와 다시 그려도 알림이 남게, 공부를 시작할 때까지 띄운다
+  main.innerHTML=`${NOTE?`<div class="card note pre" style="margin-top:0">${esc(NOTE)}</div>`:''}
+  ${patTodayHtml()}
+  ${progressHtml(pi)}
+  <div class="card">
+    <div class="row"><b style="font-size:20px">오늘 ${S.minutes}분</b><span class="muted">${t}</span></div>
+    <div class="stat">
+      <div><b>${info.review}</b><span>복습할 카드</span></div>
+      <div><b>${info.fresh}</b><span>아직 안 본 카드</span></div>
+      <div><b>${info.deleted}</b><span>지운 카드</span></div>
+    </div>
+    <p class="muted">오늘 한 것: 새 카드 ${d.new}장, 복습 ${d.rev}장, ${Math.round(d.sec/60)}분</p>
+    ${info.wait?`<p class="muted" style="font-size:13px;margin-top:-4px">맞힌 지 1시간이 안 된 카드 ${info.wait}장은 ${hm(info.next)}부터 차례로 복습에 나옵니다.</p>`:''}
+    <div class="btns"><button class="btn n" id="start">▶ 시작 (${info.q.length}장)</button></div>
+    <div class="btns" style="margin-top:8px"><button class="btn n" id="start5">▶ 5문제만</button></div>
+    <p class="muted" style="margin:8px 0 0">5문제만: 복습 2장 + 새 카드 3장. 끝나면 '5문제 더'로 이어 갑니다.</p>
+    <div class="btns" style="margin-top:8px">
+      <button class="btn ghost small" data-m="15">15분만</button>
+      <button class="btn ghost small" data-m="30">30분</button>
+      <button class="btn ghost small" data-m="60">60분</button>
+    </div>
+  </div>
+  ${D.pilot&&D.pilot.length?`<div class="card" style="border-color:var(--acc)"><b>새 해설 시안 ${D.pilot.length}문항</b><p class="muted" style="margin:4px 0 8px">논점·출제 의도·판단 틀, 바꿔친 말에만 삭선. 검토용이라 기록에는 남지만 오늘 분량과 따로 돕니다.</p><div class="btns"><button class="btn n small" id="pilot">시안 보기</button></div></div>`:''}
+  <div class="card">
+    <b>예상 점수</b> <span class="muted">(최근 판단 정확도로 계산, 과목 40문항 × 2.5점)</span>
+    <div class="stat">
+      <div><b>${acc.rea.score}</b><span>부동산학개론 (${acc.rea.n}장 기준)</span></div>
+      <div><b>${acc.civ.score}</b><span>민법 (${acc.civ.n}장 기준)</span></div>
+      <div><b>${acc.avg}</b><span>평균 (60 넘으면 합격권)</span></div>
+    </div>
+  </div>
+  ${weakHtml()}
+  <div class="card">
+    <b>하는 법</b>
+    <ol style="padding-left:18px;margin:6px 0;font-size:15px">
+      <li><b>옳은 말 카드</b>: 문장이 맞으면 <b>O</b>, 틀리면 <b>X</b>. 발문이 '틀린 것은?'이어도 문장 자체만 본다.</li>
+      <li><b>예/아니오 카드</b>(해당하는 것·아닌 것을 묻는 문제): 위에 적힌 질문에 <b>예 / 아니오</b>만 답한다. 발문의 '않는 것'은 신경 쓰지 않는다.</li>
+      <li>근거를 읽고 <b>다음 →</b>. 아는지 모르는지 고를 필요 없다. 이해 안 되면 🤔 버튼을 누르고 넘어간다(내일 다시 나온다).</li>
+      <li><b>3번 연속</b> 맞히면 저절로 지워진다. 날은 안 따진다. 다만 맞힌 뒤 <b>1시간</b>이 지나야 다음 정답을 센다(방금 본 답을 기억해서 맞히는 것은 안 친다). 한 번이라도 틀리면 0부터. 카드 위 ●●○가 지금 연속 기록이다.</li>
+      <li>세 번째는 <b>지우기 시험</b>이다. 실전처럼 회색 칠 없이, 이 카드 문장 그대로이거나 논점 자리가 반대인 문장(다른 회차에 실제로 나온 기출, 또는 틀린 기출을 바로잡은 문장)이 나온다. 지어낸 문장은 내지 않는다. 답만 외웠으면 여기서 걸린다. 맞혔어도 답만 외운 것 같으면 뒷면의 <b>↩ 답만 외운 것 같아요</b>로 남긴다.</li>
+      <li>지운 카드는 하루 3장씩 몰래 다시 나온다(이것도 바꾼 문장일 수 있다). 틀리면 되살아난다. 현황 탭에서 지운 카드를 한꺼번에 다시 점검할 수도 있다.</li>
+      <li>맨 위 <b>전체 진도</b>: 지우지 않은 카드를 전부 한 번씩 보면 1회독, 두 번씩 보면 2회독. 지운 카드는 끝난 것으로 친다.</li>
+      <li><b>타시험 카드</b>: 다른 시험(감평·주관·노무·행정·세무·법원직·법무사·변시)이 올해 낸 논점을 옳은 문장·틀린 문장 두 장으로 만든 카드. 기출 카드 사이에 섞여 나오고, 같은 논점의 두 장은 다른 때 나온다. 판정·지우기 규칙은 기출 카드와 같다.</li>
+      <li><b>개념</b> 탭은 기출 지문으로 쓴 개념서다. 카드 뒷면의 📖 버튼을 누르면 그 논점 섹션이 바로 열린다.</li>
+      <li><b>패턴</b> 탭은 여러 회차 선지가 한 규칙으로 갈리는 자리만 모은 것이다. 처음이면 여기부터 읽고, 카드 뒷면의 ★ 버튼으로 그 패턴에 바로 간다.</li>
+    </ol>
+  </div>`;
+  main.querySelector('#start').onclick=()=>startSession(info.q);
+  main.querySelector('#start5').onclick=()=>startSession(buildQueue(true).q,true);
+  const pb=main.querySelector('#pilot'); if(pb) pb.onclick=()=>startSession(D.cards.filter(c=>D.pilot.includes(c.q)));
+  main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ S.minutes=+b.dataset.m; save(); render(); });
+  main.querySelectorAll('[data-book]').forEach(b=>b.onclick=()=>{ bk.sec=b.dataset.book; bk.memo=false; bk.from=null; goView('book'); });
+  const tb=main.querySelector('#toBook'); if(tb) tb.onclick=()=>{ bk.sec=null; bk.memo=false; bk.from=null; goView('book'); };
+  main.querySelectorAll('[data-pat]').forEach(b=>b.onclick=()=>openPat(b.dataset.pat,null));
+  const tp=main.querySelector('#toPat'); if(tp) tp.onclick=()=>{ pt.id=null; pt.memo=false; pt.drill=null; goView('pat'); };
+}
+// 오늘 탭 '전체 진도': 몇 회독째인지, 그 회독이 몇 % 됐는지
+function progressHtml(p){
+  if(!p.live) return `<div class="card prog"><div class="big">✂ 전부 지웠습니다</div><p class="muted" style="margin:6px 0 0">지운 카드 검사만 하루 3장씩 나옵니다.</p></div>`;
+  const w=x=>(100*x/p.total).toFixed(2)+'%', left=p.live-p.done;
+  // 회독 칸: 지금 회독과 그다음 두 회독. 끝낸 회독은 빼고, 회독이 넘어가면 칸이 한 칸씩 밀린다(4·5·6회독 → 5·6·7회독)
+  const chips=[p.pass,p.pass+1,p.pass+2].map(k=>`<span class="${k===p.pass?'on':''}">${k}회독 ${pct(p.at(k))}</span>`).join('');
+  const gr=['A','B','C','T'].filter(g=>p.byG[g]).map(g=>{ const G=p.byG[g]; return `${g==='T'?'타시험':g+'급'} ${pct(100*(G.del+G.seen.filter(x=>x>=p.pass).length)/G.t)}`; }).join(' · ');
+  return `<div class="card prog">
+    <div class="hd"><span class="ps">전체 진도</span><span class="muted" style="font-size:12px">카드 ${p.total.toLocaleString()}장</span></div>
+    <div class="big">${p.pass}회독째 ${pct(p.pct)}</div>
+    <div class="sbar"><i class="d" style="width:${w(p.del)}"></i><i class="s" style="width:${w(p.done)}"></i></div>
+    <div class="leg"><span class="d">지움 ${p.del}</span><span class="s">${p.pass===1?'본 카드':p.pass+'번 본 카드'} ${p.done}</span><span>${p.pass===1?'안 본 카드':'아직'} ${left}</span></div>
+    <div class="passes">${chips}</div>
+    <div class="gr">${gr}${p.pass===1?' (새 카드는 A급부터)':''}</div>
+    ${paceHtml(p)}
+  </div>`;
+}
+function mdw(d){ const x=new Date(d+'T00:00:00'); return `${x.getMonth()+1}/${x.getDate()}(${'일월화수목금토'[x.getDay()]})`; }
+// 지금 속도로 1회독이 언제 끝나나. 새 카드는 '시작' 한 번에 하루 시간(분)만큼 나온다
+function paceHtml(p){
+  const t=today(), lastDay=addDays(EXAM_DAY,-1);
+  if(p.pass>1) return `<div class="pace">${p.pass}회독은 복습 카드로 저절로 채워집니다. 지우지 않은 ${p.live}장 중 ${p.live-p.done}장 남았습니다.</div>`;
+  if(t>lastDay) return '';
+  const per=Math.round(S.minutes*1.0), todayLeft=Math.max(0,per-((allDaily()[t]||{}).new||0));
+  const fin=rem=>rem<=todayLeft?t:addDays(t,Math.ceil((rem-todayLeft)/per));
+  const remAll=p.live-p.done, A=p.byG.A, remA=A?A.seen.filter(x=>x<1).length:0, endAll=fin(remAll);
+  if(endAll<=lastDay) return `<div class="pace">하루 새 카드 ${per}장이면 <b>${mdw(endAll)}</b>에 1회독 끝 · 시험 전 ✓</div>`;
+  const days=dayDiff(t,lastDay)+(todayLeft>0?1:0), need=Math.ceil(remAll/Math.max(1,days)), endA=fin(remA);
+  return `<div class="pace">하루 새 카드 ${per}장이면 1회독 끝 → ${remA?`A급 <b>${mdw(endA)}</b>${endA<=lastDay?' ✓':''}`:'A급 ✓'} · 전체 <b>${mdw(endAll)}</b>
+    <div class="muted" style="font-size:12.5px;margin-top:2px">시험(${mdw(EXAM_DAY)}) 전에 다 보려면 하루 ${need}장. 오늘 분량 뒤 '시작'을 또 누르면 새 카드 ${per}장이 더 나옵니다.</div></div>`;
+}
+// 카드에서 많이 틀린 논점을 개념서 섹션으로 묶어 보여 준다
+function weakHtml(){
+  if(!B||!D) return '';
+  const byQ={}; for(const c of D.cards){ const st=S.cards[c.id]; if(st&&st.miss>0&&st.st!==2) byQ[c.q]=(byQ[c.q]||0)+1; }
+  if(!Object.keys(byQ).length) return `<div class="card"><b>개념서</b><p class="muted" style="margin:4px 0 8px">카드를 넘기다 틀린 논점이 생기면 여기에 그 논점의 개념서 섹션이 뜹니다.</p><button class="bookbtn" style="margin-top:0" id="toBook">📖 개념서 목차 열기</button></div>`;
+  const rows=Object.values(B.sections).map(s=>({s,n:s.refs.reduce((a,q)=>a+(byQ[q]||0),0)})).filter(x=>x.n>0).sort((a,b)=>b.n-a.n||b.s.f10-a.s.f10).slice(0,3);
+  return `<div class="card"><b>틀린 카드가 많은 논점</b><p class="muted" style="margin:4px 0 0">카드만 넘기지 말고 개념서로 한 번 읽어 두세요.</p>${rows.map(x=>`<button class="bookbtn" data-book="${x.s.id}">📖 ${esc(x.s.title)} <span style="font-weight:600">· 틀린 카드 ${x.n}장</span></button>`).join('')}</div>`;
+}
+function accuracy(){
+  const res={};
+  for(const subj of ['rea','civ']){
+    const L=S.log.filter(l=>l.subj===subj).slice(-120);
+    const n=L.length, ok=L.filter(l=>l.ok).length;
+    // 찍기 보정: 정확도 p → 5지선다 기대 정답률 대략 p^(1.6) (선지 4~5개를 다 맞혀야 한 문항이 맞는다는 보수적 보정)
+    const p=n?ok/n:0; const expected=n?Math.round(Math.pow(p,1.6)*100):0;
+    res[subj]={n, acc:Math.round(p*100), score:n?expected:'-'};
+  }
+  res.avg=(res.rea.n&&res.civ.n)?Math.round((res.rea.score+res.civ.score)/2):'-';
+  return res;
+}
+
+let timerId=null, startAt=0;
+function startSession(q,five){
+  NOTE='';
+  session={q, i:0, phase:'ask', pick:null, startAt:Date.now(), sec:0, five:!!five};
+  startAt=Date.now();
+  clearInterval(timerId); timerId=setInterval(()=>{ const el=document.getElementById('timer'); if(!el||!session) return; el.textContent=timerText(); if(!session.five&&S.minutes*60===Math.floor((Date.now()-session.startAt)/1000)){ try{navigator.vibrate&&navigator.vibrate(200);}catch(e){} } },1000);
+  renderCard();
+}
+// 하루 시간 분량은 남은 시간, 5문제만은 걸린 시간
+function timerText(){ const e=Math.floor((Date.now()-session.startAt)/1000); if(session.five) return '걸린 '+fmt(e); const left=S.minutes*60-e; return (left>=0?'남은 ':'초과 ')+fmt(Math.abs(left)); }
+function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function endSession(){
+  if(session){ const t=today(); const d=S.daily[t]||(S.daily[t]={new:0,rev:0,sec:0}); d.sec+=Math.floor((Date.now()-session.startAt)/1000); save(); }
+  session=null; clearInterval(timerId); render();
+}
+function markChoice(text, wrong){
+  if(!wrong||!text.includes(wrong)) return esc(text);
+  const i=text.indexOf(wrong);
+  return esc(text.slice(0,i))+'<span class="red">'+esc(wrong)+'</span>'+esc(text.slice(i+wrong.length));
+}
+function renderCard(){
+  const s=session; if(!s) return renderToday();
+  if(s.i>=s.q.length&&s.five){
+    main.innerHTML=`<div class="card center"><div class="verdict ok">${s.q.length}문제 끝</div><p class="muted">${fmt(Math.floor((Date.now()-s.startAt)/1000))} 걸렸습니다.</p><div class="btns"><button class="btn n" id="more">▶ 5문제 더</button><button class="btn ghost" id="done">마치기</button></div></div>`;
+    main.querySelector('#more').onclick=()=>{ endSession(); startSession(buildQueue(true).q,true); };
+    main.querySelector('#done').onclick=endSession; return;
+  }
+  if(s.i>=s.q.length){ main.innerHTML=`<div class="card center"><div class="verdict ok">오늘 분량 끝</div><p class="muted">${s.q.length}장을 봤습니다. 내일 또 봅시다.</p><div class="btns"><button class="btn n" id="done">마치기</button></div></div>`; main.querySelector('#done').onclick=endSession; return; }
+  const c=s.q[s.i], Q=D.questions[c.q], st=cardState(c.id);
+  const subj=Q.subject==='rea'?'학개론':'민법';
+  if(s.phase==='ask'&&!s.form) s.form=testForm(c,st); // 판정 뒤엔 st가 바뀌므로 문제를 낼 때 정해 둔다
+  const F=s.form||{}, ans=F.flip?F.flip.ox:c.ox;
+  let html=`<div class="row"><span class="muted">${s.i+1} / ${s.q.length}</span><span class="timer" id="timer">${timerText()}</span><button class="btn ghost small" style="flex:0 0 auto;padding:6px 10px" id="quit">그만</button></div>
+  <div class="card">
+    <div>${Q.tsx?`<span class="tag T">타시험 · ${subj}</span>${tsRank(Q)}`:`<span class="tag ${Q.grade}">${Q.grade}급</span><span class="tag">${subj} ${Q.round}회 ${Q.no}번</span>`}${F.tag?`<span class="tag" style="background:var(--line);color:var(--ink2)">${F.tag}</span>`:''}${st.st===1&&s.phase==='ask'?`<span class="muted" style="font-size:12px">지우기까지 ${dots(st.k.length)}</span>`:''}</div>
+    <div class="muted" style="font-size:12px;margin-top:4px">${esc(Q.concept)}</div>
+    ${c.kind==='calc'&&Q.img?qimgHtml(Q.img,`${Q.round}회 ${Q.no}번 문제 원문`,`<div class="qstem">${esc(Q.question)}</div>${Q.passage&&Q.passage.length?`<div class="passage">${esc(Q.passage.join('\n'))}</div>`:''}${s.phase==='ask'?`<div class="choice" style="font-size:16px">${Q.choices.map((t,i)=>`<div style="margin:4px 0">${CIRC[i]} ${esc(t)}</div>`).join('')}</div>`:''}`):(c.mode==='member'?(Q.facts?`<div class="qstem">${esc(Q.facts)}</div>`:''):Q.question?`<div class="qstem">${esc(Q.question)}</div>`:'')}
+    ${!(c.kind==='calc'&&Q.img)&&Q.passage&&Q.passage.length&&(c.kind==='calc'||c.n.match(/[①②③④⑤]/))?`<div class="passage">${esc(Q.passage.join('\n'))}</div>`:''}`;
+  if(c.kind==='calc'){
+    if(!Q.img||s.phase!=='ask') html+=`<div class="choice" style="font-size:16px">${Q.choices.map((t,i)=>`<div style="margin:4px 0;${s.phase!=='ask'&&CIRC[i]===c.ox?'color:var(--o);font-weight:800':''}${s.phase!=='ask'&&CIRC[i]===s.pick&&s.pick!==c.ox?'color:var(--x);text-decoration:line-through':''}">${CIRC[i]} ${esc(t)}</div>`).join('')}</div>`;
+    if(s.phase==='ask'){
+      html+=`<div class="btns">${Q.choices.map((t,i)=>`<button class="btn n" style="padding:14px 4px" data-p="${CIRC[i]}">${CIRC[i]}</button>`).join('')}</div>
+      <p class="muted center" style="margin:10px 0 0">${c.mode==='choose'?'번호를 고르세요':'계산문제. 식이 안 떠오르면 아무거나 누르고 풀이를 읽으세요'}</p></div>`;
+    }
+  } else if(c.mode==='member'){
+    html+=`<div class="ask member">${esc(Q.cond)}</div>
+    <div class="choice" id="choice">${c.n.match(/^[ㄱ-ㅎ]/)?'':c.n+' '}${s.phase==='ask'?esc(c.text):renderMarked(c)}</div>`;
+    if(s.phase==='ask'){
+      html+=`<div class="btns"><button class="btn n" data-p="Y">예</button><button class="btn g" data-p="N">아니오</button></div></div>`;
+    }
+  } else {
+    html+=`<div class="ask truth">이 문장은 <b>옳은 말인가요?</b><span>${F.test?`${F.tag}: 이 카드 문장 그대로일 수도, 논점 자리가 반대인 문장(${Q.tsx?'바로잡은 문장':'다른 회차 기출이나 바로잡은 문장'})일 수도 있습니다 · 실전처럼 회색 칠 없이`:`발문이 옳은 것을 묻든 틀린 것을 묻든, 문장 자체가 맞는지만 봅니다${focusRange(c)?' · 회색 칠한 곳이 논점 자리':''}`}</span></div>
+    <div class="choice" id="choice">${c.n} ${s.phase==='ask'?(F.test?esc(F.flip?F.flip.text:c.text):shadeFocus(c)):(F.flip?F.flip.a:renderMarked(c))}</div>`;
+    if(s.phase==='ask'){
+      html+=`<div class="btns"><button class="btn o" data-p="O">O 옳은 말</button><button class="btn x" data-p="X">X 틀린 말</button></div>
+      <p class="muted center" style="margin:10px 0 0">모르겠으면 아무거나 누르고 근거를 읽으세요</p></div>`;
+    }
+  }
+  if(s.phase!=='ask'){
+    const ok=s.pick===ans;
+    html+=`<div class="verdict ${ok?'ok':'bad'}">${ok?'맞음':'틀림'} · 정답은 ${ansLabel(c,ans)}</div>
+      ${s.confused?'':streakHtml(s.res)}
+      ${F.test?flipNote(c,F):''}
+      ${c.swap?`${F.flip&&!F.flip.real?'':`<div class="fix">바로잡은 문장: ${c.ed&&c.ed.length?edPair(c.text,c.ed).b:esc(fixedText(c))}</div>`}<div class="kind">출제자의 바꿔치기: ${esc(c.swap.kind||'')}</div>${edLegend(c.ed)}${c.fake?`<div class="fake"><b>그럴듯하게 지어낸 말</b>${md(c.fake)}</div>`:''}`:(c.ox==='X'&&c.fix?`<div class="fix">바로잡기: ${esc(c.fix)}</div>`:'')}
+      ${c.trap?`<div class="trap"><b>출제자가 바꿀 자리</b> <span class="hl">${esc(c.key||'')}</span><br>${md(c.trap)}</div>`:''}
+      ${c.alt?`<div class="note">${md(c.alt)}</div>`:''}
+      ${c.mode==='choose'&&c.opts?`<div class="opts">${c.opts.map(o=>`<div class="opt-r ${o.ok?'ok':''}"><b>${esc(o.n)}</b> ${o.ok?'<span class="tag">정답</span>':''}${md(o.reason||'')}${o.law?`<span class="law"> · ${esc(o.law)}</span>`:''}</div>`).join('')}</div>`:''}
+      <div class="reason">${c.reason?md(c.reason):'<span class="muted">근거 준비 중. 정답 여부만 확인하세요.</span>'}</div>
+      ${c.law?`<div class="law">${esc(c.law)}</div>`:''}
+      ${c.point?`<div class="box issue"><b>이 선지의 논점</b> ${md(c.point)}</div>
+      ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${md(c.aim)}</div>`:''}
+      ${Q.issue||Q.intent||Q.frame?`<details><summary>문항 전체의 논점·출제 의도 (이 선지와는 다른 주제)</summary>
+        ${Q.issue?`<div class="box issue"><b>논점</b> ${md(Q.issue)}</div>`:''}
+        ${Q.intent?`<div class="box intent"><b>출제 의도</b> ${md(Q.intent)}</div>`:''}
+        ${Q.frame?`<div class="note pre">${md(Q.frame)}</div>`:''}
+        ${Q.tip?`<div class="tip">암기팁: ${md(Q.tip)}</div>`:''}</details>`:''}`:`
+      ${Q.issue?`<div class="box issue"><b>논점</b> ${md(Q.issue)}</div>`:''}
+      ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${md(c.aim)}</div>`:(Q.intent?`<div class="box intent"><b>출제 의도</b> ${md(Q.intent)}</div>`:'')}
+      ${Q.frame?`<details open><summary>판단 틀 (헷갈리는 것 나란히 보기)</summary><div class="note pre">${md(Q.frame)}</div></details>`:''}
+      ${c.aim&&Q.intent?`<details><summary>문항 전체의 출제 의도 (정답 선지 기준)</summary><div class="box intent">${md(Q.intent)}</div></details>`:''}`}
+      ${Q.core&&!Q.issue?`<details><summary>이 문제의 핵심</summary><div class="note">${md(Q.core)}</div></details>`:''}
+      ${Q.calc?`<details><summary>계산 풀이</summary><div class="calc">${esc(Q.calc)}</div></details>`:''}
+      ${Q.tip&&!c.point?`<div class="tip">암기팁: ${md(Q.tip)}</div>`:''}
+      ${Q.revision?`<div class="note">법 개정 주의: ${esc(Q.revision)}</div>`:''}
+      ${Q.tsx?tsxBack(c,Q):''}${patLinks(c.id)}${bookLinks(c.q)}
+      ${Q.related&&Q.related.length?`<details><summary>같은 논점 기출 ${Q.related.length}문항</summary><div class="note">${Q.related.map(x=>`${x.r}회 ${x.n}번 · ${esc(x.q)}`).join('<br>')}</div></details>`:''}
+      ${Q.tsx?'':`<details><summary>문제 전체 보기</summary><div class="note">${esc(Q.question)}${Q.passage&&Q.passage.length?'\n'+esc(Q.passage.join('\n')):''}<br>${Q.choices.map((t,i)=>`${CIRC[i]} ${esc(t)}`).join('<br>')}<br><b>정답 ${Q.all_correct?'모두 정답(이의신청으로 전항정답 처리)':CIRC[Q.answer-1]}</b></div></details>`}
+    </div>
+    ${c.easy?`<div class="card easy"><b>쉬운 설명</b><div class="reason">${md(c.easy)}</div></div>`:''}
+    <div class="card help ${s.confused?'':'hide'}" id="help">
+      <b>괜찮습니다. PD 공부법대로 일단 넘어갑니다.</b>
+      <p class="muted" style="margin:4px 0 8px">이 카드는 '이해 안 된 카드'에 모였습니다. 내일 다시 나오고, 연속 기록은 0으로 돌아갑니다.</p>
+      <div class="btns"><a class="btn n small" id="askClaude" target="_blank" rel="noopener" href="${claudeUrl(c,Q)}">Claude에게 쉽게 물어보기</a><button class="btn ghost small" id="copyQ">질문 복사</button></div>
+      <p class="muted" style="margin:8px 0 0;font-size:13px">현황 탭의 '이해 안 된 카드 목록 복사'를 Claude Code에 붙여 넣으면 쉬운 설명을 카드에 붙여 다시 올립니다.</p>
+    </div>
+    <div class="card">
+      ${s.confused?`<b>오늘은 여기까지 이해해도 됩니다.</b><div class="btns" style="margin-top:8px"><button class="btn n small" data-r="cf">다음 (내일 다시 보기)</button></div>`:`
+      <div class="btns"><button class="btn n" data-r="n">다음 →</button></div>
+      ${s.res&&(s.res.r==='del'||s.res.r==='audit')?`<div class="btns" style="margin-top:8px"><button class="btn ghost small" id="keep">↩ 답만 외운 것 같아요 · ${s.res.r==='del'?'지우지 말고 남기기':'되살리기'}</button></div>`:''}
+      <div class="btns" style="margin-top:8px"><button class="btn ghost small" id="confused">🤔 해설을 봐도 이해가 안 돼요</button>${st.st!==2?`<button class="btn ghost small" style="flex:0 0 auto" data-r="del">✂ 바로 지우기</button>`:''}</div>`}
+    </div>`;
+  }
+  main.innerHTML=html;
+  main.querySelector('#quit').onclick=()=>{ if(confirm('여기서 그만할까요? 본 것은 저장됩니다.')) endSession(); };
+  main.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{ s.pick=b.dataset.p; s.phase='show'; s.res=judge(c, s.pick===ans); header(); renderCard(); });
+  main.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{ afterCard(c, b.dataset.r); s.i++; s.phase='ask'; s.pick=null; s.confused=false; s.res=null; s.form=null; header(); renderCard(); });
+  const kb=main.querySelector('#keep'); if(kb) kb.onclick=()=>{ afterCard(c,'keep'); s.res={r:'kept'}; header(); renderCard(); };
+  const cb=main.querySelector('#confused'); if(cb) cb.onclick=()=>{ s.confused=true; if(!S.confused[c.id]) S.confused[c.id]=today(); save(); renderCard(); const h=document.getElementById('help'); if(h) h.scrollIntoView({behavior:'smooth',block:'center'}); };
+  const cq=main.querySelector('#copyQ'); if(cq) cq.onclick=()=>copyText(askText(c,Q));
+  main.querySelectorAll('[data-book]').forEach(b=>b.onclick=()=>{ bk.sec=b.dataset.book; bk.memo=false; bk.from='card'; goView('book'); });
+  main.querySelectorAll('[data-pat]').forEach(b=>b.onclick=()=>openPat(b.dataset.pat,'card'));
+  main.querySelectorAll('[data-tso]').forEach(b=>b.onclick=()=>{ ot.id=b.dataset.tso; ot.tab=Q.subject; ot.tabY=0; goView('other'); });
+}
+// 타시험 카드 뒷면: 나온 시험·공인 회차·판례, 다른 시험이 바꿔 낸 꼴, 왜 나올 만한지. 민법 카드(K)·학개론(R)은 타시험 탭 그 카드로 간다
+function tsxBack(c,Q){
+  const T=Q.tsx, m=c.tsx||{}, refs=m.r||T.refs||'', g=m.g||T.g||'';
+  return `<div class="box intent"><b>다른 시험에서</b> ${esc(refs)}${g?' '+tsG(g):''}${m.f?` <span class="tag fr">${esc(m.f)}</span>`:''}
+      ${m.x?`<div class="tsx"><b>다른 시험이 바꿔 낸 꼴</b>${esc(m.x)}</div>`:''}
+      ${T.why?`<div class="muted" style="font-size:13.5px;margin-top:6px;line-height:1.55">${esc(T.why)}</div>`:''}
+      ${T.gn?`<div class="muted" style="font-size:12.5px;margin-top:4px">공인중개사 기출: ${esc(T.gn)}</div>`:''}</div>
+    ${T.set==='L'?`<div class="law">민법 전체 목록 ${esc(T.src)} · ${esc(T.sec||'')}</div>`:`<button class="bookbtn" data-tso="${esc(T.src)}">⇄ 타시험 탭에서 '${esc(Q.concept)}' 카드 보기</button>`}`;
+}
+function renderMarked(c){
+  const t=c.text||'';
+  if(c.ed&&c.ed.length) return edPair(t,c.ed,true).a;
+  if(c.swap&&c.swap.pos>=0){ const p=c.swap.pos, f=c.swap.from; return esc(t.slice(0,p))+'<span class="red">'+esc(f)+'</span>'+(c.swap.to?'<span class="ins">'+esc(c.swap.to)+'</span>':'')+esc(t.slice(p+f.length)); }
+  if(c.key&&t.includes(c.key)){ const p=t.indexOf(c.key); return esc(t.slice(0,p))+'<span class="hl">'+esc(c.key)+'</span>'+esc(t.slice(p+c.key.length)); }
+  return markChoice(t,c.wrong);
+}
+// 앞면 회색 음영: 뒷면에서 삭선(바꿔친 말 swap.from)이나 형광펜(key)이 칠해지는 바로 그 자리만 칠한다.
+// 넓히지 않는다(10-18 PD: 출제자가 바꿀지 말지 고민하는 자리만). 대신 형광펜도 바꿔친 말처럼 최소 단위로 맞춰
+// 칠한 길이로 O/X가 드러나지 않게 했다(선지DB/선지의도/_지침.md).
+// 예/아니오 카드는 보기가 대개 한두 낱말이라 칠하는지 여부로 답이 기운다. 옳은 말 카드에만 쓴다.
+function focusRange(c){
+  const t=c.text||''; let a, b;
+  if(c.swap&&c.swap.pos>=0){ a=c.swap.pos; b=a+c.swap.from.length; }
+  else if(c.key&&t.includes(c.key)){ a=t.indexOf(c.key); b=a+c.key.length; }
+  else return null;
+  if(!t.slice(0,a).replace(/[\s.,?!·()]/g,'')&&!t.slice(b).replace(/[\s.,?!·()]/g,'')) return null; // 문장 전체면 칠할 뜻이 없다
+  return [a,b];
+}
+function shadeFocus(c){
+  const t=c.text||'', r=focusRange(c);
+  if(!r) return esc(t);
+  return esc(t.slice(0,r[0]))+'<span class="focus">'+esc(t.slice(r[0],r[1]))+'</span>'+esc(t.slice(r[1]));
+}
+// 바로잡기 표시(앱/바로잡기.py): ed=[[위치, 원문 말, 바로잡은 말, 역할]] 역할 c 바꿔친 말·f 지어낸 말·l 연결 다듬기
+// a = 원문에 줄 긋기(inline이면 바로잡은 말을 바로 옆에), b = 바로잡은 문장(바꿔친 말·지어낸 말 자리만 밑줄)
+function edPair(t,ed,inline){
+  let a='', b='', last=0;
+  for(const [p,f,to,r] of ed){
+    const mid=esc(t.slice(last,p)); a+=mid; b+=mid;
+    a+=r==='c'?(inline?'<span class="red">'+esc(f)+'</span>':'<del>'+esc(f)+'</del>'):'<del class="'+r+'">'+esc(f)+'</del>';
+    if(inline&&to) a+='<span class="ins '+r+'">'+esc(to)+'</span>';
+    if(to) b+=r==='l'?esc(to):'<ins>'+esc(to)+'</ins>';
+    last=p+f.length;
+  }
+  a+=esc(t.slice(last)); b+=esc(t.slice(last));
+  return {a, b:b.replace(/ {2,}/g,' ').replace(/ +([,.])/g,'$1').trim()};
+}
+function edLegend(ed){
+  const has=r=>(ed||[]).some(e=>e[3]===r);
+  if(!has('f')&&!has('l')) return '';
+  return `<div class="edkey"><span class="c">빨간 줄</span> 바꿔친 말${has('f')?' · <span class="f">주황 칸</span> 그럴듯하게 지어낸 말':''}${has('l')?' · <del class="l">회색 줄</del><span class="ins l">초록 점선</span> 바로잡으며 연결만 다듬은 곳':''}</div>`;
+}
+function fixDiff(o){ return o.ed&&o.ed.length?edPair(o.text,o.ed):wordDiff(o.text,o.fix); }
+function fixedText(c){ const t=c.text, p=c.swap.pos; return t.slice(0,p)+c.swap.to+t.slice(p+c.swap.from.length); }
+function ansLabel(c,ox){
+  ox=ox||c.ox;
+  if(c.mode==='calc'||c.mode==='choose') return ox;
+  if(c.mode==='member') return ox==='Y'?'예':'아니오';
+  return ox==='O'?'O 옳은 말':'X 틀린 말';
+}
+function askText(c,Q){
+  const pas=(Q.passage||[]).join(' / ').slice(0,1200);
+  return `공인중개사 1차 기출을 공부하는데 아래 해설을 봐도 이해가 안 돼.\n중학생도 알아듣게 쉬운 말과 생활 예시로 5줄 안에 설명해 줘. 법률 용어는 괄호로 풀어 줘. 마지막 줄에 외울 한 문장을 줘.\n\n[문제] ${Q.tsx?`다른 시험 논점(${Q.concept})`:`제${Q.round}회 ${Q.no}번 ${Q.question}`}\n${pas?'[조건·보기] '+pas+'\n':''}[카드] ${c.n} ${c.mode==='calc'?'':c.text}\n[정답] ${ansLabel(c)}\n[해설] ${plain(c.reason)}${c.law?'\n[근거] '+c.law:''}${Q.calc?'\n[풀이] '+Q.calc:''}`;
+}
+function claudeUrl(c,Q){ return 'https://claude.ai/new?q='+encodeURIComponent(askText(c,Q)); }
+function copyText(t){ try{ navigator.clipboard.writeText(t).then(()=>alert('복사했습니다. Claude 앱에 붙여 넣으세요.'),()=>fallbackCopy(t)); }catch(e){ fallbackCopy(t); } }
+function fallbackCopy(t){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); alert('복사했습니다'); }catch(e){ prompt('아래 글을 길게 눌러 복사하세요', t); } ta.remove(); }
+// 지우기 규칙: 3번 연속 맞히면 저절로 지운다. 한 번이라도 틀리면 0부터.
+// 10-28 PD: 시험(10-31)까지 사흘이라 서로 다른 날(하루 뒤·이틀 뒤)로 세면 새로 본 카드는 시험 전에 못 지운다. 날은 안 따지고 시간으로 띄운다.
+// STREAK_GAP[n] = n번째까지 센 뒤 몇 분 지나야 다음 정답을 세나. 첫 번째는 언제든, 두 번째·세 번째는 1시간 뒤부터.
+// 간격을 아예 없애면 복습이 앞에 서는 큐라 방금 맞힌 카드가 다음 '시작'·'5문제 더'에 곧장 다시 나와, 방금 본 답으로 몇 분 만에 지워진다.
+// OX 카드를 찍어서 3번 연속 맞힐 확률은 1/8이고, 지운 카드는 하루 3장씩 몰래 다시 나와 틀리면 되살아난다.
+const STREAK_GAP=[0,60,60], STREAK_N=STREAK_GAP.length;
+// 마지막으로 센 시각(kt). 예전 기록은 날짜(k)뿐이라 그날 0시로 친다
+function lastHit(st){ const n=st.k.length; return n?Math.max(st.kt||0,dayMs(st.k[n-1])):0; }
+// 다음 정답을 셀 수 있는 시각. 0/3이면 언제든
+function readyAt(st){ const n=st.k.length; return n?lastHit(st)+STREAK_GAP[Math.min(n,STREAK_N-1)]*60000:0; }
+function hm(ms){ const x=new Date(ms); return String(x.getHours()).padStart(2,'0')+':'+String(x.getMinutes()).padStart(2,'0'); }
+// 카드 판정. 돌려주는 값은 뒷면에 띄울 연속 기록 결과: {r:'del'|'up'|'wait'|'miss'|'audit'|'revive', n:지금 연속, prev:틀리기 전 연속, at:다음 정답을 세는 시각}
+function judge(c, ok){
+  const Q=D.questions[c.q], st=cardState(c.id), t=today(); const d=S.daily[t]||(S.daily[t]={new:0,rev:0,sec:0});
+  const L={d:t, subj:Q.subject, ok, id:c.id}; if(st.st===2) L.au=1; // au = 지운 카드 검사
+  S.log.push(L); if(S.log.length>3000) S.log=S.log.slice(-3000);
+  if(st.st===0){ d.new++; } else { d.rev++; }
+  st.seen++; st.last=t; st.a=c.mode+':'+c.ox;
+  const prev=st.k.length; let res;
+  if(!ok){
+    st.miss++; st.k=[]; st.due=t; // 틀리면 오늘 다시(큐가 끝나면 내일)
+    res={r:st.st===2?'revive':'miss', n:0, prev};
+    st.st=1;                        // 지운 카드 검사에서 틀리면 되살림
+  } else if(st.st===2){
+    res={r:'audit', n:prev};
+  } else {
+    st.st=1;
+    const now=Date.now(), at=readyAt(st);
+    if(!prev||now>=at){
+      st.k.push(t); st.kt=now;
+      if(st.k.length>=STREAK_N){ st.st=2; res={r:'del', n:st.k.length}; }
+      else { st.due=t; res={r:'up', n:st.k.length, at:readyAt(st)}; }
+    } else {
+      res={r:'wait', n:prev, at};
+    }
+    if(S.confused[c.id]&&S.confused[c.id]<t) delete S.confused[c.id]; // 이해 안 됐던 카드를 다른 날 맞히면 목록에서 뺀다
+  }
+  save();
+  return res;
+}
+function afterCard(c, r){
+  const st=cardState(c.id), t=today();
+  if(r==='cf'||r==='keep'){ st.k=[]; st.st=1; st.due=addDays(t,1); } // 이해 안 됨·답만 외움: 연속 기록을 지우고, 방금 지워졌어도 되살린다
+  if(r==='del'){ st.st=2; }
+  save();
+}
+function addDays(d,n){ const x=new Date(d+'T00:00:00'); x.setDate(x.getDate()+n); x.setMinutes(x.getMinutes()-x.getTimezoneOffset()); return x.toISOString().slice(0,10); }
+function dayDiff(a,b){ return Math.round((Date.parse(b+'T00:00:00Z')-Date.parse(a+'T00:00:00Z'))/86400000); }
+function dots(n){ n=Math.min(n,STREAK_N); return '●'.repeat(n)+'○'.repeat(STREAK_N-n); }
+function streakHtml(res){
+  if(!res) return '';
+  const N=STREAK_N, when=at=>{ const m=Math.max(1,Math.ceil((at-Date.now())/60000)); return `${m>=60?Math.floor(m/60)+'시간'+(m%60?` ${m%60}분`:''):m+'분'} 뒤(${hm(at)})`; };
+  const m={
+    del:['ok',`✂ 지웠습니다 · ${N}번 연속 맞힘`],
+    up:['up',`지우기까지 ${dots(res.n)} ${res.n}/${N} · ${when(res.at)}부터 또 맞히면 ${res.n+1===N?'저절로 지워집니다':`${res.n+1}/${N}`}`],
+    wait:['',`지우기까지 ${dots(res.n)} ${res.n}/${N} · 맞힌 지 1시간이 안 돼 이번 건 안 셉니다 · ${when(res.at)}부터 셉니다`],
+    miss:['bad',res.prev?`연속 ${res.prev}번이 끊겼습니다 · 0/${N}부터 다시`:`지우기까지 ${dots(0)} 0/${N} · 다시 나옵니다`],
+    audit:['ok','지운 카드 검사 통과 · 그대로 지워 둡니다'],
+    revive:['bad','지운 카드였는데 틀려서 되살렸습니다 · 0/'+N+'부터 다시'],
+    kept:['up',`↩ 지우지 않고 남겼습니다 · 0/${N}부터 다시, 내일 또 나옵니다`],
+  }[res.r];
+  return `<div class="streak ${m[0]}">${m[1]}</div>`;
+}
+// 지우기 시험(10-20 PD: 자주 봐서 답만 외운 카드가 원리도 모른 채 지워질까 봐).
+// 이번 정답으로 지워질 카드와 지운 카드 검사는, 논점 자리가 반대인 문장을 반반 확률로 낸다.
+// 그대로 둔 문장도 섞어야 '이번엔 뒤집혔겠지'로 맞히지 못한다. 실전처럼 회색 칠도 뺀다.
+// 반대 문장(10-24 PD: 기출된 적 없는 변형은 억지다): ① 다른 회차에 실제로 나온 쌍둥이 기출(cards.json tw, 118장,
+// 글자 유사도로 찾고 같은 명제·같은 발문 맥락인지 손으로 골랐다) ② 없으면 틀린 말 카드만 바로잡은 옳은 문장.
+// 옳은 말 카드를 지어낸 말로 틀리게 바꾼 문장은 내지 않는다. 바꿀 문장이 없는 카드는 예전처럼 낸다.
+function willDelete(st){ return st.st===1&&st.k.length===STREAK_N-1&&Date.now()>=readyAt(st); }
+function testForm(c,st){
+  const audit=st.st===2, f=audit||willDelete(st)?flipOf(c):null;
+  return {tag:audit?'지운 카드 검사':f?'지우기 시험':'', test:!!f, flip:f&&Math.random()<0.5?f:null};
+}
+function edPlain(t,ed){ let b='', last=0; for(const [p,f,to] of ed){ b+=t.slice(last,p)+(to||''); last=p+f.length; } return (b+t.slice(last)).replace(/ {2,}/g,' ').replace(/ +([,.])/g,'$1').trim(); }
+// 이 카드 원래 기출 문장을 칠한 글(틀린 말은 바꿔친 말에 줄, 옳은 말은 형광펜 자리)
+function origHtml(c){
+  const t=c.text||'';
+  if(c.ox==='X'&&c.ed&&c.ed.length) return edPair(t,c.ed).a;
+  if(c.key&&t.includes(c.key)){ const p=t.indexOf(c.key); return esc(t.slice(0,p))+'<span class="hl">'+esc(c.key)+'</span>'+esc(t.slice(p+c.key.length)); }
+  return esc(t);
+}
+// {ox:반대 문장의 정답, text:앞면 글, a:뒷면에 칠한 글, real:실제 기출이면 'N회 M번', fix·why: 그 기출의 바로잡기·근거}
+function flipOf(c){
+  if(c.mode!=='truth') return null;
+  const t=c.text||'', w=c.tw;
+  if(w){ const p=w.r.split('-'), ed=w.ed&&w.ed.length;
+    return {ox:w.ox, text:w.t, real:`${p[0]}회 ${p[1]}번`, a:ed?edPair(w.t,w.ed,true).a:esc(w.t),
+      fix:w.ox==='X'?(ed?edPair(w.t,w.ed).b:esc(w.fx||'')):'', why:w.w||''}; }
+  if(c.ox==='X'&&c.ed&&c.ed.length) return {ox:'O', text:edPlain(t,c.ed), a:edPair(t,c.ed).b};
+  return null;
+}
+function flipNote(c,F){
+  const f=F.flip, og=`<div class="og">이 카드의 ${isTsx(c)?'':'기출 '}문장(${c.ox==='O'?'옳은 말':'틀린 말'}): ${origHtml(c)}</div>`;
+  if(!f) return `<div class="flipnote"><b>${F.tag} · 이번엔 이 카드의 ${isTsx(c)?'':'기출 '}문장 그대로였습니다</b></div>`;
+  if(f.real) return `<div class="flipnote"><b>${F.tag} · 이번 문장은 ${f.real}에 실제로 나온 기출입니다(정답 ${f.ox})</b>${f.fix?`<div class="fix">바로잡기: ${f.fix}</div>`:''}${f.why?`<div class="wy2">${md(f.why)}</div>`:''}${og}</div>`;
+  return `<div class="flipnote"><b>${F.tag} · 이 카드의 틀린 ${isTsx(c)?'':'기출 '}문장을 바로잡은 옳은 문장이었습니다</b>${og}</div>`;
+}
+
+/* ===== 논점 ===== */
+function renderConcepts(){
+  const groups={};
+  for(const c of D.cards){ const Q=D.questions[c.q]; if(Q.tsx) continue; const k=Q.ckey; (groups[k]=groups[k]||{name:Q.concept,grade:Q.grade,subj:Q.subject,cards:[]}).cards.push(c); }
+  const arr=Object.entries(groups).sort((a,b)=>({A:0,B:1,C:2}[a[1].grade]-{A:0,B:1,C:2}[b[1].grade])||b[1].cards.length-a[1].cards.length);
+  let html=`<div class="card"><b>논점별 보기</b><p class="muted" style="margin:4px 0">A급 = 10년간 4번 이상 나온 논점. 눌러서 그 논점만 돌릴 수 있습니다.</p></div><div class="list">`;
+  for(const [k,g] of arr){
+    const del=g.cards.filter(c=>cardState(c.id).st===2).length;
+    html+=`<button data-k="${esc(k)}"><span class="tag ${g.grade}">${g.grade}</span>${esc(g.name)} <span class="muted">(${g.subj==='rea'?'학개론':'민법'})</span><div class="meta">카드 ${g.cards.length}장 · 지움 ${del}장</div></button>`;
+  }
+  main.innerHTML=html+'</div>';
+  main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{ const g=groups[b.dataset.k]; const q=g.cards.filter(c=>cardState(c.id).st!==2); if(!q.length){ alert('이 논점은 다 지웠습니다.'); return; } view='today'; document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v==='today')); startSession(q); });
+}
+
+/* ===== 실전 ===== */
+let exam=null;
+function renderExam(){
+  if(exam) return renderExamPaper();
+  let html=`<div class="card"><b>실전처럼 풀기</b><p class="muted" style="margin:4px 0">한 과목 40문항을 50분 안에. 끝나면 채점하고, 틀린 문항의 선지 카드는 지웠더라도 되살아납니다.</p></div><div class="list">`;
+  for(const r of D.summary.rounds){ for(const subj of ['rea','civ']){ const key=r+subj; const e=S.exam[key]; html+=`<button data-r="${r}" data-s="${subj}">${r}회 ${subj==='rea'?'부동산학개론':'민법'} <span class="muted">${e?`· 지난 점수 ${e.score}점 (${e.date})`:''}</span></button>`; } }
+  main.innerHTML=html+'</div>';
+  main.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{ exam={round:+b.dataset.r, subj:b.dataset.s, answers:{}, done:false, startAt:Date.now()}; renderExamPaper(); });
+}
+// 문제 원문 그림(계산·번호 고르기 74문항). 못 불러오면 한 번 다시 받고, 그래도 안 되면 같은 문제를 글자로 보여 준다
+// (10-26 PD: 폰에서 그림이 안 떠 보기 번호만 남아 문제를 못 읽음)
+function qimgHtml(src,alt,textHtml){ return `<img class="qimg" src="${src}" alt="${alt}" data-try="0" onerror="qimgFail(this)"><div class="qimgtx" hidden>${textHtml}</div>`; }
+function qimgFail(im){
+  if(im.dataset.try==='0'){ im.dataset.try='1'; im.src=im.getAttribute('src').split('?')[0]+'?r='+Date.now(); return; }
+  im.style.display='none'; const t=im.nextElementSibling; if(t&&t.classList.contains('qimgtx')) t.hidden=false;
+}
+function renderExamPaper(){
+  const qs=Object.values(D.questions).filter(q=>q.round===exam.round&&q.subject===exam.subj).sort((a,b)=>a.no-b.no);
+  let html=`<div class="exam"><div class="row"><b>${exam.round}회 ${exam.subj==='rea'?'부동산학개론':'민법'}</b><button class="btn ghost small" style="flex:0 0 auto;padding:6px 10px" id="exit">나가기</button></div>`;
+  for(const q of qs){
+    const qt=`<div class="q">${q.no}. ${esc(q.question)}</div>${q.passage.length?`<div class="passage">${esc(q.passage.join('\n'))}</div>`:''}`;
+    html+=q.img?qimgHtml(q.img,`${q.no}번 문제 원문`,qt):qt;
+    q.choices.forEach((t,i)=>{ const sel=exam.answers[q.no]===i+1; let cls='opt'+(sel?' sel':''); if(exam.done){ if(q.all_correct?sel:(i+1===q.answer)) cls+=' right'; else if(sel) cls+=' wrongsel'; } html+=`<button class="${cls}" data-q="${q.no}" data-i="${i+1}">${CIRC[i]} ${esc(t)}</button>`; });
+    if(exam.done&&q.core) html+=`<div class="note">${md(q.core)}</div>`;
+  }
+  const n=Object.keys(exam.answers).length;
+  html+=`<div class="sticky-bottom">${exam.done?`<div class="card center"><div class="verdict ${exam.score>=40?'ok':'bad'}">${exam.score}점</div><p class="muted">40점 미만이면 과락, 평균 60점이면 합격</p></div>`:`<div class="btns"><button class="btn n" id="grade">채점 (${n}/40 표시함)</button></div>`}</div></div>`;
+  main.innerHTML=html;
+  main.querySelector('#exit').onclick=()=>{ if(exam.done||confirm('채점하지 않고 나갈까요?')){ exam=null; renderExam(); } };
+  if(!exam.done){ main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ exam.answers[+b.dataset.q]=+b.dataset.i; renderExamPaper(); window.scrollTo(0, b.getBoundingClientRect().top+window.scrollY-120); }); main.querySelector('#grade').onclick=gradeExam; }
+}
+function gradeExam(){
+  const qs=Object.values(D.questions).filter(q=>q.round===exam.round&&q.subject===exam.subj);
+  let right=0;
+  for(const q of qs){ const ok=q.all_correct?!!exam.answers[q.no]:(exam.answers[q.no]===q.answer); if(ok) right++; else { for(const c of D.cards){ if(c.q===`${q.round}-${q.no}`){ const st=cardState(c.id); if(st.st===2){ st.st=1; } st.k=[]; st.due=today(); st.miss++; } } } }
+  exam.done=true; exam.score=Math.round(right*2.5);
+  S.exam[exam.round+exam.subj]={score:exam.score,date:today(),right}; save(); renderExamPaper(); header();
+}
+
+/* ===== 현황 ===== */
+function renderStats(){
+  const total=D.cards.length; const sts=D.cards.map(c=>cardState(c.id).st);
+  const del=sts.filter(s=>s===2).length, learn=sts.filter(s=>s===1).length, fresh=sts.filter(s=>s===0).length;
+  const acc=accuracy();
+  const days=Object.entries(allDaily()).sort().slice(-14);
+  const byGrade={}; for(const c of D.cards){ const g=D.questions[c.q].grade; byGrade[g]=byGrade[g]||{t:0,d:0}; byGrade[g].t++; if(cardState(c.id).st===2) byGrade[g].d++; }
+  main.innerHTML=`<div class="card"><b>카드 현황</b>
+    <div class="stat"><div><b>${fresh}</b><span>안 본 카드</span></div><div><b>${learn}</b><span>배우는 중</span></div><div><b>${del}</b><span>지움</span></div></div>
+    <p class="muted">전체 ${total}장 (${D.summary.rounds.join('·')}회 기출${D.summary.tsx?` + 타시험 ${D.summary.tsx}장`:''}, 근거 있는 카드 ${D.summary.with_reason}장)</p>
+    ${['A','B','C','T'].map(g=>byGrade[g]?`<div class="row"><span><span class="tag ${g}">${g==='T'?'타시험':g+'급'}</span></span><span class="muted">${byGrade[g].d} / ${byGrade[g].t} 지움</span></div>`:'').join('')}
+    ${del?`<div class="btns" style="margin-top:10px"><button class="btn n small" id="delRun">지운 카드 ${del}장 다시 점검</button></div>
+    <p class="muted" style="font-size:13px;margin:6px 0 0">답만 외워서 지워진 카드를 거릅니다. 카드 문장 그대로이거나, 논점 자리가 반대인 다른 회차 기출·바로잡은 문장으로 나오고, 틀리면 되살아납니다. 아무 때나 '그만'을 눌러도 됩니다.</p>`:''}
+  </div>
+  <div class="card"><b>판단 정확도</b><div class="stat"><div><b>${acc.rea.acc}%</b><span>학개론 (${acc.rea.n}장)</span></div><div><b>${acc.civ.acc}%</b><span>민법 (${acc.civ.n}장)</span></div><div><b>${acc.avg}</b><span>예상 평균 점수</span></div></div>
+  <p class="muted">예상 점수는 선지 정확도를 문항 단위로 보수적으로 바꾼 값입니다. 실전 탭 점수가 더 믿을 만합니다.</p></div>
+  <div class="card"><b>이해 안 된 카드</b> <span class="muted">${Object.keys(S.confused).length}장</span>
+    ${Object.keys(S.confused).length?`<div style="margin:6px 0;font-size:14px">${Object.keys(S.confused).map(id=>{ const c=D.cards.find(x=>x.id===id); if(!c) return ''; const Q=D.questions[c.q]; return `<div class="row" style="padding:3px 0;border-bottom:1px solid var(--line)"><span>${qLabel(Q)} ${c.n} ${esc((c.mode==='calc'?Q.question:c.text).slice(0,28))}…</span></div>`; }).join('')}</div>
+    <div class="btns"><button class="btn n small" id="cfRun">이 카드만 다시 보기</button><button class="btn ghost small" id="cfCopy">목록 복사</button></div>
+    <div class="btns" style="margin-top:8px"><button class="btn ghost small" id="cfClear">목록 비우기</button></div>
+    <p class="muted" style="font-size:13px;margin:6px 0 0">'목록 복사'를 Claude Code에 붙여 넣으면 그 카드에 쉬운 설명을 붙여 다시 올립니다.</p>`:'<p class="muted">아직 없음. 카드 뒷면의 🤔 버튼을 누르면 여기 모입니다.</p>'}
+  </div>
+  <div class="card"><b>최근 14일</b>${days.length?days.map(([d,v])=>`<div class="row" style="font-size:14px"><span>${d}</span><span class="muted">새 ${v.new} · 복습 ${v.rev} · ${Math.round(v.sec/60)}분</span></div>`).join(''):'<p class="muted">아직 기록 없음</p>'}</div>
+  <div class="card"><b>실전 점수</b>${Object.keys(S.exam).length?Object.entries(S.exam).map(([k,v])=>`<div class="row" style="font-size:14px"><span>${k.replace('rea',' 학개론').replace('civ',' 민법')}</span><span>${v.score}점 (${v.date})</span></div>`).join(''):'<p class="muted">아직 없음</p>'}</div>`;
+  const dr=main.querySelector('#delRun'); if(dr) dr.onclick=()=>{ const q=D.cards.filter(c=>cardState(c.id).st===2); shuffle(q); view='today'; document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v==='today')); startSession(q); };
+  const ids=Object.keys(S.confused);
+  const r1=main.querySelector('#cfRun'); if(r1) r1.onclick=()=>{ const q=D.cards.filter(c=>ids.includes(c.id)); view='today'; document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v==='today')); startSession(q); };
+  const r2=main.querySelector('#cfCopy'); if(r2) r2.onclick=()=>{ copyText('기출 지우개 2 이해 안 된 카드 '+ids.length+'장 (쉬운 설명을 붙여 줘)\n'+ids.map(id=>{ const c=D.cards.find(x=>x.id===id); if(!c) return id; const Q=D.questions[c.q]; return `${id} | ${qLabel(Q)} ${c.n} | ${(c.mode==='calc'?Q.question:c.text).slice(0,60)}`; }).join('\n')); };
+  const r3=main.querySelector('#cfClear'); if(r3) r3.onclick=()=>{ if(confirm('이해 안 된 카드 목록을 비울까요? 카드 자체는 그대로입니다.')){ S.confused={}; save(); renderStats(); } };
+}
+
+/* ===== 설정 ===== */
+// 지금 앱(기출 지우개)의 동기화 토큰만 읽는다. gist 번호는 가져오지 않는다(그걸 쓰면 지금 앱 기록 파일에 닿는다)
+function origToken(){ try{ return (JSON.parse(localStorage.getItem(ORIG_SYNC)||'{}').token)||''; }catch(e){ return ''; } }
+function renderSettings(){
+  const th=themePref();
+  main.innerHTML=`<div class="card"><b>화면</b><div class="btns" style="margin-top:8px">${[['auto','자동'],['light','☀ 밝게'],['dark','☾ 어둡게']].map(([k,l])=>`<button class="btn ${th===k?'n':'ghost'} small" data-th="${k}">${l}</button>`).join('')}</div>
+    <p class="muted" style="margin:6px 0 0;font-size:13px">자동은 폰의 밝게·어둡게 설정을 따릅니다. 이 기기에만 적용됩니다.</p></div>
+  ${SY.token?`<div class="card"><b>기기 간 동기화</b> <span class="tag" style="background:var(--o-bg);color:var(--o)">연결됨</span>
+    <p style="margin:6px 0 2px;font-size:15px" id="syncst">${syncStatus()}</p>
+    <p class="muted" style="margin:4px 0;font-size:14px">앱을 열 때, 공부하는 동안 2분마다, 다른 앱으로 넘어가거나 화면을 끌 때 저절로 맞춥니다. 위쪽 ☁ 표시가 동기화 상태입니다.</p>
+    <div class="btns" style="margin-top:8px"><button class="btn n small" id="syNow">지금 맞추기</button><button class="btn ghost small" id="syCopy">다른 기기용 토큰 복사</button></div>
+    <div class="btns" style="margin-top:8px"><button class="btn ghost small" id="syOff">이 기기 연결 끊기</button></div></div>`
+  :`<div class="card"><b>기기 간 동기화</b>
+    <p class="muted" style="margin:4px 0">폰·PC·태블릿 어디서 열어도 기록이 이어지게, 기록을 PD의 GitHub 계정에 비공개 gist(메모 파일)로 저장합니다. 기기마다 한 번만 연결하면 됩니다.</p>
+    <ol style="padding-left:18px;margin:6px 0;font-size:15px">
+      <li><a href="https://github.com/settings/tokens/new?scopes=gist&description=${encodeURIComponent('기출 지우개 2 동기화')}" target="_blank" rel="noopener">GitHub 토큰 만들기</a>를 엽니다(GitHub 로그인). <b>gist</b>에만 체크된 채로 Expiration을 <b>90 days</b>로 바꾸고 맨 아래 <b>Generate token</b>.</li>
+      <li>나온 <b>ghp_</b>로 시작하는 글을 복사해 아래 칸에 붙여 넣고 <b>연결</b>.</li>
+      <li>다른 기기에서도 같은 토큰을 붙여 넣습니다. GitHub는 토큰을 한 번만 보여 주니, 연결한 뒤 이 화면의 '다른 기기용 토큰 복사'로 꺼내 쓰세요.</li>
+    </ol>
+    ${origToken()?`<div class="btns" style="margin:4px 0 8px"><button class="btn ghost small" id="syOrig">지금 앱에 넣은 토큰 쓰기</button></div><p class="muted" style="margin:0 0 6px;font-size:13px">이 기기의 지금 앱에 연결한 토큰을 칸에 넣습니다. 같은 토큰이어도 이 앱 기록은 다른 파일(jiugae2-sync.json)에 따로 저장돼 지금 앱 기록과 섞이지 않습니다.</p>`:''}
+    <input class="tok" id="syTok" type="password" placeholder="ghp_로 시작하는 토큰" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div class="btns" style="margin-top:8px"><button class="btn n small" id="syGo">연결</button></div>
+    <p class="muted" style="margin:8px 0 0;font-size:13px">다른 기기에서 이미 올린 기록이 있으면 이 기기 기록과 카드마다 더 최근 것을 골라 합칩니다. 어느 쪽 기록도 버리지 않습니다.</p></div>`}
+  <div class="card"><b>지금 앱 기록 가져오기</b><p class="muted" style="margin:4px 0">이 기기에 있는 '기출 지우개'(지금 앱) 기록을 한 번 옮겨 옵니다. 기출 카드는 거기서 본 데까지 이어지고, 타시험 카드는 새 카드로 남습니다. 지금 앱 기록은 읽기만 하고 바꾸지 않습니다.${SY.token?' 이 앱 동기화 중이라 이 앱의 다른 기기 기록도 이것으로 바뀝니다.':''}</p>
+    <div class="btns" style="margin-top:8px"><button class="btn ghost small" id="impOrig">가져오기</button></div></div>
+  <div class="card"><b>진행 상태 옮기기 (손으로)</b><p class="muted" style="margin:4px 0">동기화를 안 쓸 때의 예비 방법입니다. 아래 글을 복사해 다른 기기에서 붙여 넣으면 그 기기 기록이 이것으로 바뀝니다${SY.token?'(동기화 중이면 다른 기기 기록도 모두 이것으로 바뀝니다)':''}.</p>
+    <textarea id="dump" readonly>${esc(JSON.stringify(S))}</textarea>
+    <div class="btns" style="margin-top:8px"><button class="btn ghost small" id="copy">복사</button><button class="btn ghost small" id="paste">붙여넣어 불러오기</button></div></div>
+  <div class="card"><b>하루 시간</b><div class="btns" style="margin-top:8px">${[15,30,45,60].map(m=>`<button class="btn ${S.minutes===m?'n':'ghost'} small" data-m="${m}">${m}분</button>`).join('')}</div></div>
+  <div class="card"><b>처음부터</b><p class="muted">모든 기록을 지웁니다. 되돌릴 수 없습니다.${SY.token?' 동기화 중이라 다른 기기 기록도 함께 지워집니다.':''}</p><div class="btns"><button class="btn x small" id="reset">기록 전부 지우기</button></div></div>
+  <div class="card muted" style="font-size:13px">문제: 한국산업인력공단 큐넷 공개 기출문제(공공누리 출처표시). 36회 문제 그림은 큐넷 PDF가 그림이라 전자문제집 CBT(comcbt.com) 학생용 판에서 잘랐다. 정답: 큐넷 기출을 두 출처로 대조. 선지 근거: 이 앱을 위해 직접 작성한 것으로, 틀린 곳이 있으면 PD가 '문제 전체 보기'로 원문을 확인하세요. 카드 ${D.summary.total}장.</div>`;
+  main.querySelector('#copy').onclick=()=>{ const ta=main.querySelector('#dump'); ta.select(); try{ navigator.clipboard.writeText(ta.value); alert('복사했습니다'); }catch(e){ document.execCommand('copy'); } };
+  main.querySelector('#impOrig').onclick=()=>{
+    let o=null; try{ o=JSON.parse(localStorage.getItem(ORIG_KEY)||'null'); }catch(e){}
+    if(!o||!o.cards){ alert('이 기기에는 지금 앱(기출 지우개) 기록이 없습니다. 지금 앱을 쓰던 폰·PC에서 누르세요.'); return; }
+    const n=Object.values(o.cards).filter(s=>s&&s.seen).length;
+    if(!confirm(`지금 앱에서 본 카드 ${n}장의 기록을 가져옵니다. 이 앱 기록은 그것으로 바뀝니다.`)) return;
+    S=o; delete S.dataver; S._epoch=Date.now(); normalize(); SNAP=units(S); migrate(); syncNow(); alert('가져왔습니다'); render();
+  };
+  main.querySelector('#paste').onclick=()=>{ const v=prompt('복사해 둔 글을 붙여 넣으세요'); if(!v) return; try{ const o=JSON.parse(v); if(!o.cards) throw 0; S=o; S._epoch=Date.now(); normalize(); SNAP=units(S); save(); syncNow(); alert('불러왔습니다'); render(); }catch(e){ alert('형식이 맞지 않습니다'); } };
+  main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ S.minutes=+b.dataset.m; save(); renderSettings(); });
+  main.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{ try{ if(b.dataset.th==='auto') localStorage.removeItem('jiugae2-theme'); else localStorage.setItem('jiugae2-theme',b.dataset.th); }catch(e){} applyTheme(); renderSettings(); });
+  main.querySelector('#reset').onclick=()=>{ if(confirm('정말 전부 지울까요?')&&confirm('한 번 더: 모든 카드 기록이 사라집니다.')){ S={cards:{},log:[],exam:{},minutes:60,daily:{},_epoch:Date.now(),_ts:{}}; normalize(); SNAP=units(S); save(); syncNow(); render(); } };
+  const q=s=>main.querySelector(s);
+  if(q('#syGo')) q('#syGo').onclick=async()=>{
+    const tok=q('#syTok').value.trim(); if(!tok){ alert('토큰을 붙여 넣으세요'); return; }
+    const b=q('#syGo'); b.disabled=true; b.textContent='확인하는 중…';
+    SY={token:tok};
+    lastTag=lastText='';
+    try{ await gh('/gists?per_page=1'); }
+    catch(e){ SY={}; b.disabled=false; b.textContent='연결'; alert(e.status===401?'토큰이 맞지 않습니다. 다시 복사해 붙여 넣으세요.':e.status?`GitHub가 거절했습니다(${e.status}). gist에 체크해서 토큰을 다시 만드세요.`:'GitHub에 닿지 못했습니다. 인터넷을 확인하세요.'); return; }
+    saveSY(); await syncNow(); if(view==='settings') renderSettings();
+    alert(SY.err||'연결했습니다. 다른 기기에서도 같은 토큰으로 연결하세요.');
+  };
+  if(q('#syOrig')) q('#syOrig').onclick=()=>{ q('#syTok').value=origToken(); };
+  if(q('#syNow')) q('#syNow').onclick=()=>syncNow();
+  if(q('#syCopy')) q('#syCopy').onclick=()=>{ const ok=()=>alert('토큰을 복사했습니다. 다른 기기의 설정 → 기기 간 동기화에 붙여 넣으세요. 남에게는 보내지 마세요.'); try{ navigator.clipboard.writeText(SY.token).then(ok,()=>prompt('길게 눌러 복사하세요',SY.token)); }catch(e){ prompt('길게 눌러 복사하세요',SY.token); } };
+  if(q('#syOff')) q('#syOff').onclick=()=>{ if(confirm('이 기기의 동기화를 끕니다. 이 기기 기록은 그대로 남고, GitHub에 올린 기록도 지우지 않습니다.')){ clearTimeout(dirtyT); dirtyT=null; SY={}; saveSY(); syncUI(); renderSettings(); } };
+}
+
+/* ===== 개념서 ===== */
+let B=null, bookLoading=null, Q2S={};
+const bk={sec:null, from:null, q:'', memo:false, open:{}, tocY:0, wrong:false};
+function bookState(){ return S.book||(S.book={read:{},last:'',hide:false,subj:'civ'}); }
+function loadBook(){
+  if(B) return Promise.resolve(B);
+  if(!bookLoading) bookLoading=fetch('book.json?v='+Date.now()).then(r=>r.json()).then(d=>{ B=d; Q2S={}; for(const s of Object.values(B.sections)) for(const q of s.refs) (Q2S[q]=Q2S[q]||[]).push(s.id); return B; }).catch(e=>{ bookLoading=null; throw e; });
+  return bookLoading;
+}
+function rlabel(ref){ const p=ref.split('-'); return `${p[0]}회 ${p[1]}번`; }
+function subjSecs(subj){ const out=[]; for(const cid of B.subjects.find(x=>x.id===subj).chapters) out.push(...B.chapters[cid].sections); return out; }
+function freqLabel(s){ return `10년 ${s.f10}회${s.f5?` · 최근5년 ${s.f5}`:''}`; }
+function bookLinks(qid){
+  if(!B||!Q2S[qid]) return '';
+  return Q2S[qid].slice(0,2).map(id=>`<button class="bookbtn" data-book="${id}">📖 개념서에서 읽기 · ${esc(B.sections[id].title)}</button>`).join('');
+}
+function renderBook(){
+  if(!B){
+    main.innerHTML='<div class="card muted">개념서 불러오는 중…</div>';
+    loadBook().then(()=>{ if(view==='book') renderBook(); }).catch(()=>{ if(view==='book') main.innerHTML='<div class="card">개념서(book.json)를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; });
+    return;
+  }
+  if(!AU) loadAudio().then(a=>{ if(view==='book'&&!bk.sec&&a.memo) keepY(renderBook); });  // 외우기 모음 듣기 버튼
+  if(bk.sec&&B.sections[bk.sec]) return renderSection(bk.sec);
+  if(bk.memo) return renderMemos();
+  renderToc();
+}
+function renderToc(){
+  const st=bookState(); const subj=st.subj||'civ'; const sb=B.subjects.find(x=>x.id===subj);
+  const last=st.last&&B.sections[st.last];
+  const bp=seenPass(st.read,subjSecs(subj)), rd=id=>seenRec(st.read[id]).n>=bp.pass; // 과목마다 회독
+  let html=`<div class="seg">${B.subjects.map(x=>`<button data-subj="${x.id}" class="${x.id===subj?'on':''}">${x.id==='civ'?'민법':'학개론'}</button>`).join('')}</div>
+  <input class="search" id="bks" type="search" placeholder="개념서 검색 (예: 유치권, 저당상수)" value="${esc(bk.q)}">
+  ${last&&!bk.q?`<button class="cont" data-sec="${last.id}"><span>이어 읽기</span>${esc(last.title)}</button>`:''}
+  <div class="row" style="margin:0 2px 10px"><span class="muted">${sb.name} · ${bp.pass===1?'읽은 섹션':bp.pass+'회독'} ${bp.done}/${bp.total}</span><button class="linkbtn" id="memo">외우기 모음${AU&&AU.memo?' · 🔊 듣기':''} ›</button></div>`;
+  if(bk.q.trim()) html+=searchResults(bk.q.trim());
+  else {
+    for(const cid of sb.chapters){
+      const ch=B.chapters[cid]; const r=ch.sections.filter(rd).length, n=ch.sections.length; const open=bk.open[cid];
+      html+=`<div class="card chap"><button class="hd" data-ch="${cid}"><div class="row"><b>${esc(ch.title)}</b><span class="muted" style="font-size:13px">${open?'접기':'펼치기'}</span></div>
+        <div class="meta">10년 ${ch.nq}문항 출제(한 해 약 ${ch.per_round}문항) · 섹션 ${n}개 · 읽음 ${r}/${n}</div><div class="pbar"><i style="width:${n?Math.round(100*r/n):0}%"></i></div></button>
+        ${open?`<div class="secs">${ch.intro?`<div class="intro">${md(ch.intro)}</div>`:''}${(ch.tables||[]).map(tableHtml).join('')}${ch.sections.map(id=>{ const s=B.sections[id]; return `<button class="srow ${rd(id)?'read':''}" data-sec="${id}"><span class="ck">${rd(id)?'✓':''}</span><span class="tag ${s.grade}">${s.grade}</span><span class="t">${esc(s.title)}</span><span class="f">${s.f10}회</span></button>`; }).join('')}</div>`:''}
+      </div>`;
+    }
+    html+=`<p class="muted" style="font-size:12px;margin:4px 2px 0">A = 10년 중 6개 회차 이상 출제(꼭 읽기), B = 4~5회, C = 3회 이하. 오른쪽 숫자는 10년 중 출제 회차 수.<br>섹션을 열기만 하면 ✓가 붙는다. ${SUBJ[subj]} 섹션을 다 읽으면 ${bp.pass+1}회독으로 넘어가고 ✓는 다시 비워진다.</p>`;
+  }
+  main.innerHTML=html;
+  main.querySelectorAll('[data-subj]').forEach(b=>b.onclick=()=>{ st.subj=b.dataset.subj; save(); renderToc(); });
+  main.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{ bk.open[b.dataset.ch]=!bk.open[b.dataset.ch]; const y=window.scrollY; renderToc(); window.scrollTo(0,y); });
+  main.querySelectorAll('[data-sec]').forEach(b=>b.onclick=()=>{ bk.tocY=window.scrollY; openSection(b.dataset.sec); });
+  main.querySelector('#memo').onclick=()=>{ bk.tocY=window.scrollY; bk.memo=true; render(); };
+  const inp=main.querySelector('#bks');
+  inp.oninput=()=>{ bk.q=inp.value; clearTimeout(inp._t); inp._t=setTimeout(()=>{ renderToc(); const i2=main.querySelector('#bks'); i2.focus(); i2.setSelectionRange(i2.value.length,i2.value.length); },250); };
+  if(bk.tocY){ const y=bk.tocY; bk.tocY=0; requestAnimationFrame(()=>window.scrollTo(0,y)); }
+}
+function openSection(id){ bk.sec=id; bk.memo=false; render(); }
+function searchResults(q){
+  const ql=q.toLowerCase(); const hits=[];
+  const mark=t=>{ const i=t.toLowerCase().indexOf(ql); if(i<0) return null; const a=Math.max(0,i-24); return (a?'…':'')+esc(t.slice(a,i))+'<mark>'+esc(t.slice(i,i+q.length))+'</mark>'+esc(t.slice(i+q.length,i+q.length+40))+'…'; };
+  for(const s of Object.values(B.sections)){
+    const pool=[s.title,s.law||'',s.one||'',...(s.concept||[]),...(s.traps||[]),s.memo||'',...(s.tables||[]).flatMap(t=>[t.title||'',...(t.head||[]),...t.rows.flat()]),...(s.calc||[]).flatMap(c=>[c.name,c.formula]),...s.ox.flatMap(o=>[o.text,o.fix||'',o.why||''])].map(plain);
+    let first=null, n=0; for(const t of pool){ if(t.toLowerCase().includes(ql)){ n++; if(!first) first=mark(t); } }
+    if(n) hits.push({s,n,first,score:(s.title.toLowerCase().includes(ql)?1000:0)+n});
+  }
+  hits.sort((a,b)=>b.score-a.score);
+  if(!hits.length) return `<div class="card muted">'${esc(q)}'(이)가 들어간 섹션이 없습니다.</div>`;
+  return `<div class="card" style="padding:6px 14px">${hits.slice(0,40).map(h=>`<button class="srow" data-sec="${h.s.id}"><span class="tag ${h.s.grade}">${h.s.grade}</span><span class="t">${esc(h.s.title)} <span class="muted" style="font-size:12px">${h.s.ch[0]==='C'?'민법':'학개론'} · ${h.n}곳</span><div class="hit">${h.first||''}</div></span></button>`).join('')}</div>`;
+}
+function tableHtml(t){
+  // t.s: 행마다 풀어 쓴 문장. 첫 칸(개념 이름)은 두 줄로 세로 병합해 개념별 묶음을 유지하고,
+  // 문장은 나머지 칸만 병합한 줄에 쓴다(10-25 PD: '취소권' 밑까지 병합하지 말고 기간·출발점 칸만)
+  const has=i=>t.s&&t.s[i]&&t.rows[i].length>1;
+  const row=(r,i)=>`<tr>${r.map((c,k)=>`<td${k===0&&has(i)?' rowspan="2"':''}>${md(c)}</td>`).join('')}</tr>`
+    +(has(i)?`<tr class="trs" data-i="${i}"><td colspan="${t.rows[i].length-1}">${esc(t.s[i])}</td></tr>`:'');
+  return `<div class="tw"><table>${t.title?`<caption>${md(t.title)}</caption>`:''}${t.head&&t.head.length?`<thead><tr>${t.head.map(h=>`<th>${md(h)}</th>`).join('')}</tr></thead>`:''}<tbody>${t.rows.map(row).join('')}</tbody></table></div>`;
+}
+// 틀린 지문과 바로잡은 문장을 낱말 단위로 비교해 바뀐 곳만 표시
+function wordDiff(a,b){
+  const A=a.split(/(\s+)/).filter(x=>x!==''), Bw=b.split(/(\s+)/).filter(x=>x!=='');
+  const n=A.length, m=Bw.length; if(n*m>40000) return null;
+  const L=Array.from({length:n+1},()=>new Uint16Array(m+1));
+  for(let i=n-1;i>=0;i--) for(let j=m-1;j>=0;j--) L[i][j]=A[i]===Bw[j]?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+  let i=0,j=0, ra='', rb='';
+  while(i<n||j<m){
+    if(i<n&&j<m&&A[i]===Bw[j]){ ra+=esc(A[i]); rb+=esc(Bw[j]); i++; j++; }
+    else if(j<m&&(i>=n||L[i][j+1]>=L[i+1][j])){ rb+=/^\s+$/.test(Bw[j])?Bw[j]:'<ins>'+esc(Bw[j])+'</ins>'; j++; }
+    else { ra+=/^\s+$/.test(A[i])?A[i]:'<del>'+esc(A[i])+'</del>'; i++; }
+  }
+  return {a:ra,b:rb};
+}
+function oxStatus(o){
+  if(!o.c) return '';
+  let del=0, miss=0, seen=0;
+  for(const id of o.c){ const st=S.cards[id]; if(!st) continue; if(st.st===2) del++; miss+=st.miss||0; seen+=st.seen||0; }
+  if(miss) return `<span class="dot miss">틀린 적 ${miss}</span>`;
+  if(del&&del===o.c.length) return '<span class="dot del">지움</span>';
+  if(seen) return '<span class="dot ok">맞힘</span>';
+  return '';
+}
+// 甲·乙·丙 지문은 발문의 사실관계(사례)를 위에 붙인다. 바로 위 지문과 같은 사례면 한 번만
+function caseHtml(o,prev){ return o.case&&!(prev&&prev.case===o.case)?`<div class="cs"><b>사례</b>${esc(o.case)}</div>`:''; }
+// 임대차 지문은 같은 문장도 주택·상가·민법 중 어느 법이냐에 따라 정오가 갈린다(기간 2년 미만이면 주택은 2년, 상가는 1년).
+// 패턴·개념서·또 나온 문장은 발문 없이 지문만 보여 주므로 발문이 묻는 법을 지문 옆에 붙인다(10-22 PD).
+// 발문에 법 이름이 없어도 X주택·X상가건물 사례면 그 법으로, 일반 임대차·토지임대차·전대는 민법으로 갈랐다.
+const LEASE_LAW=(()=>{ const o={}, put=(k,qs)=>qs.split(' ').forEach(q=>o[q]=k);
+  put('h','27-65 28-76 28-80 29-78 30-76 31-75 31-76 32-75 32-76 33-75 34-78 35-74 35-75 36-75');
+  put('s','27-66 28-75 29-79 30-77 31-79 32-77 33-76 34-79 35-79 35-80 36-80');
+  put('m','27-77 27-78 28-66 29-68 29-72 29-73 30-73 30-74 30-75 31-74 32-73 32-74 33-73 33-74 34-72 34-73 35-73 36-72 36-73');
+  return o; })();
+const LAW_NAME={h:'주택임대차보호법', s:'상가건물 임대차보호법', m:'민법 임대차'};
+function lawHtml(ref){ const k=LEASE_LAW[(ref||'').split('-').slice(0,2).join('-')]; return k?`<span class="lawc l${k}">${LAW_NAME[k]}</span>`:''; }
+function oxHtml(o,i,prev){
+  const d=o.ox==='X'&&o.fix?fixDiff(o):null;
+  const also=(o.also||[]).map(rlabel);
+  return `<li class="oxi" data-i="${i}"><div class="h"><span class="oxb ${o.ox}">${o.ox}</span><div class="tx">${caseHtml(o,prev)}<span class="rd">${rlabel(o.ref)}</span>${lawHtml(o.ref)}<span class="t0">${esc(o.text)}</span>${d?`<span class="t1 hide">${d.a}</span>`:''}${o.re?'<span class="re">(보기를 문장으로)</span>':''}${oxStatus(o)}</div></div>
+    <div class="more">${o.ox==='X'&&o.fix?`<div class="fx">→ ${d?d.b:esc(o.fix)}</div>`:''}${o.fk?`<div class="fk"><b>지어낸 말</b>${md(o.fk)}</div>`:''}${o.why?`<div class="wy">${md(o.why)}</div>`:''}${o.now?`<div class="nw">법 개정: ${esc(o.now)}</div>`:''}${also.length?`<div class="al">같은 논점 기출: ${also.join(', ')}</div>`:''}</div></li>`;
+}
+function renderSection(id){
+  const st=bookState(); const s=B.sections[id], ch=B.chapters[s.ch];
+  const fresh=markSeen(st.read,id); if(fresh||st.last!==id){ st.last=id; save(); }
+  const sn=seenRec(st.read[id]).n;
+  const list=subjSecs(s.ch[0]==='C'?'civ':'rea'); const k=list.indexOf(id);
+  const prev=k>0?B.sections[list[k-1]]:null, next=k<list.length-1?B.sections[list[k+1]]:null;
+  const qcards=D?D.cards.filter(c=>s.refs.includes(c.q)):[];
+  const live=qcards.filter(c=>cardState(c.id).st!==2);
+  let oxs=s.ox.map((o,i)=>[o,i]);
+  if(bk.wrong) oxs=oxs.filter(([o])=>o.c&&o.c.some(cid=>(S.cards[cid]||{}).miss>0));
+  const nX=s.ox.filter(o=>o.ox==='X').length;
+  main.innerHTML=`<div class="reader">
+    ${bk.from==='card'?`<div class="backbar"><button class="btn n small" id="backCard">← 카드로 돌아가기</button></div>`:''}
+    ${bk.from==='pat'?`<div class="backbar"><button class="btn n small" id="backPat">← 패턴으로 돌아가기</button></div>`:''}
+    <div class="row"><button class="linkbtn" id="toToc">‹ 목차</button><span class="muted" style="font-size:12px">${k+1} / ${list.length}</span></div>
+    <div class="crumb">${s.ch[0]==='C'?'민법':'학개론'} › ${esc(ch.title)}</div>
+    <h2 class="st">${esc(s.title)}</h2>
+    ${s.law?`<div class="lawl">${esc(s.law)}</div>`:''}
+    <div><span class="tag ${s.grade}">${s.grade}급</span><span class="tag">${freqLabel(s)}</span><span class="tag" style="background:var(--o-bg);color:var(--o)">✓ ${sn===1?'처음 읽음':sn+'번째 읽음'}</span></div>
+    ${s.one?`<div class="one"><small>그래서 이것만</small>${md(s.one)}</div>`:''}
+    ${s.warn?`<div class="warnbox">법 개정 주의: ${md(s.warn)}</div>`:''}
+    <ul class="concept">${(s.concept||[]).map(t=>/^\s*-\s+/.test(t)?`<li class="sub">${md(t.replace(/^\s*-\s+/,''))}</li>`:`<li>${md(t)}</li>`).join('')}</ul>
+    ${(s.tables||[]).map(tableHtml).join('')}
+    ${(s.calc||[]).map(c=>`<div class="calcb"><div class="nm">${esc(c.name)}</div><div class="fm">${esc(c.formula)}</div>${c.steps&&c.steps.length?`<ol>${c.steps.map(x=>`<li>${md(x.replace(/^\s*\d+[).]\s*/,''))}</li>`).join('')}</ol>`:''}${c.trap?`<div class="ct">함정: ${md(c.trap.replace(/^함정\s*(답)?\s*[:：]\s*/,''))}</div>`:''}${c.ex?`<div class="ex">대표 기출: ${rlabel(c.ex)}</div>`:''}</div>`).join('')}
+    ${s.ox.length?`<div class="sech"><h3>기출 지문 ${s.ox.length}개 <span class="muted" style="font-size:12px;font-weight:600">(틀린 지문 ${nX})</span></h3>
+      <div style="display:flex;gap:6px"><button class="chipbtn ${bk.wrong?'on':''}" id="wrongOnly">틀린 적만</button><button class="chipbtn ${st.hide?'on':''}" id="hideAns">${st.hide?'답 가림':'답 가리기'}</button></div></div>
+      <p class="muted" style="font-size:12px;margin:0 0 2px">${st.hide?'지문을 누르면 정답과 근거가 열립니다.':'빨간 줄은 출제자가 바꾼 말, 주황 칸은 그럴듯하게 지어낸 말, 회색 줄은 연결만 다듬은 곳, 초록은 바로잡은 말.'}</p>
+      <ul class="oxl ${st.hide?'hideans':''}" id="oxl">${oxs.length?oxs.map(([o,i],k)=>oxHtml(o,i,k?oxs[k-1][0]:null)).join(''):'<li class="muted" style="padding:10px 0">카드에서 틀린 적 있는 지문이 없습니다.</li>'}</ul>`:''}
+    ${s.traps&&s.traps.length?`<div class="trapbox"><b>출제자가 바꾸는 자리</b><ul style="margin:0;padding-left:18px">${s.traps.map(t=>`<li>${md(t)}</li>`).join('')}</ul></div>`:''}
+    ${s.memo?`<div class="memo"><small>외우기</small>${md(s.memo)}</div>`:''}
+    ${secPatHtml(id)}
+    <details><summary>이 섹션의 기출 문항 ${s.refs.length}개</summary><div style="margin-top:6px">${s.refs.map(q=>`<div class="qref"><b>${rlabel(q)}</b> ${esc(B.qs[q]||'')}</div>`).join('')}</div></details>
+    <div class="btns" style="margin-top:14px">${live.length?`<button class="btn n small" id="runCards">이 논점 카드 ${live.length}장 돌리기</button>`:`<button class="btn ghost small" disabled>${qcards.length?'이 논점 카드는 다 지웠습니다':'카드는 32~36회만 있습니다'}</button>`}</div>
+    <div class="pn">${prev?`<button data-go="${prev.id}"><span>‹ 이전</span>${esc(prev.title)}</button>`:'<span style="flex:1"></span>'}${next?`<button class="nx" data-go="${next.id}"><span>다음 ›</span>${esc(next.title)}</button>`:'<span style="flex:1"></span>'}</div>
+  </div>`;
+  const bc=main.querySelector('#backCard'); if(bc) bc.onclick=()=>{ bk.from=null; bk.sec=null; goView('today'); };
+  const bp=main.querySelector('#backPat'); if(bp) bp.onclick=()=>{ bk.from=null; bk.sec=null; goView('pat'); };
+  main.querySelectorAll('[data-pat]').forEach(b=>b.onclick=()=>{ bk.from=null; openPat(b.dataset.pat,null); });
+  main.querySelector('#toToc').onclick=()=>{ bk.sec=null; bk.from=null; bk.open[s.ch]=true; render(); };  const hb=main.querySelector('#hideAns'); if(hb) hb.onclick=()=>{ st.hide=!st.hide; save(); const y=window.scrollY; renderSection(id); window.scrollTo(0,y); };
+  const wb=main.querySelector('#wrongOnly'); if(wb) wb.onclick=()=>{ bk.wrong=!bk.wrong; const y=window.scrollY; renderSection(id); window.scrollTo(0,y); };
+  const ol=main.querySelector('#oxl');
+  if(ol){
+    ol.querySelectorAll('.oxi').forEach(li=>{ if(!st.hide) showDiff(li,true); li.onclick=()=>{ if(!st.hide) return; li.classList.toggle('open'); showDiff(li,li.classList.contains('open')); }; });
+  }
+  const rc=main.querySelector('#runCards'); if(rc) rc.onclick=()=>{ bk.from=null; view='today'; document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v==='today')); startSession(live); };
+  main.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ bk.from=null; openSection(b.dataset.go); });
+}
+function showDiff(li,on){ const a=li.querySelector('.t0'), b=li.querySelector('.t1'); if(!b) return; a.classList.toggle('hide',on); b.classList.toggle('hide',!on); }
+function renderMemos(){
+  const st=bookState(); const subj=st.subj||'civ'; const sb=B.subjects.find(x=>x.id===subj);
+  let html=`<div class="reader"><div class="row"><button class="linkbtn" id="toToc">‹ 목차</button></div>
+    <h2 class="st">외우기 모음 · ${subj==='civ'?'민법':'학개론'}</h2>
+    <p class="muted" style="margin:0 0 8px">시험 전날과 당일 아침에 읽는 한 줄씩. 제목을 누르면 그 섹션으로 갑니다.</p>
+    <div class="seg">${B.subjects.map(x=>`<button data-subj="${x.id}" class="${x.id===subj?'on':''}">${x.id==='civ'?'민법':'학개론'}</button>`).join('')}</div>`;
+  // 듣기(10-27): 장마다 파일 하나, A·B급 섹션의 제목 → 외우기 한 줄. 장 ▶ = 그 장부터, 섹션 ▶ = 그 섹션부터, 가만히 두면 다음 장으로
+  const chs=sb.chapters.filter(cid=>hasAudio(cid,'memo')), parts=cid=>(hasAudio(cid,'memo')&&AU.memo[cid].parts)||{};
+  if(chs.length) html+=`<div class="btns" style="margin-bottom:12px"><button class="btn ghost small" id="memoAu">🔊 내 목소리로 ${subj==='civ'?'민법':'학개론'} 외우기 한 줄 듣기 (A·B급)</button></div>`;
+  const play=(cid,id,label)=>`<button class="psec" data-mch="${cid}"${id?` data-msec="${id}"`:''} aria-label="${label}">▶</button>`;
+  for(const cid of sb.chapters){
+    const ch=B.chapters[cid], pa=parts(cid);
+    html+=`<div class="card"><div class="row" data-mch="${cid}"><b>${esc(ch.title)}</b>${hasAudio(cid,'memo')?play(cid,null,'이 장부터 듣기'):''}</div>${ch.sections.map(id=>{ const s=B.sections[id]; return s.memo?`<div style="padding:8px 0;border-bottom:1px solid var(--line)"${pa[id]!=null?` data-psec="${id}"`:''}><div class="row" style="align-items:flex-start"><button class="linkbtn" data-sec="${id}" style="font-size:13px;text-align:left"><span class="tag ${s.grade}" style="font-size:11px">${s.grade}</span>${esc(s.title)}</button>${pa[id]!=null?play(cid,id,'이 섹션부터 듣기'):''}</div><div style="font-size:15px;line-height:1.6;font-weight:700">${md(s.memo)}</div></div>`:''; }).join('')}</div>`;
+  }
+  main.innerHTML=html+'</div>';
+  main.querySelector('#toToc').onclick=()=>{ bk.memo=false; render(); };
+  main.querySelectorAll('[data-subj]').forEach(b=>b.onclick=()=>{ st.subj=b.dataset.subj; save(); renderMemos(); window.scrollTo(0,0); });
+  main.querySelectorAll('[data-sec]').forEach(b=>b.onclick=()=>openSection(b.dataset.sec));
+  const ma=main.querySelector('#memoAu'); if(ma) ma.onclick=()=>apStart(chs,null,null,'memo');
+  main.querySelectorAll('button[data-mch]').forEach(b=>b.onclick=()=>{ const cid=b.dataset.mch, id=b.dataset.msec; apStart(chs,cid,id?parts(cid)[id]:0,'memo'); });
+  apMark();
+}
+
+/* ===== 패턴 =====
+   patterns.json(앱/패턴_만들기.py): 선지 읽는 법(데이터), 과목별 '이것만' 패턴, 두 회차 이상 또 나온 문장.
+   기록: S.pat(본 기록), S.rep(또 나온 문장 O/X 결과). 동기화 단위는 t/, e/ */
+let P=null, patLoading=null, C2P={};
+const SUBJ={civ:'민법',rea:'학개론'};
+const pt={id:null, tab:'civ', from:null, hide:true, memo:false, rf:{subj:'all',min:3}, drill:null, tabY:0};
+function loadPat(){
+  if(P) return Promise.resolve(P);
+  if(!patLoading) patLoading=fetch('patterns.json?v='+Date.now()).then(r=>r.json()).then(d=>{ P=d; C2P={}; for(const p of P.patterns) for(const id of p.cards) (C2P[id]=C2P[id]||[]).push(p.id); return P; }).catch(e=>{ patLoading=null; throw e; });
+  return patLoading;
+}
+function patById(id){ return P&&P.patterns.find(p=>p.id===id); }
+function patsOf(subj){ return P.patterns.filter(p=>p.subj===subj); }
+function patLive(p){ if(!D) return []; const ids=new Set(p.cards); return D.cards.filter(c=>ids.has(c.id)&&cardState(c.id).st!==2); }
+function patSeen(id){ return seenRec(S.pat[id]); }
+function markPatSeen(id){ if(markSeen(S.pat,id)) save(); }
+function patPass(){ return seenPass(S.pat,P.patterns.map(p=>p.id)); }
+function patLabel(pp){ return `${pp.pass===1?'봤다':pp.pass+'회독'} ${pp.done} / ${pp.total}`; }
+function patNext(pass){ const left=P.patterns.filter(p=>patSeen(p.id).n<pass); return left.find(p=>p.level==='S')||left[0]; }
+function patName(p){ return p.name||p.title; }
+function patLinks(cid){
+  if(!P||!C2P[cid]) return '';
+  return C2P[cid].slice(0,2).map(id=>`<button class="patbtn" data-pat="${id}">★ 패턴 · ${esc(patName(patById(id)))}</button>`).join('');
+}
+// 패턴 요점 글: 괄호(예시·보충)는 작은 회색, 따로 선 O/X는 색 배지, 줄은 첫 '→'(괄호 밖)에서 조건과 판정으로 가른다
+function oxBadge(h){ return h.replace(/(^|[\s(,·/])([OX])(?=$|[\s),.·/(])/g,'$1<b class="okx $2">$2</b>'); }
+function ptInline(s){
+  let out='', buf='', dep=0;
+  const flush=paren=>{ if(!buf) return; const h=oxBadge(md(buf)).replace(/→/g,'<i class="ar">→</i>'); out+=paren?`<span class="px">${h}</span>`:h; buf=''; };
+  for(const ch of s){
+    if(ch==='('){ if(!dep) flush(false); dep++; buf+=ch; }
+    else if(ch===')'&&dep){ buf+=ch; if(!--dep) flush(true); }
+    else buf+=ch;
+  }
+  flush(dep>0);
+  return out;
+}
+function ptLine(s){
+  let dep=0, at=-1, n=0;
+  for(let i=0;i<s.length;i++){ const c=s[i]; if(c==='(') dep++; else if(c===')') dep=Math.max(0,dep-1); else if(c==='→'&&!dep){ if(at<0) at=i; n++; } }
+  if(at<0||n>1) return ptInline(s);  // '→'가 둘 이상이면 순서(동심원 → 선형 → 다핵심)라 가르지 않는다
+  return `<span class="pc">${ptInline(s.slice(0,at).trim())}</span><i class="ar">→</i><span class="pr">${ptInline(s.slice(at+1).trim())}</span>`;
+}
+function openPat(id,from){ pt.id=id; pt.from=from||null; pt.memo=false; pt.drill=null; goView('pat'); }
+function runCards(q){ view='today'; document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v==='today')); startSession(q); }
+function keepY(f){ const y=window.scrollY; f(); window.scrollTo(0,y); }
+function renderPat(){
+  if(!P){
+    main.innerHTML='<div class="card muted">패턴 불러오는 중…</div>';
+    loadPat().then(()=>{ if(view==='pat') renderPat(); }).catch(()=>{ if(view==='pat') main.innerHTML='<div class="card">패턴(patterns.json)을 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; });
+    return;
+  }
+  if(!AU) loadAudio().then(a=>{ if(view==='pat'&&!pt.drill&&!pt.memo&&Object.keys(a.patterns).length) keepY(renderPat); });  // 듣기 버튼은 오디오 목록이 오면 붙인다
+  if(pt.drill) return renderDrill();
+  if(pt.id&&patById(pt.id)) return renderPatDetail(pt.id);
+  if(pt.memo) return renderPatMemos();
+  renderPatList();
+}
+// 선지 읽는 법: 출제자가 틀린 선지를 만든 방식, 말버릇별 O/X 쏠림, 정답 번호 분포
+function readingHtml(){
+  const R=P.reading, sw=R.swaps, c1=sw.civ.cats[0], r1=sw.rea.cats[0], r2=sw.rea.cats[1];
+  const bars=v=>v.cats.map(c=>`<div class="hb" title="${esc(c.name)} ${c.n}개 (${c.pct}%)"><span class="nm">${esc(c.name)}</span><span class="tr"><i style="width:${c.pct}%"></i></span><span class="pc">${c.pct}%</span></div>${c.ex.length?`<div class="hbex">${c.ex.map(esc).join(' · ')}</div>`:''}`).join('');
+  const ap=R.answer_pos, tot=[0,1,2,3,4].map(i=>ap.civ[i]+ap.rea[i]), N=tot.reduce((a,b)=>a+b,0), mx=Math.max(...tot);
+  const words=R.words.map(w=>{ const lean=w.pct_o>=w.base_o, p=lean?w.pct_o:100-w.pct_o, b=lean?w.base_o:100-w.base_o;
+    return `<div class="lesson"><div class="k">${SUBJ[w.subj]} · 선지 ${w.n}개</div><div class="say">${esc(w.label)} → <span style="color:var(--${lean?'o':'x'})">${lean?'O':'X'} ${p}%</span> <span class="muted" style="font-weight:600">(보통 ${b}%)</span></div><div class="so">${esc(w.note)}</div></div>`; }).join('');
+  return `<div class="card"><b>선지 읽는 법</b> <span class="muted">기출 선지 ${R.n_stm}개, 출제자가 바꾼 말 ${sw.civ.n+sw.rea.n}개를 센 결과</span>
+    <div class="lesson"><div class="k">민법 틀린 선지 ${sw.civ.n}개</div><div class="say">${c1.pct}%는 ${esc(c1.name)}다 (${esc(c1.hint)}).</div><div class="so">그래서 민법은 '이 상황이면 <b>된다 / 안 된다</b>' 결론을 외운다. 선지는 끝의 결론부터 본다.</div>
+      <details><summary>바꾸는 방식 전부 보기</summary>${bars(sw.civ)}</details></div>
+    <div class="lesson"><div class="k">학개론 틀린 선지 ${sw.rea.n}개</div><div class="say">${r1.pct}%는 ${esc(r1.name)}, ${r2.pct}%는 ${esc(r2.name)}다.</div><div class="so">그래서 학개론은 <b>짝꿍 용어 표</b>와 <b>방향(오르나 내리나)</b>을 외운다. 아래 학개론 패턴이 그 표다.</div>
+      <details><summary>바꾸는 방식 전부 보기</summary>${bars(sw.rea)}</details></div>
+    <div class="lesson"><div class="k">말버릇 ${R.words.length}가지</div><div class="say">어떤 말투는 O나 X로 쏠린다.</div><div class="so">규칙은 아니다. 모르는 선지에서 먼저 의심할 곳을 고르는 데만 쓴다.</div>
+      <details><summary>말버릇별 O/X 비율 보기</summary>${words}</details></div>
+    <div class="lesson"><div class="k">정답 번호 ${N}문항</div><div class="say">①~⑤가 고르게 나온다(각 ${Math.round(100*Math.min(...tot)/N)}~${Math.round(100*mx/N)}%). 찍기 번호는 없다.</div><div class="so">모르면 아는 선지부터 지우고 남은 것 중에 고른다. 선지 길이로 찍어도 20%에서 크게 나아지지 않는다.</div>
+      <div class="vb">${tot.map((n,i)=>`<div title="${CIRC[i]} ${n}문항"><span>${n}</span><i style="height:${Math.round(40*n/mx)}px"></i></div>`).join('')}</div><div class="vbl">${tot.map((n,i)=>`<span>${CIRC[i]}</span>`).join('')}</div></div>
+  </div>`;
+}
+function renderPatList(){
+  const pp=patPass(), tab=pt.tab, seen=p=>patSeen(p.id).n>=pp.pass;
+  let html=`<div class="card"><div class="row"><b style="font-size:19px">이것만 먼저</b><span class="muted">${patLabel(pp)}</span></div>
+    <p style="margin:6px 0 0;font-size:15px;line-height:1.6">10년 800문항에서 <b>매번 같은 방식으로 정오가 갈린 자리</b>만 모았다. 하나 외우면 여러 회차 선지가 한 번에 풀린다. 카드 돌리기 전에 <b>S급부터</b> 읽는다.</p>
+    <p class="muted" style="margin:4px 0 0;font-size:12px">'기출로 확인' 지문을 답 가린 채 하나씩 다 눌러 보면 ✓가 붙는다. 다 보면 ${pp.pass+1}회독으로 넘어가고 ✓는 다시 비워진다.</p>
+    <div class="pbar2"><i style="width:${pp.total?Math.round(100*pp.done/pp.total):0}%"></i></div></div>
+  ${readingHtml()}
+  <div class="seg">${[['civ',`민법 ${patsOf('civ').length}`],['rea',`학개론 ${patsOf('rea').length}`],['rep','또 나온 문장']].map(([k,l])=>`<button data-tab="${k}" class="${tab===k?'on':''}">${l}</button>`).join('')}</div>`;
+  if(tab==='rep') html+=repHtml();
+  else {
+    const L=patsOf(tab), nAu=L.filter(p=>hasAudio(p.id)).length;
+    if(nAu) html+=`<div class="btns" style="margin-bottom:12px"><button class="btn ghost small" id="listenAll">🔊 내 목소리로 ${SUBJ[tab]} ${nAu}개 이어 듣기</button></div>`;
+    html+=L.length?`<div class="card" style="padding:2px 12px">${L.map(p=>`<button class="srow ${seen(p)?'read':''}" data-pid="${p.id}"><span class="ck">${seen(p)?'✓':''}</span><span class="tag ${p.level}">${p.level}</span><span class="t">${p.head?`<b>${esc(p.name)}</b><small>${esc(p.head.join(', '))}</small>`:esc(p.title)}</span><span class="f">${p.f10}회</span></button>`).join('')}</div>
+    <div class="row" style="margin:0 2px"><span class="muted" style="font-size:12px">S = 10년 중 7개 회차 이상, A = 4~6회. 숫자는 출제 회차 수.</span><button class="linkbtn" id="pmemo">외우기 모음 ›</button></div>`:'<div class="card muted">이 과목 패턴은 준비 중입니다.</div>';
+  }
+  main.innerHTML=html;
+  main.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{ pt.tab=b.dataset.tab; keepY(renderPatList); });
+  main.querySelectorAll('[data-pid]').forEach(b=>b.onclick=()=>{ pt.tabY=window.scrollY; pt.id=b.dataset.pid; pt.from=null; render(); });
+  const pm=main.querySelector('#pmemo'); if(pm) pm.onclick=()=>{ pt.tabY=window.scrollY; pt.memo=true; render(); };
+  const la=main.querySelector('#listenAll'); if(la) la.onclick=()=>apStart(patsOf(tab).map(p=>p.id));
+  if(tab==='rep') bindRep();
+  if(pt.tabY){ const y=pt.tabY; pt.tabY=0; requestAnimationFrame(()=>window.scrollTo(0,y)); }
+}
+function patOxHtml(o,i,arr){
+  const d=o.ox==='X'&&o.fix?fixDiff(o):null;
+  return `<li class="oxi" data-i="${i}"><div class="h"><span class="oxb ${o.ox}">${o.ox}</span><div class="tx">${caseHtml(o,i&&arr?arr[i-1]:null)}<span class="rd">${o.rounds.join('·')}회</span>${lawHtml(o.ref)}<span class="t0">${esc(o.text)}</span>${d?`<span class="t1 hide">${d.a}</span>`:''}${oxStatus(o)}</div></div>
+    <div class="more">${o.ox==='X'&&o.fix?`<div class="fx">→ ${d?d.b:esc(o.fix)}</div>`:''}${o.fk?`<div class="fk"><b>지어낸 말</b>${md(o.fk)}</div>`:''}${o.why?`<div class="wy">${md(o.why)}</div>`:''}</div></li>`;
+}
+function bindOx(onOpen){
+  const ol=main.querySelector('#oxl'); if(!ol) return;
+  ol.querySelectorAll('.oxi').forEach(li=>{ if(!pt.hide) showDiff(li,true); li.onclick=()=>{ if(!pt.hide) return; li.classList.toggle('open'); const on=li.classList.contains('open'); showDiff(li,on); if(on&&onOpen) onOpen(li); }; });
+}
+// 패턴 읽음: 들어가기만 해서는 안 세고, 답을 가린 채 '기출로 확인' 지문을 하나씩 다 눌러 봐야 ✓(하루에 한 번만 셈).
+// 누른 지문은 앱을 켜 둔 동안 기억해서, 개념서에 다녀오거나 다른 패턴을 봐도 이어서 센다
+const patOpened={};
+function patOpenSet(id){ const k=today()+'|'+id; return patOpened[k]||(patOpened[k]=new Set()); }
+function patReadToday(id){ return seenRec(S.pat[id]).d===today(); }
+function patRdTag(id,p){
+  const sn=patSeen(id).n;
+  return patReadToday(id)?`<span class="tag rd1" id="patRd">✓ 읽었어요${sn>1?` · ${sn}번째`:''}</span>`:`<span class="tag rd0" id="patRd">기출 ${patOpenSet(id).size}/${p.ex.length} 눌러 보면 ✓</span>`;
+}
+function patRdCnt(id,p){ const k=patOpenSet(id).size, n=p.ex.length; return k>=n?`<span class="prd on" id="patCnt">✓ ${n}개 다 눌러 봄</span>`:`<span class="prd" id="patCnt">${k}/${n} 눌러 봄</span>`; }
+function patOpenEx(id,p,li){
+  li.classList.add('did'); patOpenSet(id).add(+li.dataset.i);
+  if(patOpenSet(id).size>=p.ex.length) markPatSeen(id);
+  main.querySelector('#patRd').outerHTML=patRdTag(id,p);
+  main.querySelector('#patCnt').outerHTML=patRdCnt(id,p);
+}
+function renderPatDetail(id){
+  const p=patById(id), list=patsOf(p.subj), k=list.indexOf(p), prev=list[k-1], next=list[k+1], live=patLive(p);
+  const pa=hasAudio(id)&&AU.patterns[id].parts, secBtn=s=>pa&&pa[s]!=null?`<button class="psec" data-at="${s}" aria-label="여기부터 듣기">▶</button>`:'';
+  if(!p.ex.length) markPatSeen(id);
+  main.innerHTML=`<div class="reader">
+    ${pt.from==='card'?`<div class="backbar"><button class="btn n small" id="backCard">← 카드로 돌아가기</button></div>`:''}
+    <div class="row"><button class="linkbtn" id="toList">‹ 패턴 목록</button><span class="muted" style="font-size:12px">${SUBJ[p.subj]} ${k+1} / ${list.length}</span></div>
+    ${p.head?`<div class="pname">${esc(p.name)}</div><div class="psrow" data-psec="head"><h2 class="st phead">${p.head.map(h=>`<span>${ptInline(h)}</span>`).join('')}</h2>${secBtn('head')}</div>`:`<h2 class="st">${esc(p.title)}</h2>`}
+    <div><span class="tag ${p.level}">${p.level}급</span><span class="tag">10년 ${p.f10}회 출제</span>${patRdTag(id,p)}${hasAudio(id)?'<button class="chipbtn" id="listenOne" style="margin-top:6px">🔊 이 패턴 듣기</button>':''}</div>
+    ${p.sig?`<div class="psig"><small>이런 문제가 나오면</small>${p.sig.map(x=>`<span class="sg">${ptInline(x)}</span>`).join('')}</div>`:`<div class="pwhen"><small>이런 문제가 나오면</small>${md(p.when)}</div>`}
+    ${p.pts?p.pts.map((b,j)=>`<div class="pblk" data-psec="b${j}">${b.h?`<div class="ph"><span>${esc(b.h)}</span>${secBtn('b'+j)}</div>`:''}<ul>${b.li.map((x,i)=>`<li>${ptLine(x)}${b.s&&b.s[i]?`<span class="pf">${esc(b.s[i])}</span>`:''}</li>`).join('')}</ul></div>`).join(''):`<ul class="prule">${p.rule.map(r=>`<li>${md(r)}</li>`).join('')}</ul>`}
+    ${p.table?tableHtml(p.table):''}
+    ${p.exceptions&&p.exceptions.length?`<div class="pexc"><b>예외</b>${p.exceptions.map(md).join('<br>')}</div>`:''}
+    <div class="sech"><h3>기출로 확인 ${p.ex.length}개</h3>${secBtn('ex')}${patRdCnt(id,p)}<button class="chipbtn ${pt.hide?'on':''}" id="hideAns">${pt.hide?'답 가림':'답 가리기'}</button></div>
+    <p class="muted" style="font-size:12px;margin:0 0 2px">${pt.hide?'위 규칙으로 O/X를 먼저 정하고 지문을 눌러 확인하세요. 하나씩 다 눌러 보면 ✓ 읽었어요.':`빨간 줄은 출제자가 바꾼 말, 주황 칸은 그럴듯하게 지어낸 말, 회색 줄은 연결만 다듬은 곳, 초록은 바로잡은 말.${patReadToday(id)?'':' ✓ 읽었어요는 답을 가리고 하나씩 눌러 봐야 켜집니다.'}`}</p>
+    <ul class="oxl ${pt.hide?'hideans':''}" id="oxl">${p.ex.map((o,i,a)=>patOxHtml(o,i,a).replace('<li class="oxi"',`<li class="oxi${patOpenSet(id).has(i)?' did':''}"`)).join('')}</ul>
+    <div class="trapbox"><b>출제자가 바꾸는 자리</b>${md(p.trap)}</div>
+    <div class="memo"><small>외우기</small>${md(p.memo)}</div>
+    <div class="btns">${live.length?`<button class="btn n small" id="runCards">이 패턴 카드 ${live.length}장 돌리기</button>`:`<button class="btn ghost small" disabled>${p.cards.length?'이 패턴 카드는 다 지웠습니다':'카드는 32~36회만 있습니다'}</button>`}</div>
+    <details style="margin-top:12px"><summary>개념서에서 더 읽기 (섹션 ${p.secs.length}개)</summary>${p.secs.map(s=>`<button class="bookbtn" data-book="${s.id}"><span class="tag ${s.grade}" style="font-size:11px">${s.grade}</span>${esc(s.title)} <span style="font-weight:600">· ${s.f10}회</span></button>`).join('')}</details>
+    <div class="pn">${prev?`<button data-go="${prev.id}"><span>‹ 이전</span>${esc(patName(prev))}</button>`:'<span style="flex:1"></span>'}${next?`<button class="nx" data-go="${next.id}"><span>다음 ›</span>${esc(patName(next))}</button>`:'<span style="flex:1"></span>'}</div>
+  </div>`;
+  const bc=main.querySelector('#backCard'); if(bc) bc.onclick=()=>{ pt.from=null; pt.id=null; goView('today'); };
+  main.querySelector('#toList').onclick=()=>{ pt.id=null; pt.from=null; pt.tab=p.subj; render(); };
+  main.querySelector('#hideAns').onclick=()=>{ pt.hide=!pt.hide; keepY(()=>renderPatDetail(id)); };
+  const lo=main.querySelector('#listenOne'); if(lo) lo.onclick=()=>apStart(list.map(x=>x.id),id,0);
+  main.querySelectorAll('[data-at]').forEach(b=>b.onclick=()=>apStart(list.map(x=>x.id),id,pa[b.dataset.at]));  // 그 부분부터, 가만히 두면 다음 부분·다음 패턴
+  // 기출 지문마다 ▶(10-25 PD): 그 지문부터(사례 → 지문 → 2초 → 정답·해설). 누르기만 하고 지문을 펼치지는 않는다
+  // 표 문장 칸·기출 지문마다 ▶: 그 자리부터 (표는 문장만 읽는다)
+  const addPlay=(el,k,host,label)=>{ if(!pa||pa[k]==null) return; el.dataset.psec=k; const b=document.createElement('button'); b.className='psec'; b.textContent='▶'; b.setAttribute('aria-label',label);
+    b.onclick=ev=>{ ev.stopPropagation(); apStart(list.map(x=>x.id),id,pa[k]); }; host.prepend(b); };
+  main.querySelectorAll('.tw tr.trs').forEach(tr=>addPlay(tr,'t'+tr.dataset.i,tr.querySelector('td'),'이 행부터 듣기'));
+  main.querySelectorAll('#oxl .oxi').forEach(li=>addPlay(li,'e'+li.dataset.i,li.querySelector('.h'),'이 지문부터 듣기'));
+  main.querySelectorAll('#oxl .oxi .h .psec').forEach(b=>b.parentNode.appendChild(b));  // 지문 ▶는 오른쪽 끝으로
+  apMark();
+  bindOx(li=>patOpenEx(id,p,li));
+  const rc=main.querySelector('#runCards'); if(rc) rc.onclick=()=>{ pt.from=null; runCards(live); };  main.querySelectorAll('[data-book]').forEach(b=>b.onclick=()=>{ bk.sec=b.dataset.book; bk.memo=false; bk.from='pat'; goView('book'); });
+  main.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ pt.id=b.dataset.go; pt.from=null; render(); });
+}
+function renderPatMemos(){
+  let html=`<div class="reader"><div class="row"><button class="linkbtn" id="toList">‹ 패턴 목록</button></div>
+    <h2 class="st">패턴 외우기 모음</h2><p class="muted" style="margin:0 0 8px">시험 전날과 당일 아침에 읽는 한 줄씩. 제목을 누르면 그 패턴으로 갑니다.</p>`;
+  for(const subj of ['civ','rea']){
+    const L=patsOf(subj); if(!L.length) continue;
+    html+=`<div class="card"><b>${SUBJ[subj]}</b>${L.map(p=>`<div style="padding:8px 0;border-bottom:1px solid var(--line)"><button class="linkbtn" data-pid="${p.id}" style="font-size:13px;text-align:left"><span class="tag ${p.level}" style="font-size:11px">${p.level}</span>${esc(patName(p))}</button><div style="font-size:15px;line-height:1.6;font-weight:700">${md(p.memo)}</div></div>`).join('')}</div>`;
+  }
+  main.innerHTML=html+'</div>';
+  main.querySelector('#toList').onclick=()=>{ pt.memo=false; render(); };
+  main.querySelectorAll('[data-pid]').forEach(b=>b.onclick=()=>{ pt.memo=false; pt.id=b.dataset.pid; render(); });
+}
+/* ===== 패턴 듣기 (10-25) =====
+   PD 목소리(AI 합성, voice-tts\voxcpm\pattern_audio.py)로 읽은 패턴: 이름 → 결론 → 풀어 쓴 문장.
+   오디오는 따로 내릴 수 있게 전용 저장소(gichul-jiugae-audio)에 둔다. audio.json = {patterns:{id:{file,sec}}}.
+   못 불러오면 듣기 버튼을 안 띄운다. 듣기는 '✓ 읽었어요'로 세지 않는다(읽음은 기출 지문을 눌러 봐야). 재생 빠르기는 이 기기에만. */
+const AUDIO_BASE=(()=>{ const d='https://jjangguss-prog.github.io/gichul-jiugae-audio/'; try{ return localStorage.getItem('jiugae2-audio-base')||d; }catch(e){ return d; } })();
+// 10-27: 듣기 묶음이 늘었다. audio.json의 patterns 옆에 tsx(타시험 카드)·rep(또 나온 문장)·memo(개념서 장별 외우기 한 줄, A·B급).
+// 재생 막대 하나로 틀고, 지금 무슨 묶음을 트는지는 ap.kind
+let AU=null, auLoading=null;
+const ap={q:[], i:0, el:null, kind:'patterns'};
+function loadAudio(){
+  if(AU) return Promise.resolve(AU);
+  if(!auLoading) auLoading=fetch(AUDIO_BASE+'audio.json?v='+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null).then(d=>{ AU=d&&d.patterns?d:{patterns:{}}; return AU; });
+  return auLoading;
+}
+function hasAudio(id,kind){ const k=kind||'patterns'; return !!(AU&&AU[k]&&AU[k][id]); }
+function auItem(){ return AU&&AU[ap.kind]&&AU[ap.kind][ap.q[ap.i]]; }
+function apRate(){ try{ return +localStorage.getItem('jiugae2-rate')||1; }catch(e){ return 1; } }
+function apEl(){
+  if(ap.el) return ap.el;
+  const bar=document.createElement('div'); bar.id='aplayer';
+  bar.innerHTML='<i class="pg"></i><button id="apPrev" aria-label="이전">⏮</button><button id="apPlay" aria-label="재생, 멈춤">⏸</button><button id="apNext" aria-label="다음">⏭</button><div class="ti" id="apTi"></div><button class="rt" id="apRate" aria-label="빠르기"></button><button id="apX" aria-label="닫기">✕</button>';
+  document.body.appendChild(bar);
+  const a=new Audio(); a.preload='auto';
+  a.onended=()=>apGo(ap.i+1);
+  a.onplay=a.onpause=()=>{ bar.querySelector('#apPlay').textContent=a.paused?'▶':'⏸'; apMark(); };
+  a.ontimeupdate=()=>{ bar.querySelector('.pg').style.width=(a.duration?100*a.currentTime/a.duration:0)+'%'; apMark(); };
+  bar.querySelector('#apPlay').onclick=()=>{ if(a.paused) a.play().catch(()=>{}); else a.pause(); };
+  bar.querySelector('#apPrev').onclick=()=>{ if(a.currentTime>3) a.currentTime=0; else apGo(ap.i-1); };  // 3초 넘게 들었으면 처음부터
+  bar.querySelector('#apNext').onclick=()=>apGo(ap.i+1);
+  bar.querySelector('#apRate').onclick=()=>{ const R=[1,1.25,1.5], r=R[(R.indexOf(a.playbackRate)+1)%R.length]; a.defaultPlaybackRate=a.playbackRate=r; try{ localStorage.setItem('jiugae2-rate',r); }catch(e){} apInfo(); };
+  bar.querySelector('#apTi').onclick=apOpen;
+  bar.querySelector('#apX').onclick=()=>{ a.pause(); bar.classList.remove('on'); document.body.classList.remove('aplay'); apMark(); };
+  if('mediaSession' in navigator){ const ms=navigator.mediaSession; ms.setActionHandler('play',()=>a.play()); ms.setActionHandler('pause',()=>a.pause()); ms.setActionHandler('previoustrack',()=>apGo(ap.i-1)); ms.setActionHandler('nexttrack',()=>apGo(ap.i+1)); }
+  ap.el=a; return a;
+}
+// 재생 막대 제목: t 큰 글씨, s 작은 글씨, a 잠금화면 둘째 줄
+function apMeta(){
+  const id=ap.q[ap.i], n=`${ap.i+1}/${ap.q.length}`;
+  if(ap.kind==='tsx'){ const c=TS&&tsById(id); return c&&{t:c.title, s:`타시험 ${c.subj==='civ'?'민법':'학개론'} ${n} · 내 목소리`, a:'타시험 예상 논점'}; }
+  if(ap.kind==='rep'){ const r=P&&P.repeats.find(x=>x.ref===id); return r&&{t:r.st||r.text, s:`또 나온 문장 ${n} · ${r.rounds.length}번 나옴`, a:'또 나온 문장'}; }
+  if(ap.kind==='memo'){ const ch=B&&B.chapters[id]; return ch&&{t:ch.title, s:`외우기 한 줄 ${n} · A·B급`, a:'외우기 한 줄 · '+(ch.subject==='civ'?'민법':'학개론')}; }
+  const p=patById(id); if(!p) return null; const L=patsOf(p.subj);
+  return {t:patName(p), s:`${SUBJ[p.subj]} 패턴 ${L.indexOf(p)+1}/${L.length} · 내 목소리`, a:'기출 패턴 · '+SUBJ[p.subj]};
+}
+function apInfo(){
+  const m=apMeta(), bar=document.getElementById('aplayer'); if(!m||!bar) return;
+  bar.querySelector('#apTi').innerHTML=`${esc(m.t)}<small>${esc(m.s)}</small>`;
+  bar.querySelector('#apRate').textContent=ap.el.playbackRate+'×';
+  if('mediaSession' in navigator&&window.MediaMetadata) navigator.mediaSession.metadata=new MediaMetadata({title:m.t, artist:m.a, album:'기출 지우개 2'});
+}
+// 재생 막대 제목을 누르면 지금 듣는 것이 있는 화면으로
+function apOpen(){
+  const id=ap.q[ap.i]; if(!id) return;
+  if(ap.kind==='patterns') return openPat(id);
+  if(ap.kind==='tsx'){ ot.id=id; return goView('other'); }
+  if(ap.kind==='rep'){ pt.id=null; pt.memo=false; pt.drill=null; pt.tab='rep'; return goView('pat'); }
+  if(ap.kind==='memo'&&B&&B.chapters[id]){
+    const st=bookState(); st.subj=B.chapters[id].subject; bk.sec=null; bk.memo=true; goView('book');
+    requestAnimationFrame(()=>{ const el=main.querySelector(`[data-mch="${id}"]`); if(el) el.scrollIntoView({block:'start'}); });
+  }
+}
+// at: 그 패턴 안에서 시작할 초(소제목 ▶). 듣던 패턴이면 다시 받지 않고 그 자리로만 옮긴다
+function apGo(i,at){
+  const a=apEl();
+  if(i<0||i>=ap.q.length){ a.pause(); return; }  // 목록 끝까지 들었으면 멈춘다
+  const url=AUDIO_BASE+AU[ap.kind][ap.q[i]].file;
+  if(i===ap.i&&a.src===url&&a.readyState>0){ if(at!=null) a.currentTime=at; }
+  else { a.src=url; if(at) a.addEventListener('loadedmetadata',()=>{ a.currentTime=at; },{once:true}); }
+  ap.i=i; a.defaultPlaybackRate=a.playbackRate=apRate(); a.play().catch(()=>{});
+  document.getElementById('aplayer').classList.add('on'); document.body.classList.add('aplay');
+  apInfo();
+}
+// kind: 'patterns'(기본)·'tsx'·'rep'·'memo'
+function apStart(ids,from,at,kind){ const k=kind||'patterns', q=ids.filter(id=>hasAudio(id,k)); if(!q.length) return; if(k!==ap.kind||q.join()!==ap.q.join()) ap.i=-1; ap.kind=k; ap.q=q; apGo(Math.max(0,q.indexOf(from)),at); }
+// 지금 읽는 부분: 그 화면(패턴·타시험 카드·외우기 모음)을 보고 있을 때만 파란 테두리
+function apSecNow(){ const it=auItem(), pa=it&&it.parts; if(!pa||!ap.el) return null; let cur=null, best=-1; for(const k in pa){ const t=pa[k]; if(t<=ap.el.currentTime+0.05&&t>best){ best=t; cur=k; } } return cur; }
+function apHere(){ const id=ap.q[ap.i]; return ap.kind==='patterns'?view==='pat'&&pt.id===id:ap.kind==='tsx'?view==='other'&&ot.id===id:ap.kind==='memo'?view==='book'&&bk.memo&&!bk.sec:false; }
+function apMark(){
+  const on=ap.el&&!ap.el.paused&&apHere()?apSecNow():null;
+  main.querySelectorAll('[data-psec]').forEach(el=>el.classList.toggle('secnow',el.dataset.psec===on));
+}
+// 또 나온 문장: 두 회차 이상 나온 지문. O/X 퀴즈 또는 목록
+function repPool(){ const f=pt.rf; return P.repeats.filter(r=>(f.subj==='all'||r.subj===f.subj)&&r.rounds.length>=f.min); }
+function repLast(r){ const s=S.rep[r.ref]; return s?s.l:-1; }
+function repHtml(){
+  const f=pt.rf, pool=repPool(), known=pool.filter(r=>repLast(r)===1).length, missed=pool.filter(r=>repLast(r)===0).length;
+  const n3=P.repeats.filter(r=>r.rounds.length>=3).length, todo=pool.length-known;
+  const au=pool.filter(r=>hasAudio(r.ref,'rep')), auMiss=au.filter(r=>repLast(r)===0);
+  return `<div class="card"><b>또 나온 문장</b>
+    <p style="margin:6px 0 0;font-size:15px;line-height:1.6">10년 동안 같은 문장이 두 번 이상 나왔다(세 번 이상 ${n3}개). <b>정오도 매번 같았다.</b> 이 문장이 보이면 생각하지 말고 바로 O/X.</p>
+    <div class="chips">${[['all','둘 다'],['civ','민법'],['rea','학개론']].map(([k,l])=>`<button class="chipbtn ${f.subj===k?'on':''}" data-rs="${k}">${l}</button>`).join('')}<span style="width:6px"></span>${[[3,'3회 이상'],[2,'2회 이상']].map(([k,l])=>`<button class="chipbtn ${f.min===k?'on':''}" data-rm="${k}">${l}</button>`).join('')}</div>
+    <div class="stat"><div><b>${pool.length}</b><span>문장</span></div><div><b>${known}</b><span>마지막에 맞힘</span></div><div><b>${missed}</b><span>마지막에 틀림</span></div></div>
+    <div class="btns"><button class="btn n small" id="repGo">▶ O/X 퀴즈 ${todo||pool.length}개</button></div>
+    <div class="btns" style="margin-top:8px">${missed?`<button class="btn x small" id="repMiss">틀린 것만 ${missed}개</button>`:''}<button class="btn ghost small" id="repList">목록으로 읽기</button></div>
+    ${au.length?`<div class="btns" style="margin-top:8px"><button class="btn ghost small" id="repAu">🔊 내 목소리로 ${au.length}개 듣기</button>${auMiss.length?`<button class="btn ghost small" id="repAuMiss">🔊 틀린 것만 ${auMiss.length}개</button>`:''}</div>
+    <p class="muted" style="font-size:12px;margin:6px 0 0">지문 → 2초 생각 → 맞는 말 / 틀린 말·바르게는 → 해설.${au.length<pool.length?` 소리는 아직 ${au.length}개(3회 이상 나온 문장)만 있습니다.`:''}</p>`:''}</div>`;
+}
+function bindRep(){
+  main.querySelectorAll('[data-rs]').forEach(b=>b.onclick=()=>{ pt.rf.subj=b.dataset.rs; keepY(renderPatList); });
+  main.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ pt.rf.min=+b.dataset.rm; keepY(renderPatList); });
+  const pool=repPool();
+  main.querySelector('#repGo').onclick=()=>{ const q=pool.filter(r=>repLast(r)!==1); startDrill(q.length?q:pool,'quiz'); };
+  const rm=main.querySelector('#repMiss'); if(rm) rm.onclick=()=>startDrill(pool.filter(r=>repLast(r)===0),'quiz');
+  main.querySelector('#repList').onclick=()=>startDrill(pool,'list');
+  const au=pool.filter(r=>hasAudio(r.ref,'rep')).map(r=>r.ref);
+  const ra=main.querySelector('#repAu'); if(ra) ra.onclick=()=>apStart(au,null,null,'rep');
+  const rx=main.querySelector('#repAuMiss'); if(rx) rx.onclick=()=>apStart(pool.filter(r=>repLast(r)===0).map(r=>r.ref),null,null,'rep');
+}
+function startDrill(q,mode){ pt.drill={q, i:0, phase:'ask', pick:null, mode, ok:0}; window.scrollTo(0,0); renderDrill(); }
+function renderDrill(){
+  const d=pt.drill, quit=()=>{ pt.drill=null; pt.tab='rep'; render(); };
+  if(d.mode==='list'){
+    main.innerHTML=`<div class="reader"><div class="row"><button class="linkbtn" id="dx">‹ 패턴</button><span class="muted" style="font-size:12px">${d.q.length}개</span></div>
+      <h2 class="st">또 나온 문장</h2>
+      <div class="row" style="margin-bottom:4px"><span class="muted" style="font-size:12px">${pt.hide?'지문을 누르면 정답과 근거가 열립니다.':'빨간 줄은 바꾼 말, 주황 칸은 지어낸 말, 초록은 바로잡은 말.'}</span><button class="chipbtn ${pt.hide?'on':''}" id="hideAns">${pt.hide?'답 가림':'답 가리기'}</button></div>
+      <ul class="oxl ${pt.hide?'hideans':''}" id="oxl">${d.q.map(patOxHtml).join('')}</ul></div>`;
+    main.querySelector('#dx').onclick=quit;
+    main.querySelector('#hideAns').onclick=()=>{ pt.hide=!pt.hide; keepY(renderDrill); };
+    bindOx(); return;
+  }
+  if(d.i>=d.q.length){
+    main.innerHTML=`<div class="card center"><div class="verdict ${d.ok===d.q.length?'ok':''}">${d.q.length}개 중 ${d.ok}개 맞힘</div><p class="muted">틀린 문장은 '틀린 것만'으로 다시 돌릴 수 있습니다.</p><div class="btns"><button class="btn n" id="dx">끝</button></div></div>`;
+    main.querySelector('#dx').onclick=quit; return;
+  }
+  const r=d.q[d.i];
+  let html=`<div class="row"><span class="muted">${d.i+1} / ${d.q.length}</span><button class="btn ghost small" style="flex:0 0 auto;padding:6px 10px" id="dx">그만</button></div>
+  <div class="card"><div><span class="tag">${SUBJ[r.subj]} · ${r.rounds.join('·')}회</span>${lawHtml(r.ref)}</div><div class="muted" style="font-size:12px;margin-top:4px">${esc(r.st||'')}</div>
+    <div class="ask truth">이 문장은 <b>옳은 말인가요?</b><span>${r.rounds.length}개 회차에 나온 문장. 정오는 매번 같았다.</span></div>`;
+  if(r.case) html+=`<div class="passage"><b>사례</b> ${esc(r.case)}</div>`;
+  if(d.phase==='ask'){
+    html+=`<div class="choice">${esc(r.text)}</div><div class="btns"><button class="btn o" data-p="O">O 옳은 말</button><button class="btn x" data-p="X">X 틀린 말</button></div></div>`;
+  } else {
+    const ok=d.pick===r.ox, df=r.ox==='X'&&r.fix?fixDiff(r):null;
+    html+=`<div class="choice">${df?df.a:esc(r.text)}</div>
+      <div class="verdict ${ok?'ok':'bad'}">${ok?'맞음':'틀림'} · 정답은 ${r.ox==='O'?'O 옳은 말':'X 틀린 말'}</div>
+      ${r.ox==='X'&&r.fix?`<div class="fix">바로잡기: ${df?df.b:esc(r.fix)}</div>${edLegend(r.ed)}`:''}${r.fk?`<div class="fake"><b>그럴듯하게 지어낸 말</b>${md(r.fk)}</div>`:''}
+      ${r.why?`<div class="reason">${md(r.why)}</div>`:''}
+      <button class="bookbtn" data-book="${r.sec}">📖 개념서에서 읽기 · ${esc(r.st||'')}</button>
+      <div class="btns" style="margin-top:12px"><button class="btn n" id="dn">다음</button></div></div>`;
+  }
+  main.innerHTML=html;
+  main.querySelector('#dx').onclick=quit;
+  main.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{
+    d.pick=b.dataset.p; d.phase='show'; const ok=d.pick===r.ox; if(ok) d.ok++;
+    const s=S.rep[r.ref]||{n:0,ok:0}; S.rep[r.ref]={n:(s.n||0)+1, ok:(s.ok||0)+(ok?1:0), l:ok?1:0, d:today()}; save(); renderDrill();
+  });
+  const dn=main.querySelector('#dn'); if(dn) dn.onclick=()=>{ d.i++; d.phase='ask'; d.pick=null; window.scrollTo(0,0); renderDrill(); };
+  main.querySelectorAll('[data-book]').forEach(b=>b.onclick=()=>{ bk.sec=b.dataset.book; bk.memo=false; bk.from='pat'; goView('book'); });
+}
+// 오늘 탭 맨 위: 이번 회독에 아직 안 본 패턴 중 다음 것(S급 먼저). 1회독 중에는 굵은 테두리
+function patTodayHtml(){
+  if(!P||!P.patterns.length) return '';
+  const pp=patPass(), nx=patNext(pp.pass);
+  return `<div class="card"${pp.pass===1?' style="border:1.5px solid var(--ink)"':''}><div class="row"><b>★ 먼저: 이것만 패턴</b><span class="muted">${patLabel(pp)}</span></div>
+    <p class="muted" style="margin:4px 0 8px">${pp.pass===1?`여러 회차 선지가 한 규칙으로 갈리는 자리 ${pp.total}개. 하나에 2~3분, 기출 지문까지 다 눌러 보면 ✓.`:`${pp.total}개를 ${pp.pass-1}번씩 다 봤다. 한 번 더 훑으면 ${pp.pass}회독.`}<br>다음: ${esc(patName(nx))}</p>
+    <div class="btns"><button class="btn n small" data-pat="${nx.id}">다음 패턴 읽기</button><button class="btn ghost small" id="toPat">패턴 목록</button></div></div>`;
+}
+// 개념서 섹션 → 그 섹션이 들어간 패턴
+function secPatHtml(sid){
+  if(!P) return '';
+  const L=P.patterns.filter(p=>p.secs.some(s=>s.id===sid)); if(!L.length) return '';
+  return L.slice(0,3).map(p=>`<button class="patbtn" data-pat="${p.id}">★ 이 논점이 든 패턴 · ${esc(patName(p))}</button>`).join('');
+}
+
+/* ===== 시작 ===== */
+/* ===== 타시험 (10-26 PD) =====
+   2026년 8개 시험(감평·주관·노무·행정·세무·법원직 9급·법무사·변시) 기출에서 37회에 다시 나올 만한 논점.
+   자료는 tasihum.json(타시험/만들기.py가 만듦). 민법 카드 K1~K34는 여러 줄, 학개론 R1~R42는 한 줄.
+   답을 가린 채 줄을 하나씩 다 눌러 보면 ✓(S.tsx, 하루에 한 번만 셈). 패턴의 '기출로 확인'과 같은 방식. */
+let TS=null, tsLoading=null;
+const ot={tab:'civ', id:null, hide:true, r1:false, nw:false, tabY:0};
+const TS_SEC={'총칙':'법률행위 (총칙)','물권':'물권','계약':'계약·매매·임대차','특별법':'민사특별법','직전':'시험 직전 판례 · 참고만'};
+const TS_EX=['감평','주관','노무','행정','세무','9급','법무','변시'];
+function loadTs(){
+  if(TS) return Promise.resolve(TS);
+  if(!tsLoading) tsLoading=fetch('tasihum.json?v='+Date.now()).then(r=>r.json()).then(d=>{
+    // 학개론 한 줄짜리도 민법 카드와 같은 꼴로 맞춘다
+    d.rea=d.rea.map(a=>({id:a.id, subj:'rea', rank:a.score===3?1:a.score===2?2:3, title:a.topic, why:a.why, unit:a.unit,
+      g:a.gongin_rounds&&a.gongin_rounds.length?a.gongin_rounds.join('·')+'회':'미출제', gn:a.gongin_note, fresh:a.fresh,
+      lines:[{t:a.statement, trap:a.trap, calc:a.calc, r:a.src}]}));
+    d.civ.forEach(c=>c.subj='civ');
+    TS=d; return d;
+  }).catch(e=>{ tsLoading=null; throw e; });
+  return tsLoading;
+}
+const tsList=s=>TS[s];
+const tsById=id=>TS.civ.find(c=>c.id===id)||TS.rea.find(c=>c.id===id);
+const tsHl=s=>esc(s).replace(/\[\[(.+?)\]\]/g,'<mark class="tk">$1</mark>');
+const tsNew=g=>!!g&&g.indexOf('미출제')===0;
+const tsG=g=>!g?'':tsNew(g)?'<span class="tag nw">공인 미출제</span>':`<span class="tag gd">공인 ${esc(g)}</span>`;
+function tsExams(c){ const s=[c.refs||'',...c.lines.map(l=>l.r||'')].join(' '); return c.subj==='civ'?TS_EX.filter(e=>s.indexOf(e)>=0).length:0; }
+function tsRank(c){ return `<span class="tag r${c.rank}">${c.rank?c.rank+'순위':'참고'}</span>`; }
+const tsOpened={};
+function tsOpenSet(id){ const k=today()+'|'+id; return tsOpened[k]||(tsOpened[k]=new Set()); }
+function tsPass(s){ return seenPass(S.tsx,tsList(s).map(c=>c.id)); }
+function renderOther(){
+  if(!TS){
+    main.innerHTML='<div class="card muted">타시험 논점을 불러오는 중…</div>';
+    loadTs().then(()=>{ if(view==='other') renderOther(); }).catch(()=>{ if(view==='other') main.innerHTML='<div class="card">타시험 자료(tasihum.json)를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; });
+    return;
+  }
+  if(!AU) loadAudio().then(a=>{ if(view==='other'&&a.tsx) keepY(renderOther); });  // 듣기 버튼은 오디오 목록이 오면 붙인다
+  if(ot.id&&tsById(ot.id)) renderOtherDetail(ot.id); else renderOtherList();
+}
+function renderOtherList(){
+  const tab=ot.tab, pp=tsPass(tab), seen=c=>seenRec(S.tsx[c.id]).n>=pp.pass;
+  let L=tsList(tab);
+  if(ot.r1) L=L.filter(c=>c.rank===1);
+  if(ot.nw) L=L.filter(c=>tsNew(c.g)||c.lines.some(l=>tsNew(l.g)));
+  const row=c=>{ const n=tsExams(c); return `<button class="srow ${seen(c)?'read':''}" data-oid="${c.id}"><span class="ck">${seen(c)?'✓':''}</span>${tsRank(c)}<span class="t"><b>${esc(c.title)}</b><small>${[n?`올해 ${n}곳`:'',c.subj==='rea'?esc(c.unit):'',c.g?(tsNew(c.g)?'공인 미출제':'공인 '+esc(c.g)):''].filter(Boolean).join(' · ')}</small></span><span class="f">${c.lines.length>1?c.lines.length+'줄':''}</span></button>`; };
+  let body=''; const shown=[];  // 이어 듣기는 화면에 보이는 순서대로
+  const group=(lab,cs)=>{ if(!cs.length) return; body+=`<div class="oth">${lab}</div>`+cs.map(row).join(''); shown.push(...cs); };
+  if(tab==='civ'){ for(const sec of Object.keys(TS_SEC)) group(TS_SEC[sec],L.filter(c=>c.sec===sec)); }
+  else { for(const [r,lab] of [[1,'1순위 · 공인중개사에 거의 안 나온 논점'],[2,'2순위 · 단골 논점의 새 각도'],[3,'3순위 · 공인중개사와 같은 각도']]) group(lab,L.filter(c=>c.rank===r)); }
+  const nAu=shown.filter(c=>hasAudio(c.id,'tsx')).length;
+  main.innerHTML=`<div class="card"><div class="row"><b style="font-size:19px">다른 시험이 올해 먼저 낸 논점</b><span class="muted">${pp.pass}회독 ${pp.done}/${pp.total}</span></div>
+    <p style="margin:6px 0 0;font-size:15px;line-height:1.6">2026년 8개 시험(감평·주관·노무·행정·세무·법원직 9급·법무사·변시) 기출에서 37회에 다시 나올 만한 것만 모았다. <b>형광펜 자리</b>(출제자가 바꿔 치는 말)를 가린 채 줄을 눌러 확인한다.</p>
+    <p class="muted" style="margin:4px 0 0;font-size:12px">카드 안 줄을 하나씩 다 눌러 보면 ✓. ${tab==='civ'?'1순위 = 올해 시험 3곳 이상, 2순위 = 2곳이거나 최신 판례가 시험에 나옴.':'학개론은 감정평가사 37회(4. 4.) 부동산학원론에서 골랐다.'}</p>
+    <div class="pbar2"><i style="width:${pp.total?Math.round(100*pp.done/pp.total):0}%"></i></div></div>
+  <div class="seg">${[['civ',`민법 ${TS.civ.length}`],['rea',`학개론 ${TS.rea.length}`]].map(([k,l])=>`<button data-otab="${k}" class="${tab===k?'on':''}">${l}</button>`).join('')}</div>
+  <div class="chips"><button class="chipbtn ${ot.r1?'on':''}" id="oR1">1순위만</button><button class="chipbtn ${ot.nw?'on':''}" id="oNw">공인 미출제만</button></div>
+  ${nAu?`<div class="btns" style="margin-bottom:12px"><button class="btn ghost small" id="oListen">🔊 내 목소리로 ${tab==='civ'?'민법':'학개론'} ${nAu}장 이어 듣기</button></div>`:''}
+  ${body?`<div class="card" style="padding:2px 12px">${body}</div>`:'<div class="card muted">조건에 맞는 논점이 없습니다.</div>'}`;
+  const ol=main.querySelector('#oListen'); if(ol) ol.onclick=()=>apStart(shown.map(c=>c.id),null,null,'tsx');
+  main.querySelectorAll('[data-otab]').forEach(b=>b.onclick=()=>{ ot.tab=b.dataset.otab; keepY(renderOtherList); });
+  main.querySelector('#oR1').onclick=()=>{ ot.r1=!ot.r1; keepY(renderOtherList); };
+  main.querySelector('#oNw').onclick=()=>{ ot.nw=!ot.nw; keepY(renderOtherList); };
+  main.querySelectorAll('[data-oid]').forEach(b=>b.onclick=()=>{ ot.tabY=window.scrollY; ot.id=b.dataset.oid; render(); });
+  if(ot.tabY){ const y=ot.tabY; ot.tabY=0; requestAnimationFrame(()=>window.scrollTo(0,y)); }
+}
+function tsRdTag(c){
+  const sn=seenRec(S.tsx[c.id]);
+  return sn.d===today()?`<span class="tag rd1" id="tsRd">✓ 읽었어요${sn.n>1?` · ${sn.n}번째`:''}</span>`:`<span class="tag rd0" id="tsRd">${tsOpenSet(c.id).size}/${c.lines.length} 눌러 보면 ✓</span>`;
+}
+function tsCnt(c){ const k=tsOpenSet(c.id).size, n=c.lines.length; return k>=n?`<span class="prd on" id="tsCnt">✓ ${n}줄 다 눌러 봄</span>`:`<span class="prd" id="tsCnt">${k}/${n} 눌러 봄</span>`; }
+function tsLineHtml(c,l,i){
+  const meta=[l.r?`<span>${esc(l.r)}</span>`:'', tsG(l.g), l.f?`<span class="tag fr">${esc(l.f)}</span>`:''].filter(Boolean).join('');
+  return `<li class="oxi tsi${tsOpenSet(c.id).has(i)?' did':''}" data-i="${i}"><div class="h"><div class="tx">${tsHl(l.t)}</div></div>
+    <div class="more">${l.x?`<div class="tsx"><b>틀린 꼴</b><del>${esc(l.x)}</del></div>`:''}${l.trap?`<div class="tsx"><b>바꿔 나오는 자리</b>${esc(l.trap)}</div>`:''}${l.calc?`<div class="calc" style="margin-top:4px">풀이  ${esc(l.calc)}</div>`:''}${meta?`<div class="tsm">${meta}</div>`:''}</div></li>`;
+}
+function renderOtherDetail(id){
+  const c=tsById(id), list=tsList(c.subj), k=list.indexOf(c), prev=list[k-1], next=list[k+1], n=tsExams(c);
+  main.innerHTML=`<div class="reader">
+    <div class="row"><button class="linkbtn" id="oList">‹ 타시험 목록</button><span class="muted" style="font-size:12px">${c.subj==='civ'?'민법':'학개론'} ${k+1} / ${list.length}</span></div>
+    <h2 class="st">${esc(c.title)}</h2>
+    <div>${tsRank(c)}${n?`<span class="tag">올해 ${n}곳</span>`:''}${tsG(c.g)}${c.fresh?'<span class="tag fr">최근 바뀐 제도</span>':''}${tsRdTag(c)}${hasAudio(id,'tsx')?'<button class="chipbtn" id="oListen1" style="margin-top:6px">🔊 이 카드부터 듣기</button>':''}</div>
+    ${c.why?`<p class="muted" style="font-size:14px;margin:8px 0 0;line-height:1.55">${esc(c.why)}</p>`:''}
+    <div class="sech"><h3>눌러서 확인 ${c.lines.length}줄</h3>${tsCnt(c)}<button class="chipbtn ${ot.hide?'on':''}" id="oHide">${ot.hide?'답 가림':'답 가리기'}</button></div>
+    <p class="muted" style="font-size:12px;margin:0 0 2px">${ot.hide?'회색 자리에 들어갈 말을 먼저 떠올리고 줄을 눌러 확인하세요. 다 눌러 보면 ✓ 읽었어요.':'노란 형광펜은 출제자가 바꿔 치는 자리, 빨간 줄은 다른 시험이 실제로 바꿔 낸 틀린 꼴. ✓ 읽었어요는 답을 가리고 눌러 볼 때만 셉니다.'}</p>
+    <ul class="oxl ${ot.hide?'hideans':''}" id="tsl">${c.lines.map((l,i)=>tsLineHtml(c,l,i)).join('')}</ul>
+    ${c.refs?`<div class="law" style="margin-top:8px">나온 곳: ${esc(c.refs)}</div>`:''}
+    ${c.gn?`<div class="law" style="margin-top:4px">공인중개사 기출: ${esc(c.gn)}${c.fresh?' · '+esc(c.fresh):''}</div>`:''}
+    <div class="pn">${prev?`<button data-ogo="${prev.id}"><span>‹ 이전</span>${esc(prev.title)}</button>`:'<span style="flex:1"></span>'}${next?`<button class="nx" data-ogo="${next.id}"><span>다음 ›</span>${esc(next.title)}</button>`:'<span style="flex:1"></span>'}</div>
+  </div>`;
+  main.querySelector('#oList').onclick=()=>{ ot.id=null; ot.tab=c.subj; render(); };
+  main.querySelector('#oHide').onclick=()=>{ ot.hide=!ot.hide; keepY(()=>renderOtherDetail(id)); };
+  main.querySelectorAll('#tsl .tsi').forEach(li=>li.onclick=()=>{
+    if(!ot.hide) return;
+    li.classList.toggle('open');
+    if(!li.classList.contains('open')) return;
+    li.classList.add('did'); tsOpenSet(id).add(+li.dataset.i);
+    if(tsOpenSet(id).size>=c.lines.length&&markSeen(S.tsx,id)) save();
+    main.querySelector('#tsRd').outerHTML=tsRdTag(c);
+    main.querySelector('#tsCnt').outerHTML=tsCnt(c);
+  });
+  main.querySelectorAll('[data-ogo]').forEach(b=>b.onclick=()=>{ ot.id=b.dataset.ogo; render(); });
+  // 듣기(10-27): 이 카드부터 이어서 다음 카드로. 줄마다 ▶ = 그 줄부터(빈칸 문장 → 생각할 틈 → 온전한 문장 → 틀린 꼴). 줄을 펼치지는 않는다
+  const ids=list.map(x=>x.id), pa=hasAudio(id,'tsx')&&AU.tsx[id].parts;
+  const l1=main.querySelector('#oListen1'); if(l1) l1.onclick=()=>apStart(ids,id,0,'tsx');
+  if(pa) main.querySelectorAll('#tsl .tsi').forEach(li=>{ const k='l'+li.dataset.i; if(pa[k]==null) return; li.dataset.psec=k;
+    const b=document.createElement('button'); b.className='psec'; b.textContent='▶'; b.setAttribute('aria-label','이 줄부터 듣기');
+    b.onclick=ev=>{ ev.stopPropagation(); apStart(ids,id,pa[k],'tsx'); }; li.querySelector('.h').appendChild(b); });
+  apMark();
+}
+
+function migrate(){
+  let n=0; const t=today(); const byId={}; D.cards.forEach(c=>byId[c.id]=c);
+  // 다시 시작해도 바뀐 시각은 그대로 둔다: 다른 기기가 새 카드로 공부한 기록이 있으면 그쪽이 이기게
+  const restart=id=>{ const st=S.cards[id]; if(!st||st.st===0) return; S.cards[id]={st:1,k:[],last:st.last,due:t,miss:st.miss||0,seen:st.seen||0}; if(SNAP) SNAP['c/'+id]=JSON.stringify(S.cards[id]); n++; };
+  if(D.version&&S.dataver!==D.version){ (D.reset||[]).forEach(restart); }
+  for(const [id,st] of Object.entries(S.cards)){ const c=byId[id]; if(c&&st.a&&st.a!==c.mode+':'+c.ox) restart(id); }
+  if(D.version) S.dataver=D.version;
+  if(n){ S.notice=`카드 ${n}장의 질문 방식이나 정답이 바뀌어 그 카드만 기록을 다시 시작합니다.`; }
+  save();
+}
+fetch('cards.json?v='+Date.now()).then(r=>r.json()).then(d=>{ D=d; migrate(); render(); syncUI(); syncNow(); loadBook().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); loadPat().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); }).catch(e=>{ main.innerHTML='<div class="card">카드 자료(cards.json)를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; });
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+</script>
+</body>
+</html>
