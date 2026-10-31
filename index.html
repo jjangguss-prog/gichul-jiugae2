@@ -51,6 +51,11 @@ main{padding:14px 16px;max-width:680px;margin:0 auto}
 [data-theme="dark"] .tag.A{background:#3b1626;color:#ff8ab4}
 .qstem{font-size:14px;color:var(--ink2);margin:8px 0 4px}
 .passage{font-size:14px;color:var(--ink2);background:var(--bg);border-left:3px solid var(--line);padding:6px 10px;margin:6px 0;border-radius:6px;white-space:pre-wrap}
+.ptab{overflow-x:auto;white-space:normal;margin:2px 0}
+.ptab table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.4}
+.ptab td,.ptab th{border:1px solid var(--line);padding:4px 5px;text-align:center;vertical-align:middle}
+.ptab th{background:var(--card);font-weight:700}
+.ptab td:first-child{font-weight:600}
 .choice{font-size:19px;font-weight:600;margin:10px 0 14px;line-height:1.55}
 .choice .red{color:var(--x);text-decoration:line-through;text-decoration-thickness:2px}
 .choice .hl{background:#fff3a3;color:#000;border-radius:3px;padding:0 2px}
@@ -124,7 +129,9 @@ a.btn{display:block;text-align:center;text-decoration:none}
 .trap{font-size:14px;background:var(--warn-bg);color:var(--ink);padding:8px 10px;border-radius:8px;margin:6px 0}
 .box{font-size:15px;padding:8px 10px;border-radius:8px;margin:8px 0 0;line-height:1.55}
 .box b:not(.kw){display:inline-block;margin-right:6px}
-.box.issue{background:var(--acc-bg)} .box.intent{background:var(--x-bg)}
+.box.issue{background:var(--acc-bg)} .box.intent{background:var(--x-bg)} .box.practice{background:var(--o-bg)}
+.jo{font-size:13.5px;line-height:1.6;color:var(--ink2);background:var(--bg);border-left:3px solid var(--line);border-radius:4px;padding:6px 9px;margin-top:6px}
+.jo b{font-size:12px;color:var(--muted);margin-right:6px}
 .note.pre{white-space:pre-wrap}
 /* 해설 강조: 개념어 굵게(.kw), O/X를 가르는 결론 형광 밑줄(.cc), 조문·판례 번호 작은 회색(.lw) */
 b.kw{font-weight:800}
@@ -640,11 +647,16 @@ function mixTsx(fresh){
 // 지금 과목의 새 카드가 다 떨어지면 SUBJ_ORDER에서 새 카드가 남은 다음 과목으로 저절로 넘어간다. 오늘 탭 과목 표를 눌러 바꿀 수 있다.
 const SUBJ_ORDER=['brk','pub','reg','civ','rea']; // 중개사법(2차 중 쉽고 민법과 이어짐) → 공법(가장 넓어 일찍) → 공시세법(세법은 해마다 바뀌어 늦게) → 1차
 function freshBy(){ const o={}; for(const c of D.cards){ const s=S.cards[c.id]; if(!s||!s.st){ const k=D.questions[c.q].subject; o[k]=(o[k]||0)+1; } } return o; }
+// PD가 과목 표에서 직접 고른 과목(S.focusUser)은 새 카드가 떨어질 때까지 그대로 둔다. 저절로 잡힌 과목은 매번 SUBJ_ORDER에서
+// 새 카드가 남은 첫 과목으로 다시 잡는다(11-01: 2차 카드가 없던 동안 민법으로 잡혔어도, 2차가 들어오면 중개사법부터)
 function focusSubj(fb){
   fb=fb||freshBy(); const f=S.focus||'';
-  if(f&&fb[f]) return f;
+  if(f&&fb[f]&&S.focusUser) return f;
   const n=SUBJ_ORDER.find(x=>fb[x])||'';
-  if(n!==f){ if(f&&n) S.notice=(S.notice?S.notice+' ':'')+`✓ ${SUBJ[f]} 새 카드를 다 봤습니다. 이제 새 카드는 ${SUBJ[n]}에서 나옵니다.`; S.focus=n; save(); }
+  if(n!==f||(S.focusUser&&!fb[f])){
+    if(f&&n&&n!==f) S.notice=(S.notice?S.notice+' ':'')+(fb[f]?`새 카드는 이제 ${SUBJ[n]}에서 나옵니다(과목 순서: 중개사법 → 공법 → 공시세법 → 민법 → 학개론). 다른 과목은 맨 위 과목 표를 누르면 바뀝니다.`:`✓ ${SUBJ[f]} 새 카드를 다 봤습니다. 이제 새 카드는 ${SUBJ[n]}에서 나옵니다.`);
+    S.focus=n; S.focusUser=0; save();
+  }
   return n;
 }
 function qLabel(Q){ return Q.tsx?`타시험 ${Q.tsx.src}`:`${Q.round}회 ${Q.no}번`; }
@@ -748,7 +760,7 @@ function renderToday(){
   main.querySelector('#start5').onclick=()=>startSession(buildQueue(true).q,true);
   const pb=main.querySelector('#pilot'); if(pb) pb.onclick=()=>startSession(D.cards.filter(c=>D.pilot.includes(c.q)));
   main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ S.minutes=+b.dataset.m; save(); render(); });
-  main.querySelectorAll('[data-focus]').forEach(b=>b.onclick=()=>{ S.focus=b.dataset.focus; save(); render(); });
+  main.querySelectorAll('[data-focus]').forEach(b=>b.onclick=()=>{ S.focus=b.dataset.focus; S.focusUser=1; save(); render(); });
 }
 // 오늘 탭 '전체 진도': 몇 회독째인지, 그 회독이 몇 % 됐는지
 function progressHtml(p){
@@ -833,6 +845,14 @@ function endSession(){
   if(session){ const t=today(); const d=S.daily[t]||(S.daily[t]={new:0,rev:0,sec:0}); d.sec+=Math.floor((Date.now()-session.startAt)/1000); save(); }
   session=null; clearInterval(timerId); render();
 }
+// 보기 박스. 2차 표 문항은 칸을 ' | '로 나눠 옮겼다(11-01): 이어지는 그런 줄을 표로 그린다(첫 줄 = 머리, 칸이 모자란 줄은 끝 칸을 늘림)
+function passageHtml(P){
+  const out=[]; let rows=[];
+  const flush=()=>{ if(!rows.length) return; const n=Math.max(...rows.map(r=>r.length));
+    out.push(`<div class="ptab"><table>${rows.map((r,i)=>`<tr>${r.map((x,j)=>{ const sp=j===r.length-1&&r.length<n?` colspan="${n-r.length+1}"`:''; return i===0?`<th${sp}>${esc(x)}</th>`:`<td${sp}>${esc(x)}</td>`; }).join('')}</tr>`).join('')}</table></div>`); rows=[]; };
+  for(const l of P){ if(/ \| |^\| /.test(l)) rows.push(l.split(/\s*\|\s*/).map(x=>x.trim())); else { flush(); out.push(esc(l)); } }
+  flush(); return out.join('\n');
+}
 function markChoice(text, wrong){
   if(!wrong||!text.includes(wrong)) return esc(text);
   const i=text.indexOf(wrong);
@@ -854,8 +874,8 @@ function renderCard(){
   <div class="card">
     <div>${Q.tsx?`<span class="tag T">타시험 · ${subj}</span>${tsRank(Q)}`:`<span class="tag ${Q.grade}">${Q.grade}급</span><span class="tag">${subj} ${Q.round}회 ${Q.no}번</span>`}${F.tag?`<span class="tag" style="background:var(--line);color:var(--ink2)">${F.tag}</span>`:''}${st.st===1&&s.phase==='ask'?`<span class="muted" style="font-size:12px">지우기까지 ${dots(st.k.length)}</span>`:''}</div>
     <div class="muted" style="font-size:12px;margin-top:4px">${esc(Q.concept)}</div>
-    ${c.kind==='calc'&&Q.img?qimgHtml(Q.img,`${Q.round}회 ${Q.no}번 문제 원문`,`<div class="qstem">${esc(Q.question)}</div>${Q.passage&&Q.passage.length?`<div class="passage">${esc(Q.passage.join('\n'))}</div>`:''}${s.phase==='ask'?`<div class="choice" style="font-size:16px">${Q.choices.map((t,i)=>`<div style="margin:4px 0">${CIRC[i]} ${esc(t)}</div>`).join('')}</div>`:''}`):(c.mode==='member'?(Q.facts?`<div class="qstem">${esc(Q.facts)}</div>`:''):Q.question?`<div class="qstem">${esc(Q.question)}</div>`:'')}
-    ${!(c.kind==='calc'&&Q.img)&&Q.passage&&Q.passage.length&&(c.kind==='calc'||c.n.match(/[①②③④⑤]/))?`<div class="passage">${esc(Q.passage.join('\n'))}</div>`:''}`;
+    ${c.kind==='calc'&&Q.img?qimgHtml(Q.img,`${Q.round}회 ${Q.no}번 문제 원문`,`<div class="qstem">${esc(Q.question)}</div>${Q.passage&&Q.passage.length?`<div class="passage">${passageHtml(Q.passage)}</div>`:''}${s.phase==='ask'?`<div class="choice" style="font-size:16px">${Q.choices.map((t,i)=>`<div style="margin:4px 0">${CIRC[i]} ${esc(t)}</div>`).join('')}</div>`:''}`):(c.mode==='member'?(Q.facts?`<div class="qstem">${esc(Q.facts)}</div>`:''):Q.question?`<div class="qstem">${esc(Q.question)}</div>`:'')}
+    ${!(c.kind==='calc'&&Q.img)&&Q.passage&&Q.passage.length&&(c.kind==='calc'||c.n.match(/[①②③④⑤]/))?`<div class="passage">${passageHtml(Q.passage)}</div>`:''}`;
   if(c.kind==='calc'){
     if(!Q.img||s.phase!=='ask') html+=`<div class="choice" style="font-size:16px">${Q.choices.map((t,i)=>`<div style="margin:4px 0;${s.phase!=='ask'&&CIRC[i]===c.ox?'color:var(--o);font-weight:800':''}${s.phase!=='ask'&&CIRC[i]===s.pick&&s.pick!==c.ox?'color:var(--x);text-decoration:line-through':''}">${CIRC[i]} ${esc(t)}</div>`).join('')}</div>`;
     if(s.phase==='ask'){
@@ -880,6 +900,7 @@ function renderCard(){
     const ok=s.pick===ans;
     html+=`<div class="verdict ${ok?'ok':'bad'}">${ok?'맞음':'틀림'} · 정답은 ${ansLabel(c,ans)}</div>
       ${s.confused?'':streakHtml(s.res)}
+      ${Q.why?`<div class="box issue"><b>제도부터</b> ${md(Q.why)}</div>`:''}
       ${F.test?flipNote(c,F):''}
       ${c.revision||Q.revision?`<div class="note amend">⚖ 법 개정 주의: ${md(c.revision||Q.revision)}</div>`:''}
       ${c.swap?`${F.flip&&!F.flip.real?'':`<div class="fix">바로잡은 문장: ${c.ed&&c.ed.length?edPair(c.text,c.ed).b:esc(fixedText(c))}</div>`}<div class="kind">출제자의 바꿔치기: ${esc(c.swap.kind||'')}</div>${edLegend(c.ed)}${c.fake?`<div class="fake"><b>그럴듯하게 지어낸 말</b>${md(c.fake)}</div>`:''}`:(c.ox==='X'&&c.fix?`<div class="fix">바로잡기: ${esc(c.fix)}</div>`:'')}
@@ -888,6 +909,7 @@ function renderCard(){
       ${c.mode==='choose'&&c.opts?`<div class="opts">${c.opts.map(o=>`<div class="opt-r ${o.ok?'ok':''}"><b>${esc(o.n)}</b> ${o.ok?'<span class="tag">정답</span>':''}${md(o.reason||'')}${o.law?`<span class="law"> · ${esc(o.law)}</span>`:''}</div>`).join('')}</div>`:''}
       <div class="reason">${c.reason?md(c.reason):'<span class="muted">근거 준비 중. 정답 여부만 확인하세요.</span>'}</div>
       ${c.law?`<div class="law">${esc(c.law)}</div>`:''}
+      ${c.jo?`<div class="jo"><b>조문</b>${esc(c.jo)}</div>`:''}
       ${c.point?`<div class="box issue"><b>이 선지의 논점</b> ${md(c.point)}</div>
       ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${md(c.aim)}</div>`:''}
       ${Q.issue||Q.intent||Q.frame?`<details><summary>문항 전체의 논점·출제 의도 (이 선지와는 다른 주제)</summary>
@@ -899,12 +921,13 @@ function renderCard(){
       ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${md(c.aim)}</div>`:(Q.intent?`<div class="box intent"><b>출제 의도</b> ${md(Q.intent)}</div>`:'')}
       ${Q.frame?`<details open><summary>판단 틀 (헷갈리는 것 나란히 보기)</summary><div class="note pre">${md(Q.frame)}</div></details>`:''}
       ${c.aim&&Q.intent?`<details><summary>문항 전체의 출제 의도 (정답 선지 기준)</summary><div class="box intent">${md(Q.intent)}</div></details>`:''}`}
+      ${Q.practice?`<div class="box practice"><b>실무에서는</b> ${md(Q.practice.replace(/^실무에서는[,\s]*/,''))}${Q.practice_src?`<span class="law"> (${esc(Q.practice_src)})</span>`:''}</div>`:''}
       ${Q.core&&!Q.issue?`<details><summary>이 문제의 핵심</summary><div class="note">${md(Q.core)}</div></details>`:''}
       ${Q.calc?`<details><summary>계산 풀이</summary><div class="calc">${esc(Q.calc)}</div></details>`:''}
       ${Q.tip&&!c.point?`<div class="tip">암기팁: ${md(Q.tip)}</div>`:''}
       ${Q.tsx?tsxBack(c,Q):''}${patLinks(c.id)}${bookLinks(c.q)}
       ${Q.related&&Q.related.length?`<details><summary>같은 논점 기출 ${Q.related.length}문항</summary><div class="note">${Q.related.map(x=>`${x.r}회 ${x.n}번 · ${esc(x.q)}`).join('<br>')}</div></details>`:''}
-      ${Q.tsx?'':`<details><summary>문제 전체 보기</summary><div class="note">${esc(Q.question)}${Q.passage&&Q.passage.length?'\n'+esc(Q.passage.join('\n')):''}<br>${Q.choices.map((t,i)=>`${CIRC[i]} ${esc(t)}`).join('<br>')}<br><b>정답 ${Q.all_correct?'모두 정답(이의신청으로 전항정답 처리)':CIRC[Q.answer-1]}</b></div></details>`}
+      ${Q.tsx?'':`<details><summary>문제 전체 보기</summary><div class="note">${esc(Q.question)}${Q.passage&&Q.passage.length?'\n'+passageHtml(Q.passage):''}<br>${Q.choices.map((t,i)=>`${CIRC[i]} ${esc(t)}`).join('<br>')}<br><b>정답 ${Q.all_correct?'모두 정답(이의신청으로 전항정답 처리)':Q.answers?Q.answers.map(a=>CIRC[a-1]).join('·')+' (확정답안 복수정답)':CIRC[Q.answer-1]}</b></div></details>`}
     </div>
     ${c.easy?`<div class="card easy"><b>쉬운 설명</b><div class="reason">${md(c.easy)}</div></div>`:''}
     <div class="card help ${s.confused?'':'hide'}" id="help">
@@ -1129,9 +1152,9 @@ function renderExamPaper(){
   const qs=Object.values(D.questions).filter(q=>!q.tsx&&+q.round===exam.round&&q.subject===exam.subj).sort((a,b)=>a.no-b.no);
   let html=`<div class="exam"><div class="row"><b>${exam.round}회 ${SUBJ_FULL[exam.subj]}</b><button class="btn ghost small" style="flex:0 0 auto;padding:6px 10px" id="exit">나가기</button></div>`;
   for(const q of qs){
-    const qt=`<div class="q">${q.no}. ${esc(q.question)}</div>${q.passage.length?`<div class="passage">${esc(q.passage.join('\n'))}</div>`:''}`;
+    const qt=`<div class="q">${q.no}. ${esc(q.question)}</div>${q.passage.length?`<div class="passage">${passageHtml(q.passage)}</div>`:''}`;
     html+=q.img?qimgHtml(q.img,`${q.no}번 문제 원문`,qt):qt;
-    q.choices.forEach((t,i)=>{ const sel=exam.answers[q.no]===i+1; let cls='opt'+(sel?' sel':''); if(exam.done){ if(q.all_correct?sel:(i+1===q.answer)) cls+=' right'; else if(sel) cls+=' wrongsel'; } html+=`<button class="${cls}" data-q="${q.no}" data-i="${i+1}">${CIRC[i]} ${esc(t)}</button>`; });
+    q.choices.forEach((t,i)=>{ const sel=exam.answers[q.no]===i+1; let cls='opt'+(sel?' sel':''); if(exam.done){ if(q.all_correct?sel:(q.answers||[q.answer]).includes(i+1)) cls+=' right'; else if(sel) cls+=' wrongsel'; } html+=`<button class="${cls}" data-q="${q.no}" data-i="${i+1}">${CIRC[i]} ${esc(t)}</button>`; });
     if(exam.done&&q.core) html+=`<div class="note">${md(q.core)}</div>`;
   }
   const n=Object.keys(exam.answers).length;
@@ -1143,7 +1166,7 @@ function renderExamPaper(){
 function gradeExam(){
   const qs=Object.values(D.questions).filter(q=>!q.tsx&&+q.round===exam.round&&q.subject===exam.subj);
   let right=0;
-  for(const q of qs){ const ok=q.all_correct?!!exam.answers[q.no]:(exam.answers[q.no]===q.answer); if(ok) right++; else { for(const c of D.cards){ if(c.q===q.id){ const st=cardState(c.id); if(st.st===2){ st.st=1; } st.k=[]; st.due=today(); st.miss++; } } } }
+  for(const q of qs){ const ok=q.all_correct?!!exam.answers[q.no]:(q.answers||[q.answer]).includes(exam.answers[q.no]); if(ok) right++; else { for(const c of D.cards){ if(c.q===q.id){ const st=cardState(c.id); if(st.st===2){ st.st=1; } st.k=[]; st.due=today(); st.miss++; } } } }
   exam.done=true; exam.score=Math.round(right*2.5);
   S.exam[exam.round+exam.subj]={score:exam.score,date:today(),right}; save(); renderExamPaper(); header();
 }
@@ -1916,7 +1939,22 @@ function migrate(){
   if(n){ S.notice=`카드 ${n}장의 질문 방식이나 정답이 바뀌어 그 카드만 기록을 다시 시작합니다.`; }
   save();
 }
-fetch('cards.json?v='+Date.now()).then(r=>r.json()).then(d=>{ D=d; for(const [k,q] of Object.entries(D.questions)) q.id=k; migrate(); render(); syncUI(); syncNow(); loadBook().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); loadPat().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); }).catch(e=>{ main.innerHTML='<div class="card">카드 자료(cards.json)를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; });
+// 카드 자료가 커져(11-01, 2차 포함 7.8MB·압축 1.6MB) 열 때마다 새로 받지 않는다. 판 번호(cards.ver, 몇 바이트)만 새로 받아
+// 폰 캐시에 그 판이 있으면 그것을 쓰고, 없을 때만 cards.json을 받는다(받은 판은 서비스워커가 캐시에 넣고 옛 판은 여기서 지운다).
+// 판 번호를 못 받으면(인터넷 끊김) 예전처럼 받으려 하고, 안 되면 서비스워커가 캐시에 남은 판을 준다.
+function loadCards(){
+  return fetch('cards.ver',{cache:'no-store'}).then(r=>r.ok?r.text():'').catch(()=>'').then(async v=>{
+    v=(v||'').trim(); if(!/^[0-9a-f]{6,40}$/.test(v)) v='';
+    const url='cards.json?v='+(v||Date.now());
+    let res=null;
+    try{ if(v&&window.caches) res=await caches.match(url); }catch(e){}
+    if(!res) res=await fetch(url);
+    const d=await res.json();
+    try{ if(v&&window.caches) for(const k of await caches.keys()){ if(k.indexOf('jiugae2-')!==0) continue; const c=await caches.open(k); for(const q of await c.keys()) if(q.url.includes('/cards.json')&&!q.url.endsWith(url)) await c.delete(q); } }catch(e){}
+    return d;
+  });
+}
+loadCards().then(d=>{ D=d; for(const [k,q] of Object.entries(D.questions)) q.id=k; migrate(); render(); syncUI(); syncNow(); loadBook().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); loadPat().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); }).catch(e=>{ main.innerHTML='<div class="card">카드 자료(cards.json)를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; });
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
 </body>
