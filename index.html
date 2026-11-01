@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>기출 지우개 2</title>
+<title>기출지우개 : 공인중개사 2027</title>
 <meta name="description" content="공인중개사 1차·2차 기출 선지를 OX로 넘기며 확실한 것은 지우고 모르는 것만 남기는 폰 공부 앱">
 <meta name="theme-color" content="#f6f4ee">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="기출 지우개 2">
+<meta name="apple-mobile-web-app-title" content="기출지우개 2027">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -40,7 +40,10 @@ body{word-break:keep-all;overflow-wrap:break-word}
 body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
 header{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 16px 8px;border-bottom:1px solid var(--line)}
 .top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-.top h1{font-size:18px;margin:0;font-weight:800}
+.top h1{font-size:18px;margin:0;font-weight:800;white-space:nowrap}
+.top h1 .h1s{font-size:13px;font-weight:700;color:var(--ink2)}
+/* 이름이 길어져(11-01 '기출지우개 : 공인중개사 2027') 폰에서는 D-day 줄이 이름 아래로 내려간다 */
+.top{flex-wrap:wrap;row-gap:0}
 .top .sub{font-size:13px;color:var(--muted)}
 .bar{height:6px;background:var(--line);border-radius:3px;margin-top:8px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--acc);width:0%}
@@ -365,11 +368,140 @@ mark.tk{background:linear-gradient(transparent 40%,#fff3a3 40%,#fff3a3 92%,trans
 .note.amend{border-left:3px solid var(--x)}
 .note.unv{border-left:3px solid var(--muted)}
 .unv-s{font-size:13px;color:var(--muted);margin-top:4px}
+/* 되돌리기(11-01 PD: 손이 미끄러져 O/X·🤔·다음을 잘못 누른 것) */
+.undo{flex:0 0 auto;padding:6px 10px;border-radius:12px;border:1.5px solid var(--acc);background:var(--acc-bg);color:var(--acc);font:inherit;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.vrow{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.vrow .undo{border-color:var(--line);background:transparent;color:var(--ink2);font-weight:700;font-size:13.5px}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,8px);opacity:0;z-index:50;max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-size:14.5px;font-weight:700;padding:10px 16px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.18);transition:opacity .2s,transform .2s;pointer-events:none;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+/* 켤 때 첫 화면(11-01 PD: 켤 때마다 그럴싸한 모션그래픽). 낙서를 지우개가 문질러 지우면 이름이 드러난다. 누르면 건너뛴다 */
+#splash{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#fff;
+  background:radial-gradient(120% 80% at 50% 42%,#3d76e8 0%,#2f63d0 48%,#2450b0 100%);transition:opacity .42s ease;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+:root[data-theme="dark"] #splash{background:radial-gradient(120% 80% at 50% 42%,#24438e 0%,#182c60 52%,#0f1a3a 100%)}
+#splash canvas{position:absolute;inset:0;width:100%;height:100%}
+#splash .sp-in{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 16px;transition:transform .42s ease}
+#splash .sp-in::before{content:"";position:absolute;left:50%;top:44%;width:140vmin;height:140vmin;transform:translate(-50%,-50%) scale(.55);opacity:0;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,255,255,.17),rgba(255,255,255,0));animation:spGlow 1.6s .35s ease-out forwards;pointer-events:none}
+@keyframes spGlow{to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+#splash.out{opacity:0;pointer-events:none}
+#splash.out .sp-in{transform:scale(1.05)}
+#splash .sp-line{position:relative;margin-top:min(19vw,78px)}
+#splash .sp-t{display:block;font-size:min(15vw,64px);font-weight:900;letter-spacing:-.03em;line-height:1.15;white-space:nowrap;text-shadow:0 3px 18px rgba(10,30,90,.35);
+  padding:.4em .35em;margin:-.4em -.35em;clip-path:inset(0 100% 0 0);-webkit-clip-path:inset(0 100% 0 0)} /* 안쪽 여백은 그림자가 자르는 선에 안 걸리게 */
+#splash .sp-scr{position:absolute;left:-4%;top:-8%;width:108%;height:116%;overflow:visible;pointer-events:none}
+#splash .sp-scr path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+#splash .sp-er{position:absolute;left:0;top:0;width:min(23vw,96px);height:min(9.6vw,40px);opacity:0;will-change:transform;filter:drop-shadow(0 6px 8px rgba(5,20,70,.35))}
+#splash .sp-er svg{display:block;width:100%;height:100%}
+#splash .sp-sub{margin-top:10px;font-size:min(5.8vw,24px);font-weight:800;letter-spacing:.08em;opacity:0;white-space:nowrap}
+#splash .sp-yr{position:relative;display:inline-block;padding:0 .18em;margin-left:.1em}
+#splash .sp-yr i{position:absolute;left:0;right:0;top:.12em;bottom:.08em;background:#ffe14d;border-radius:.18em;transform:scaleX(0);transform-origin:0 50%}
+#splash .sp-yr b{position:relative;font-weight:900}
+#splash .sp-chip{margin-top:22px;font-size:15.5px;font-weight:800;padding:7px 16px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);opacity:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+#splash .sp-chip b{font-size:18px;font-weight:900;margin-left:4px}
+#splash .sp-stat{margin-top:12px;font-size:14.5px;font-weight:700;color:rgba(255,255,255,.86);opacity:0;min-height:1.5em}
+#splash .sp-wait{position:absolute;left:0;right:0;bottom:calc(-64px);font-size:13px;color:rgba(255,255,255,.7);opacity:0;transition:opacity .3s}
+#splash .sp-wait.on{opacity:1;animation:spPulse 1.2s ease-in-out infinite}
+@keyframes spPulse{50%{opacity:.35}}
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true">
+  <canvas id="spc"></canvas>
+  <div class="sp-in">
+    <div class="sp-line" id="spLine">
+      <span class="sp-t" id="spT">기출지우개</span>
+      <svg class="sp-scr" id="spScr"></svg>
+      <div class="sp-er" id="spEr"><svg viewBox="0 0 96 40"><rect x="2" y="2" width="92" height="36" rx="8" fill="#fff"/><path d="M42 30H94V30A8 8 0 0 1 86 38H42Z" fill="#dfe6f5"/><path d="M10 2H42V38H10A8 8 0 0 1 2 30V10A8 8 0 0 1 10 2Z" fill="#ff6b61"/><rect x="35" y="2" width="7" height="36" fill="#e2544b"/><rect x="50" y="8" width="34" height="4" rx="2" fill="#eef2fb"/></svg></div>
+    </div>
+    <div class="sp-sub" id="spSub">공인중개사<span class="sp-yr"><i id="spHl"></i><b id="spYr">2027</b></span></div>
+    <div class="sp-chip" id="spChip"></div>
+    <div class="sp-stat" id="spStat"></div>
+    <div class="sp-wait" id="spWait">카드 불러오는 중…</div>
+  </div>
+</div>
+<script>
+// 켤 때 첫 화면(11-01 PD: "실행할 때마다 그럴싸한 모션그래픽이라도 뜨면 더 자주 들어가고 싶을 것 같아").
+// 낙서(연필 줄·빨간 ✗)를 지우개가 문질러 지우면 '기출지우개'가 드러나고, 지우개는 위로 튀어 올라 앉는다. 이어서 '공인중개사 2027'(2027에 형광펜),
+// 시험까지 D-day(조금 큰 수에서 줄어들며 멈춤), 연속 공부 날·지운 카드 수. 카드 자료를 다 불러오고 그린 뒤(splashReady) 약 2.4초에 걷힌다.
+// 누르면 건너뛴다. 동작 줄이기 설정이면 움직임 없이 끝 모습만 잠깐. 자료가 안 오면 6초에 그냥 걷는다.
+(()=>{
+  const $=id=>document.getElementById(id), sp=$('splash');
+  const line=$('spLine'), T=$('spT'), scr=$('spScr'), er=$('spEr'), sub=$('spSub'), hl=$('spHl'), yr=$('spYr'), chip=$('spChip'), stat=$('spStat'), wait=$('spWait'), cv=$('spc'), cx=cv.getContext('2d');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const meta=document.querySelector('meta[name=theme-color]'); if(meta) meta.content=document.documentElement.dataset.theme==='dark'?'#182c60':'#2f63d0';
+  const cl=(v,a,b)=>Math.min(b,Math.max(a,v)), P=(a,b,t)=>cl((t-a)/(b-a),0,1), L=(a,b,p)=>a+(b-a)*p;
+  const eo=p=>1-Math.pow(1-p,3), eio=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2, eb=p=>1+2.7*Math.pow(p-1,3)+1.7*Math.pow(p-1,2);
+  const TL={enter:[300,560], rub:[560,1320], hop:[1320,1640], sub:[1260,1660], hl:[1560,1860], chip:[1640,1980], cnt:[1680,2200], stat:[1880,2220], end:2400};
+  let t0=performance.now(), prev=0, ready=false, out=false, info=null, shown='', front=0, lastX=null, M=null, paths=[], parts=[], glyphs=[], dpr=1, VW=0, VH=0;
+  function measure(){
+    VW=innerWidth; VH=innerHeight; dpr=Math.min(devicePixelRatio||1,2.5); cv.width=VW*dpr; cv.height=VH*dpr;
+    const l=line.getBoundingClientRect(), t=T.getBoundingClientRect(), s=scr.getBoundingClientRect();
+    M={W:l.width, H:l.height, lx:l.left, ly:l.top, tx:t.left-l.left, tw:t.width, sx:s.left-l.left, sw:s.width, sh:s.height, ew:er.offsetWidth, eh:er.offsetHeight};
+  }
+  // 낙서: 위아래로 긁은 연필 줄 + 옅은 물결 + 끝에 빨간 ✗. 그리는 순서대로 선이 그어진다(stroke-dashoffset)
+  function scribble(){
+    const w=M.sw, h=M.sh, sw=Math.max(3,M.H*.06), R=(a,b)=>a+Math.random()*(b-a);
+    let d=`M${w*.04} ${h*R(.45,.6)}`, x=w*.04, up=true;
+    while(x<w*.82){ const nx=x+h*R(.13,.2), y=up?h*R(.2,.32):h*R(.66,.8); d+=` Q${(x+nx)/2} ${y+(up?-1:1)*h*.08} ${nx} ${y}`; x=nx; up=!up; }
+    let d2=`M${w*.03} ${h*.5}`; for(let i=1;i<=24;i++) d2+=` L${w*.03+w*.79*i/24} ${h*(.5+.13*Math.sin(i/24*Math.PI*6))}`;
+    const xs=w*.86, xe=w*.98, ys=h*.24, ye=h*.76;
+    scr.setAttribute('viewBox',`0 0 ${w} ${h}`);
+    scr.innerHTML=[[d,'rgba(255,255,255,.62)',sw],[d2,'rgba(255,255,255,.3)',sw*.75],[`M${xs} ${ys}L${xe} ${ye}`,'#ff8f87',sw*1.25],[`M${xe} ${ys}L${xs} ${ye}`,'#ff8f87',sw*1.25]]
+      .map(([d,c,s])=>`<path d="${d}" stroke="${c}" stroke-width="${s}"/>`).join('');
+    paths=[...scr.querySelectorAll('path')].map((p,i)=>{ const n=p.getTotalLength(); p.style.strokeDasharray=n; p.style.strokeDashoffset=n; return {p, n, a:40+i*110, b:(i<2?360:200)+i*110}; });
+  }
+  // 뒤에 떠오르는 옅은 ○ ✕ ①~⑤
+  function seed(){ const G=['○','✕','①','②','③','④','⑤','O','X','✓']; glyphs=Array.from({length:14},()=>({g:G[Math.random()*G.length|0], x:Math.random()*VW, y:Math.random()*VH, s:16+Math.random()*34, a:.05+Math.random()*.08, v:10+Math.random()*22, r:Math.random()*6.28, w:(Math.random()-.5)*.6})); }
+  // 지우개 가루: 움직인 만큼 떨어진다
+  function crumbs(x,y,n){ for(let i=0;i<n&&parts.length<160;i++) parts.push({x:x+(Math.random()-.5)*M.ew*.55, y:y+Math.random()*4, vx:(Math.random()-.5)*150, vy:-Math.random()*130-20, s:1.6+Math.random()*2.6, life:0, max:.55+Math.random()*.5, c:Math.random()<.35?'255,170,160':'255,255,255'}); }
+  function draw(t,dt){
+    cx.setTransform(dpr,0,0,dpr,0,0); cx.clearRect(0,0,VW,VH);
+    const fin=eo(P(0,700,t)); cx.textAlign='center'; cx.textBaseline='middle';
+    for(const g of glyphs){ g.y-=g.v*dt; g.r+=g.w*dt; if(g.y<-50){ g.y=VH+50; g.x=Math.random()*VW; }
+      cx.save(); cx.translate(g.x,g.y); cx.rotate(g.r); cx.font=`800 ${g.s}px system-ui,sans-serif`; cx.fillStyle=`rgba(255,255,255,${g.a*fin})`; cx.fillText(g.g,0,0); cx.restore(); }
+    parts=parts.filter(p=>(p.life+=dt)<p.max);
+    for(const p of parts){ p.vy+=900*dt; p.x+=p.vx*dt; p.y+=p.vy*dt; cx.fillStyle=`rgba(${p.c},${(1-p.life/p.max).toFixed(3)})`; cx.fillRect(p.x,p.y,p.s,p.s*.8); }
+  }
+  function getInfo(){
+    try{ if(typeof splashInfo==='function') return splashInfo(); }catch(e){}
+    return {name:'38회', d:Math.max(0,Math.ceil((new Date('2027-10-30T00:00:00+09:00')-new Date())/86400000)), streak:0, del:0};
+  }
+  function exit(){ if(out) return; out=true; sp.classList.add('out'); try{ applyTheme(); }catch(e){} setTimeout(()=>{ sp.remove(); removeEventListener('resize',measure); },460); }
+  function frame(now){
+    if(!sp.isConnected) return;
+    const real=now-t0, t=reduce?TL.end+real:real, dt=prev?Math.min(.05,(now-prev)/1000):0; prev=now;
+    for(const q of paths) q.p.style.strokeDashoffset=q.n*(1-eo(P(q.a,q.b,t)));
+    const W=M.W, mid=M.H*.52, top=-M.H*.62; let x, y, r, s=1, o=1;
+    if(t<TL.enter[0]){ o=0; x=-W*.42; y=mid-M.H*.9; r=-40; }
+    else if(t<TL.enter[1]){ const p=eo(P(...TL.enter,t)); x=L(-W*.42,0,p); y=L(mid-M.H*.9,mid,p); r=L(-40,-16,p); o=Math.min(1,p*3); }
+    else if(t<TL.rub[1]){ const p=P(...TL.rub,t); x=cl(W*eio(p)+Math.sin(p*Math.PI*8)*W*.07*(1-p*.5),0,W); y=mid+Math.sin(p*Math.PI*16)*M.H*.035; r=-16+Math.sin(p*Math.PI*8+.5)*7; }
+    else if(t<TL.hop[1]){ const p=P(...TL.hop,t), e=eio(p); x=L(W,W/2,e); y=L(mid,top,e)-Math.sin(p*Math.PI)*M.H*.55; r=L(-16,-380,e); s=L(1,.78,e); }
+    else { x=W/2; y=top+Math.sin((t-TL.hop[1])/420)*2.5; r=-20; s=.78; }
+    if(t>=TL.enter[1]&&t<TL.rub[1]){ front=Math.max(front,x); if(lastX!=null){ const dx=Math.abs(x-lastX); if(dx>.5) crumbs(M.lx+x, M.ly+mid+M.eh*.32, Math.min(6,dx*.22|0)+(Math.random()<dx*.2?1:0)); } lastX=x; }
+    if(t>=TL.rub[1]) front=1e5;
+    er.style.opacity=o; er.style.transform=`translate(${x-M.ew/2}px,${y-M.eh/2}px) rotate(${r}deg) scale(${s})`;
+    T.style.clipPath=T.style.webkitClipPath=front>=1e5?'none':`inset(0 ${cl(M.tw-(front-M.tx),0,M.tw)}px 0 0)`;
+    scr.style.clipPath=scr.style.webkitClipPath=`inset(0 0 0 ${cl(front-M.sx,0,M.sw)}px)`;
+    const ps=eo(P(...TL.sub,t)); sub.style.opacity=ps; sub.style.transform=`translateY(${(1-ps)*14}px)`;
+    const ph=eo(P(...TL.hl,t)); hl.style.transform=`scaleX(${ph})`; yr.style.color=ph>.45?'#14244d':'';
+    if(t>=TL.chip[0]){
+      if(!info){ info=getInfo(); const a=[]; if(info.streak>=2) a.push(`🔥 ${info.streak}일 연속`); if(info.del) a.push(`✂ 지운 카드 ${info.del.toLocaleString()}장`); stat.textContent=a.length?a.join(' · '):'오늘부터 하나씩 지워 봅시다'; }
+      const pc=P(...TL.chip,t), n=Math.round(L(info.d+45,info.d,eo(P(...TL.cnt,t)))), h=info.d>0?`${info.name} 1·2차까지<b>D-${n}</b>`:`${info.name} 시험 날`;
+      chip.style.opacity=Math.min(1,pc*1.6); chip.style.transform=`scale(${L(.86,1,eb(pc))})`; if(h!==shown){ chip.innerHTML=h; shown=h; }
+      const pt=eo(P(...TL.stat,t)); stat.style.opacity=pt; stat.style.transform=`translateY(${(1-pt)*8}px)`;
+    }
+    draw(t,dt);
+    if(!out){ if(ready&&real>=(reduce?600:TL.end)) exit(); else if(real>=6000) exit(); else if(real>=TL.end+500) wait.classList.add('on'); }
+    requestAnimationFrame(frame);
+  }
+  window.splashReady=()=>{ ready=true; };
+  sp.onclick=()=>{ if(ready) exit(); else t0=Math.min(t0,performance.now()-TL.end); };
+  measure(); scribble(); seed(); addEventListener('resize',measure);
+  requestAnimationFrame(frame);
+})();
+</script>
 <header>
-  <div class="top"><h1 id="title">기출 지우개 2</h1><div class="sub"><span id="subtitle">불러오는 중</span><span id="syncdot"></span></div></div>
+  <div class="top"><h1 id="title">기출지우개<span class="h1s"> : 공인중개사 2027</span></h1><div class="sub"><span id="subtitle">불러오는 중</span><span id="syncdot"></span></div></div>
   <div class="bar"><i id="bar"></i><i id="bar2"></i></div>
 </header>
 <main id="main"></main>
@@ -404,7 +536,7 @@ function today(){ const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneO
 function daysLeft(){ return Math.max(0,Math.ceil((EXAM_DATE-new Date())/86400000)); }
 function normalize(){
   S.cards=S.cards||{};      // id -> {st:0새/1학습/2지움, k:근거까지 안 날짜들[], kt:마지막으로 센 시각(ms), last:날짜, due:날짜, miss:틀린 수, seen:본 수}
-  S.log=S.log||[];          // {d,subj,ok,id,ts:시각,v:기기}
+  S.log=S.log||[];          // {d,subj,ok,id,ts:시각,v:기기} · 되돌린 판단은 {d,ts,v,x:1}만 남는다(voidLog)
   S.exam=S.exam||{};        // round -> {answers:{}, score, date}
   S.minutes=S.minutes||60;
   S.daily=S.daily||{};      // 이 기기의 date -> {new:0, rev:0, sec:0}
@@ -497,8 +629,9 @@ function mergeRemote(R){
     if(d===DEV) continue;
     const b=JSON.stringify(S.ddo[d]||{}); S.ddo[d]=maxDaily(S.ddo[d],m); if(JSON.stringify(S.ddo[d])!==b) ch=true;
   }
-  const have=new Set(S.log.map(l=>l.v+'|'+l.ts)); let add=0;
-  for(const l of R.log||[]) if(l.ts&&!have.has(l.v+'|'+l.ts)){ S.log.push(l); add++; }
+  // 판단 기록은 합집합. 되돌린 기록(x)은 어느 쪽이든 한 번 x면 x(voidLog)
+  const have=new Map(S.log.map(l=>[l.v+'|'+l.ts,l])); let add=0;
+  for(const l of R.log||[]){ if(!l.ts) continue; const m=have.get(l.v+'|'+l.ts); if(!m){ S.log.push(l); add++; } else if(l.x&&!m.x){ voidLog(m); ch=true; } }
   if(add){ S.log.sort((a,b)=>a.ts-b.ts); if(S.log.length>3000) S.log=S.log.slice(-3000); ch=true; }
   SNAP=units(S);
   return ch;
@@ -507,7 +640,7 @@ function mergeRemote(R){
 function localAhead(R){
   if((R.epoch||0)!==S._epoch) return true;
   const rt=R.ts||{}; for(const k in S._ts) if(S._ts[k]>(rt[k]||0)) return true;
-  const rk=new Set((R.log||[]).map(l=>l.v+'|'+l.ts)); if(S.log.slice(-LOGN).some(l=>!rk.has(l.v+'|'+l.ts))) return true;
+  const rk=new Map((R.log||[]).map(l=>[l.v+'|'+l.ts,l])); if(S.log.slice(-LOGN).some(l=>{ const r=rk.get(l.v+'|'+l.ts); return !r||(l.x&&!r.x); })) return true;
   const dd=R.dd||{}; if(JSON.stringify(S.daily)!==JSON.stringify(dd[DEV]||{})) return true;
   for(const [d,m] of Object.entries(S.ddo)) for(const [day,v] of Object.entries(m)){ const w=(dd[d]||{})[day]; if(!w||w.new<v.new||w.rev<v.rev||w.sec<v.sec) return true; }
   return false;
@@ -737,6 +870,13 @@ function joHtml(c,num){
   return num?numB(out):out;
 }
 function plain(t){ return (t||'').replace(/\*\*|[⟪⟫]/g,''); }
+// 켤 때 첫 화면(맨 위 splash)에 띄울 것: 시험까지 남은 날, 연속 공부 날(오늘 아직 안 했으면 어제까지), 지운 카드 수. 카드 자료 없이 기록만으로 센다
+function splashInfo(){
+  const dd=allDaily(), n=d=>{ const v=dd[d]||{}; return (v.new||0)+(v.rev||0); };
+  let d=today(), streak=0; if(!n(d)) d=addDays(d,-1);
+  while(n(d)>0){ streak++; d=addDays(d,-1); }
+  return {name:EXAM_NAME, d:daysLeft(), streak, del:Object.values(S.cards).filter(s=>s&&s.st===2).length};
+}
 function header(){
   const p=passInfo();
   document.getElementById('subtitle').textContent=`${EXAM_NAME} D-${daysLeft()} · ${p.live?`${p.pass}회독 ${pct(p.pct)}`:'다 지움'} · 지움 ${p.del}`;
@@ -806,6 +946,7 @@ function renderToday(){
       <li><b>옳은 말 카드</b>: 문장이 맞으면 <b>O</b>, 틀리면 <b>X</b>. 발문이 '틀린 것은?'이어도 문장 자체만 본다.</li>
       <li><b>예/아니오 카드</b>(해당하는 것·아닌 것을 묻는 문제): 위에 적힌 질문에 <b>예 / 아니오</b>만 답한다. 발문의 '않는 것'은 신경 쓰지 않는다.</li>
       <li>근거를 읽고 <b>다음 →</b>. 아는지 모르는지 고를 필요 없다. 이해 안 되면 🤔 버튼을 누르고 넘어간다(내일 다시 나온다).</li>
+      <li>손이 미끄러져 잘못 눌렀으면(O/X·🤔·다음) 카드 맨 위 <b>↶ 되돌리기</b>. 바로 전 선택을 없던 일로 하고, 여러 번 누르면 더 앞으로 간다. 기록·연속 기록·예상 점수에도 안 남는다. PC는 Ctrl+Z.</li>
       <li><b>서로 다른 날 3번 연속</b> 맞히면 저절로 지워진다. 하루에 한 번만 센다(같은 날 또 맞힌 건 안 친다). 한 번이라도 틀리면 0부터. 카드 위 ●●○가 지금 연속 기록이다.</li>
       <li>세 번째는 <b>지우기 시험</b>이다. 실전처럼 회색 칠 없이, 이 카드 문장 그대로이거나 논점 자리가 반대인 문장(다른 회차에 실제로 나온 기출, 또는 틀린 기출을 바로잡은 문장)이 나온다. 지어낸 문장은 내지 않는다. 답만 외웠으면 여기서 걸린다. 맞혔어도 답만 외운 것 같으면 뒷면의 <b>↩ 답만 외운 것 같아요</b>로 남긴다.</li>
       <li>지운 카드는 하루 3장씩 몰래 다시 나온다(이것도 바꾼 문장일 수 있다). 틀리면 되살아난다. 현황 탭에서 지운 카드를 한꺼번에 다시 점검할 수도 있다.</li>
@@ -892,7 +1033,7 @@ function scoreHtml(acc,k){
 let timerId=null, startAt=0;
 function startSession(q,five){
   NOTE='';
-  session={q, i:0, phase:'ask', pick:null, startAt:Date.now(), sec:0, five:!!five};
+  session={q, i:0, phase:'ask', pick:null, startAt:Date.now(), sec:0, five:!!five, hist:[]}; // hist = 되돌리기 쌓기(pushUndo)
   startAt=Date.now();
   clearInterval(timerId); timerId=setInterval(()=>{ const el=document.getElementById('timer'); if(!el||!session) return; el.textContent=timerText(); if(!session.five&&S.minutes*60===Math.floor((Date.now()-session.startAt)/1000)){ try{navigator.vibrate&&navigator.vibrate(200);}catch(e){} } },1000);
   renderCard();
@@ -919,17 +1060,19 @@ function markChoice(text, wrong){
 }
 function renderCard(){
   const s=session; if(!s) return renderToday();
+  const backBtn=s.hist.length?`<div class="btns" style="margin-top:10px"><button class="btn ghost small" data-undo>↶ 마지막 카드로 돌아가기</button></div>`:'';
   if(s.i>=s.q.length&&s.five){
-    main.innerHTML=`<div class="card center"><div class="verdict ok">${s.q.length}문제 끝</div><p class="muted">${fmt(Math.floor((Date.now()-s.startAt)/1000))} 걸렸습니다.</p><div class="btns"><button class="btn n" id="more">▶ 5문제 더</button><button class="btn ghost" id="done">마치기</button></div></div>`;
+    main.innerHTML=`<div class="card center"><div class="verdict ok">${s.q.length}문제 끝</div><p class="muted">${fmt(Math.floor((Date.now()-s.startAt)/1000))} 걸렸습니다.</p><div class="btns"><button class="btn n" id="more">▶ 5문제 더</button><button class="btn ghost" id="done">마치기</button></div>${backBtn}</div>`;
     main.querySelector('#more').onclick=()=>{ endSession(); startSession(buildQueue(true).q,true); };
-    main.querySelector('#done').onclick=endSession; return;
+    main.querySelector('#done').onclick=endSession; bindUndo(); return;
   }
-  if(s.i>=s.q.length){ main.innerHTML=`<div class="card center"><div class="verdict ok">오늘 분량 끝</div><p class="muted">${s.q.length}장을 봤습니다. 내일 또 봅시다.</p><div class="btns"><button class="btn n" id="done">마치기</button></div></div>`; main.querySelector('#done').onclick=endSession; return; }
+  if(s.i>=s.q.length){ main.innerHTML=`<div class="card center"><div class="verdict ok">오늘 분량 끝</div><p class="muted">${s.q.length}장을 봤습니다. 내일 또 봅시다.</p><div class="btns"><button class="btn n" id="done">마치기</button></div>${backBtn}</div>`; main.querySelector('#done').onclick=endSession; bindUndo(); return; }
   const c=s.q[s.i], Q=D.questions[c.q], st=cardState(c.id);
   const subj=SUBJ[Q.subject]||Q.subject;
   if(s.phase==='ask'&&!s.form) s.form=testForm(c,st); // 판정 뒤엔 st가 바뀌므로 문제를 낼 때 정해 둔다
   const F=s.form||{}, ans=F.flip?F.flip.ox:c.ox;
-  let html=`<div class="row"><span class="muted">${s.i+1} / ${s.q.length}</span><span class="timer" id="timer">${timerText()}</span><button class="btn ghost small" style="flex:0 0 auto;padding:6px 10px" id="quit">그만</button></div>
+  const H=s.hist[s.hist.length-1], here=w=>H&&H.id===c.id&&H.i===s.i&&H.what===w; // 이 카드에서 방금 누른 것이 w인가
+  let html=`<div class="row"><span class="muted">${s.i+1} / ${s.q.length}</span><span class="timer" id="timer">${timerText()}</span>${H?`<button class="undo" data-undo title="${esc(H.label)} 되돌리기">↶ 되돌리기</button>`:''}<button class="btn ghost small" style="flex:0 0 auto;padding:6px 10px" id="quit">그만</button></div>
   <div class="card">
     <div>${Q.tsx?`<span class="tag T">타시험 · ${subj}</span>${Q.tsx.set==='E'?`<span class="tag">${esc(Q.tsx.short||Q.tsx.src)}</span>`:tsRank(Q)}`:`<span class="tag ${Q.grade}">${Q.grade}급</span><span class="tag">${subj} ${Q.round}회 ${Q.no}번</span>`}${F.tag?`<span class="tag" style="background:var(--line);color:var(--ink2)">${F.tag}</span>`:''}${st.st===1&&s.phase==='ask'?`<span class="muted" style="font-size:12px">지우기까지 ${dots(st.k.length)}</span>`:''}</div>
     <div class="muted" style="font-size:12px;margin-top:4px">${esc(Q.concept)}</div>
@@ -957,7 +1100,7 @@ function renderCard(){
   }
   if(s.phase!=='ask'){
     const ok=s.pick===ans, N2=SUBJ_PART[Q.subject]===2, M=t=>md(t,N2);
-    html+=`<div class="verdict ${ok?'ok':'bad'}">${ok?'맞음':'틀림'} · 정답은 ${ansLabel(c,ans)}</div>
+    html+=`<div class="vrow"><div class="verdict ${ok?'ok':'bad'}">${ok?'맞음':'틀림'} · 정답은 ${ansLabel(c,ans)}</div>${here('pick')?'<button class="undo" data-undo>↶ 잘못 눌렀어요</button>':''}</div>
       ${s.confused?'':streakHtml(s.res)}
       ${Q.why?`<div class="box issue"><b>제도부터</b> ${M(Q.why)}</div>`:''}
       ${F.test?flipNote(c,F):''}
@@ -996,6 +1139,7 @@ function renderCard(){
       <p class="muted" style="margin:4px 0 8px">이 카드는 '이해 안 된 카드'에 모였습니다. 내일 다시 나오고, 연속 기록은 0으로 돌아갑니다.</p>
       <div class="btns"><a class="btn n small" id="askClaude" target="_blank" rel="noopener" href="${claudeUrl(c,Q)}">Claude에게 쉽게 물어보기</a><button class="btn ghost small" id="copyQ">질문 복사</button></div>
       <p class="muted" style="margin:8px 0 0;font-size:13px">현황 탭의 '이해 안 된 카드 목록 복사'를 Claude Code에 붙여 넣으면 쉬운 설명을 카드에 붙여 다시 올립니다.</p>
+      ${here('confused')?'<div class="btns" style="margin-top:8px"><button class="btn ghost small" data-undo>↶ 잘못 눌렀어요 · 이해했어요</button></div>':''}
     </div>
     <div class="card">
       ${s.confused?`<b>오늘은 여기까지 이해해도 됩니다.</b><div class="btns" style="margin-top:8px"><button class="btn n small" data-r="cf">다음 (내일 다시 보기)</button></div>`:`
@@ -1006,10 +1150,11 @@ function renderCard(){
   }
   main.innerHTML=html;
   main.querySelector('#quit').onclick=()=>{ if(confirm('여기서 그만할까요? 본 것은 저장됩니다.')) endSession(); };
-  main.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{ s.pick=b.dataset.p; s.phase='show'; s.res=judge(c, s.pick===ans); header(); renderCard(); });
-  main.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{ afterCard(c, b.dataset.r); s.i++; s.phase='ask'; s.pick=null; s.confused=false; s.res=null; s.form=null; header(); renderCard(); });
-  const kb=main.querySelector('#keep'); if(kb) kb.onclick=()=>{ afterCard(c,'keep'); s.res={r:'kept'}; header(); renderCard(); };
-  const cb=main.querySelector('#confused'); if(cb) cb.onclick=()=>{ s.confused=true; if(!S.confused[c.id]) S.confused[c.id]=today(); save(); renderCard(); const h=document.getElementById('help'); if(h) h.scrollIntoView({behavior:'smooth',block:'center'}); };
+  main.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{ const h=pushUndo(c,'pick',`'${ansLabel(c,b.dataset.p)}' 고른 것`); s.pick=b.dataset.p; s.phase='show'; s.res=judge(c, s.pick===ans); const L=S.log[S.log.length-1]; if(L&&L.id===c.id) h.log=L.v+'|'+L.ts; header(); renderCard(); });
+  main.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{ pushUndo(c,b.dataset.r,UNDO_L[b.dataset.r]); afterCard(c, b.dataset.r); s.i++; s.phase='ask'; s.pick=null; s.confused=false; s.res=null; s.form=null; header(); renderCard(); });
+  const kb=main.querySelector('#keep'); if(kb) kb.onclick=()=>{ pushUndo(c,'keep',UNDO_L.keep); afterCard(c,'keep'); s.res={r:'kept'}; header(); renderCard(); };
+  const cb=main.querySelector('#confused'); if(cb) cb.onclick=()=>{ pushUndo(c,'confused',UNDO_L.confused); s.confused=true; if(!S.confused[c.id]) S.confused[c.id]=today(); save(); renderCard(); const h=document.getElementById('help'); if(h) h.scrollIntoView({behavior:'smooth',block:'center'}); };
+  bindUndo();
   const cq=main.querySelector('#copyQ'); if(cq) cq.onclick=()=>copyText(askText(c,Q));
   main.querySelectorAll('[data-book]').forEach(b=>b.onclick=()=>{ bk.sec=b.dataset.book; bk.memo=false; bk.from='card'; goView('book'); });
   main.querySelectorAll('[data-pat]').forEach(b=>b.onclick=()=>openPat(b.dataset.pat,'card'));
@@ -1123,6 +1268,37 @@ function afterCard(c, r){
   if(r==='cf'||r==='keep'){ st.k=[]; st.st=1; st.due=addDays(t,1); } // 이해 안 됨·답만 외움: 연속 기록을 지우고, 방금 지워졌어도 되살린다
   if(r==='del'){ st.st=2; }
   save();
+}
+/* ===== 되돌리기 =====
+   11-01 PD: 손이 미끄러져 정오(O/X)·'🤔 해설을 봐도 이해가 안 돼요'·다음을 잘못 누른 게 있다 → 바로 전 선택을 되돌린다.
+   카드에서 누를 때마다 그 직전 상태(그 카드 기록·이해 안 된 카드·화면)를 쌓아 두고, 되돌리면 하나씩 꺼낸다. 여러 번 누르면 더 앞으로 간다(공부를 마치면 비운다).
+   판단 기록(S.log)은 동기화 때 합집합이라 빼면 다른 기기에서 도로 들어온다. 그래서 빼지 않고 x 표시를 하고 내용(과목·정오·카드)을 비운다.
+   x는 어느 기기에서든 한 번 붙으면 떨어지지 않게 합친다(mergeRemote·localAhead). 정확도·지운 카드 검사 수는 과목·au로 세서 x 기록은 저절로 빠진다. */
+const UNDO_L={n:"'다음' 누른 것", cf:"'다음(내일 다시 보기)' 누른 것", del:"'✂ 바로 지우기' 누른 것", keep:"'↩ 답만 외운 것 같아요' 누른 것", confused:"'🤔 이해가 안 돼요' 누른 것"};
+function voidLog(l){ l.x=1; delete l.subj; delete l.ok; delete l.id; delete l.au; }
+function pushUndo(c,what,label){
+  const s=session, p=S.cards[c.id];
+  const h={what, label, i:s.i, phase:s.phase, pick:s.pick, confused:s.confused, res:s.res, form:s.form, id:c.id, st:p?JSON.stringify(p):null, cf:S.confused[c.id], day:today(), cnt:!p||!p.st?'new':'rev', log:''};
+  s.hist.push(h); if(s.hist.length>30) s.hist.shift();
+  return h;
+}
+function undo(){
+  const s=session; if(!s||!s.hist.length) return;
+  const h=s.hist.pop();
+  if(h.st) S.cards[h.id]=JSON.parse(h.st); else delete S.cards[h.id];
+  if(h.cf===undefined) delete S.confused[h.id]; else S.confused[h.id]=h.cf;
+  if(h.log){ const l=S.log.find(x=>x.v+'|'+x.ts===h.log); if(l) voidLog(l); const d=S.daily[h.day]; if(d&&d[h.cnt]>0) d[h.cnt]--; } // 정오를 고르며 늘린 하루 공부량도 하나 뺀다
+  Object.assign(s,{i:h.i, phase:h.phase, pick:h.pick, confused:h.confused, res:h.res, form:h.form}); // 문제 꼴(지우기 시험의 바꾼 문장)은 그대로 다시 낸다
+  save(); header(); renderCard(); if(h.what!=='pick'&&h.what!=='confused') window.scrollTo(0,0);
+  toast(`↶ ${h.label}을 되돌렸습니다${h.what==='pick'?' · 다시 고르세요':''}`);
+}
+function bindUndo(){ main.querySelectorAll('[data-undo]').forEach(b=>b.onclick=undo); }
+// PC: Ctrl+Z(맥은 ⌘Z)
+document.addEventListener('keydown',e=>{ if(session&&(e.ctrlKey||e.metaKey)&&!e.shiftKey&&(e.key==='z'||e.key==='Z')&&!/INPUT|TEXTAREA/.test((e.target||{}).tagName||'')){ e.preventDefault(); undo(); } });
+let toastT=null;
+function toast(msg){
+  let el=document.getElementById('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; el.className='toast'; el.setAttribute('role','status'); document.body.appendChild(el); }
+  el.textContent=msg; el.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('on'),2200);
 }
 function addDays(d,n){ const x=new Date(d+'T00:00:00'); x.setDate(x.getDate()+n); x.setMinutes(x.getMinutes()-x.getTimezoneOffset()); return x.toISOString().slice(0,10); }
 function dayDiff(a,b){ return Math.round((Date.parse(b+'T00:00:00Z')-Date.parse(a+'T00:00:00Z'))/86400000); }
@@ -1259,7 +1435,7 @@ function renderStats(){
   const dr=main.querySelector('#delRun'); if(dr) dr.onclick=()=>{ const q=D.cards.filter(c=>cardState(c.id).st===2); shuffle(q); view='today'; document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v==='today')); startSession(q); };
   const ids=Object.keys(S.confused);
   const r1=main.querySelector('#cfRun'); if(r1) r1.onclick=()=>{ const q=D.cards.filter(c=>ids.includes(c.id)); view='today'; document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v==='today')); startSession(q); };
-  const r2=main.querySelector('#cfCopy'); if(r2) r2.onclick=()=>{ copyText('기출 지우개 2 이해 안 된 카드 '+ids.length+'장 (쉬운 설명을 붙여 줘)\n'+ids.map(id=>{ const c=D.cards.find(x=>x.id===id); if(!c) return id; const Q=D.questions[c.q]; return `${id} | ${qLabel(Q)} ${c.n} | ${(c.mode==='calc'?Q.question:c.text).slice(0,60)}`; }).join('\n')); };
+  const r2=main.querySelector('#cfCopy'); if(r2) r2.onclick=()=>{ copyText('기출지우개 : 공인중개사 2027(기출 지우개 2) 이해 안 된 카드 '+ids.length+'장 (쉬운 설명을 붙여 줘)\n'+ids.map(id=>{ const c=D.cards.find(x=>x.id===id); if(!c) return id; const Q=D.questions[c.q]; return `${id} | ${qLabel(Q)} ${c.n} | ${(c.mode==='calc'?Q.question:c.text).slice(0,60)}`; }).join('\n')); };
   const r3=main.querySelector('#cfClear'); if(r3) r3.onclick=()=>{ if(confirm('이해 안 된 카드 목록을 비울까요? 카드 자체는 그대로입니다.')){ S.confused={}; save(); renderStats(); } };
 }
 
@@ -1763,7 +1939,7 @@ function apInfo(){
   const m=apMeta(), bar=document.getElementById('aplayer'); if(!m||!bar) return;
   bar.querySelector('#apTi').innerHTML=`${esc(m.t)}<small>${esc(m.s)}</small>`;
   bar.querySelector('#apRate').textContent=ap.el.playbackRate+'×';
-  if('mediaSession' in navigator&&window.MediaMetadata) navigator.mediaSession.metadata=new MediaMetadata({title:m.t, artist:m.a, album:'기출 지우개 2'});
+  if('mediaSession' in navigator&&window.MediaMetadata) navigator.mediaSession.metadata=new MediaMetadata({title:m.t, artist:m.a, album:'기출지우개 : 공인중개사 2027'});
 }
 // 재생 막대 제목을 누르면 지금 듣는 것이 있는 화면으로
 function apOpen(){
@@ -2015,7 +2191,7 @@ function loadCards(){
     return d;
   });
 }
-loadCards().then(d=>{ D=d; for(const [k,q] of Object.entries(D.questions)) q.id=k; migrate(); render(); syncUI(); syncNow(); loadBook().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); loadPat().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); }).catch(e=>{ main.innerHTML='<div class="card">카드 자료(cards.json)를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; });
+loadCards().then(d=>{ D=d; for(const [k,q] of Object.entries(D.questions)) q.id=k; migrate(); render(); if(window.splashReady) splashReady(); syncUI(); syncNow(); loadBook().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); loadPat().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); }).catch(e=>{ main.innerHTML='<div class="card">카드 자료(cards.json)를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; if(window.splashReady) splashReady(); });
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
 </body>
