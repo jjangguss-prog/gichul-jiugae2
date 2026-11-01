@@ -158,6 +158,8 @@ b.nm{font-weight:800;color:var(--ink)}
 .fr.mem b.nm,.fr.mem .cn{color:inherit}
 [data-theme="dark"] .fr.mem{background:#463d0c;color:#fff4bf} [data-theme="dark"] .fr.mem .fl{color:#ffd966}
 .jo .cc{font-weight:700}
+/* 형광 안의 굵은 숫자·개념어·번호·조문 번호는 형광 글자색을 따른다(11-01 PD: 어두운 화면에서 흰 글자가 노랑 위에 묻힘) */
+.cc b.nm,.cc .kw,.cc .cn,.cc .lw{color:inherit}
 /* ===== 개념서 ===== */
 .seg{display:flex;background:var(--line);border-radius:12px;padding:3px;gap:3px;margin-bottom:10px}
 .seg button{flex:1;border:0;background:transparent;padding:9px 10px;border-radius:9px;font-size:15px;font-weight:800;color:var(--ink2);cursor:pointer}
