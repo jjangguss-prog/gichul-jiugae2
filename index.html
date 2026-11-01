@@ -136,7 +136,8 @@ a.btn{display:block;text-align:center;text-decoration:none}
 .box.issue{background:var(--acc-bg)} .box.intent{background:var(--x-bg)} .box.practice{background:var(--o-bg)}
 .box.issue>b:first-child{color:var(--acc)} .box.intent>b:first-child{color:var(--x)} .box.practice>b:first-child{color:var(--o)}
 .jo{font-size:13.5px;line-height:1.6;color:var(--ink2);background:var(--bg);border-left:3px solid var(--line);border-radius:4px;padding:6px 9px;margin-top:6px}
-.jo>b:first-child{font-size:12px;color:var(--muted);margin-right:6px}
+.jo>b:first-child{display:block;font-size:12px;color:var(--muted);margin:0 0 3px;font-weight:800}
+.jo .joh{margin-bottom:4px} .jo .jon{font-weight:800;color:var(--acc)} .jo .joc{color:var(--muted)}
 .note.pre{white-space:pre-wrap}
 /* 해설 강조: 개념어 굵게(.kw), O/X를 가르는 결론 형광 밑줄(.cc), 조문·판례 번호 작은 회색(.lw) */
 b.kw{font-weight:800}
@@ -869,6 +870,15 @@ function joHtml(c,num){
   out+=esc(jo.slice(at));
   return num?numB(out):out;
 }
+// 조문 상자(11-01 밤 PD: "조문파트가 이상해"). jo는 선지와 맞닿은 구절만이라 호·목이면 결론이 든 머리 문장('다음 각 호의 … 할 수 없다')이
+// 빠지고, 항 가운데 구절이면 문장이 끊긴다. 앱/조문머리.py가 법령 원문에서 찾은 johead.json으로 머리 문장을 위에, 호·목은 번호를 붙여 들여 쓰고,
+// 끊긴 문장은 앞뒤 글(옅게)로 잇는다. johead.json이 아직 안 왔거나 없는 카드는 예전처럼 jo만
+let JH=null;
+function loadJH(){ return fetch('johead.json').then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.c) JH=j; }).catch(()=>{}); }
+function joBox(c,num){
+  const r=(JH&&JH.c[c.id])||{}, hs=(r.h||[]).map(i=>JH.h[i]).filter(Boolean), hl=t=>joHtml(Object.assign({},c,{jo:t}),num);
+  return `<div class="jo"><b>조문</b>${hs.map((h,i)=>`<div class="joh" style="padding-left:${i*14}px">${hl(h)}</div>`).join('')}<div class="job" style="padding-left:${hs.length*14}px">${r.n?`<span class="jon">${esc(r.n)}</span> `:''}${r.b?`<span class="joc">${hl(r.b)}</span>`:''}${joHtml(c,num)}${r.a?`<span class="joc">${hl(r.a)}</span>`:''}</div></div>`;
+}
 function plain(t){ return (t||'').replace(/\*\*|[⟪⟫]/g,''); }
 // 켤 때 첫 화면(맨 위 splash)에 띄울 것: 시험까지 남은 날, 연속 공부 날(오늘 아직 안 했으면 어제까지), 지운 카드 수. 카드 자료 없이 기록만으로 센다
 function splashInfo(){
@@ -1113,7 +1123,7 @@ function renderCard(){
       <div class="reason">${c.reason?M(c.reason):'<span class="muted">근거 준비 중. 정답 여부만 확인하세요.</span>'}</div>
       ${c.law?`<div class="law">${esc(c.law)}</div>`:''}
       ${c.unv?`<div class="unv-s">❔ 확인 안 됨: ${esc(c.unv)}</div>`:''}
-      ${c.jo?`<div class="jo"><b>조문</b>${joHtml(c,N2)}</div>`:''}
+      ${c.jo?joBox(c,N2):''}
       ${c.point?`<div class="box issue"><b>이 선지의 논점</b> ${M(c.point)}</div>
       ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${M(c.aim)}</div>`:''}
       ${Q.issue||Q.intent||Q.frame?`<details><summary>문항 전체의 논점·출제 의도 (이 선지와는 다른 주제)</summary>
@@ -2191,7 +2201,7 @@ function loadCards(){
     return d;
   });
 }
-loadCards().then(d=>{ D=d; for(const [k,q] of Object.entries(D.questions)) q.id=k; migrate(); render(); if(window.splashReady) splashReady(); syncUI(); syncNow(); loadBook().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); loadPat().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); }).catch(e=>{ main.innerHTML='<div class="card">카드 자료(cards.json)를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; if(window.splashReady) splashReady(); });
+loadCards().then(d=>{ D=d; for(const [k,q] of Object.entries(D.questions)) q.id=k; migrate(); render(); if(window.splashReady) splashReady(); loadJH(); syncUI(); syncNow(); loadBook().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); loadPat().then(()=>{ if(view==='today'&&!session) renderToday(); }).catch(()=>{}); }).catch(e=>{ main.innerHTML='<div class="card">카드 자료(cards.json)를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>'; if(window.splashReady) splashReady(); });
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
 </body>
