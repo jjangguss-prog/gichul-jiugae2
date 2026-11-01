@@ -128,10 +128,12 @@ a.btn{display:block;text-align:center;text-decoration:none}
 .kind{font-size:13px;color:var(--x);margin:2px 0 6px;font-weight:700}
 .trap{font-size:14px;background:var(--warn-bg);color:var(--ink);padding:8px 10px;border-radius:8px;margin:6px 0}
 .box{font-size:15px;padding:8px 10px;border-radius:8px;margin:8px 0 0;line-height:1.55}
-.box b:not(.kw){display:inline-block;margin-right:6px}
+/* 상자 이름(논점·출제 의도·실무에서는)은 한 줄 위에 따로(11-01 PD: 가독성) */
+.box>b:first-child{display:block;font-size:12.5px;font-weight:800;margin:0 0 3px;letter-spacing:.02em}
 .box.issue{background:var(--acc-bg)} .box.intent{background:var(--x-bg)} .box.practice{background:var(--o-bg)}
+.box.issue>b:first-child{color:var(--acc)} .box.intent>b:first-child{color:var(--x)} .box.practice>b:first-child{color:var(--o)}
 .jo{font-size:13.5px;line-height:1.6;color:var(--ink2);background:var(--bg);border-left:3px solid var(--line);border-radius:4px;padding:6px 9px;margin-top:6px}
-.jo b{font-size:12px;color:var(--muted);margin-right:6px}
+.jo>b:first-child{font-size:12px;color:var(--muted);margin-right:6px}
 .note.pre{white-space:pre-wrap}
 /* 해설 강조: 개념어 굵게(.kw), O/X를 가르는 결론 형광 밑줄(.cc), 조문·판례 번호 작은 회색(.lw) */
 b.kw{font-weight:800}
@@ -142,6 +144,20 @@ b.kw{font-weight:800}
 [data-theme="dark"] .cc,[data-theme="dark"] .tip .cc,[data-theme="dark"] .opt-r.ok .cc{background:#ffe680;color:#1a1a00;border-radius:3px;padding:0 2px}
 .trap .hl{background:#fff3a3;color:#000;border-radius:3px;padding:0 2px}
 .lw{font-size:.8em;color:var(--muted);font-weight:500;letter-spacing:-.01em}
+/* 11-01 PD '해설에 볼드·음영': 2차 해설의 기간·금액·인원 숫자 굵게(.nm), 선지 번호 ①·ㄱ 색(.cn),
+   판단 틀은 줄마다 나눠 줄머리 굵게·'외우기' 노란 띠(.frm), 조문 원문에서 결론과 같은 말에 형광(.jo .cc) */
+b.nm{font-weight:800;color:var(--ink)}
+.cn{font-weight:800;color:var(--acc)}
+.frm{background:var(--bg);border-radius:10px;padding:2px 10px;margin-top:8px;font-size:14px;line-height:1.6;color:var(--ink2)}
+.fr{padding:6px 0;border-bottom:1px solid var(--line)}
+.fr:last-child{border-bottom:0}
+.fr .fl{font-weight:800;color:var(--acc);margin-right:6px}
+.fr .sep{color:var(--muted);margin:0 3px}
+.fr.mem{background:#fff3a3;color:#1a1a00;border:0;border-radius:8px;margin:6px -4px;padding:7px 9px;font-weight:700}
+.fr.mem .fl{color:#7a5b00}
+.fr.mem b.nm,.fr.mem .cn{color:inherit}
+[data-theme="dark"] .fr.mem{background:#463d0c;color:#fff4bf} [data-theme="dark"] .fr.mem .fl{color:#ffd966}
+.jo .cc{font-weight:700}
 /* ===== 개념서 ===== */
 .seg{display:flex;background:var(--line);border-radius:12px;padding:3px;gap:3px;margin-bottom:10px}
 .seg button{flex:1;border:0;background:transparent;padding:9px 10px;border-radius:9px;font-size:15px;font-weight:800;color:var(--ink2);cursor:pointer}
@@ -678,7 +694,46 @@ function esc(s){ return (s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>'
 const LREF=String.raw`(?:[가-힣]{1,15}법\s*)?제?\d{1,4}조(?:의\s?\d+)?(?!\s*원)(?:\s*제?\d+항)?(?:\s*제?\d+호)?(?:\s*(?:본문|단서|전단|후단))?(?:\s*준용)?`;
 const LCASE=String.raw`대판\s*\d{4}\.\s*\d{1,2}\.\s*\d{1,2}\.?\s*\d{2,4}[가-힣]{1,3}\d+(?:\s*전원합의체)?`;
 const LAWRE=new RegExp(String.raw`\((?:\s*(?:${LREF}|${LCASE}|판례|전원합의체)\s*[,·/]?)+\)|${LREF}|${LCASE}`,'g');
-function md(t){ return esc(t).replace(LAWRE,'<span class="lw">$&</span>').replace(/\*\*(.+?)\*\*/g,'<b class="kw">$1</b>').replace(/⟪(.+?)⟫/g,'<span class="cc">$1</span>'); }
+// num(2차 카드): 기간·금액·인원·비율 숫자를 굵게. 단위에 조·항·호가 없어 조문 번호는 안 칠한다. 선지 번호(①·ㄱ)는 색.
+// 연도(2025년)는 먼저 잡아 그대로 둔다(뒤돌아보기 정규식은 옛 사파리에서 안 돼서 안 씀).
+const NUMRE=/((?:19|20)\d\d\s?년)|\d+\s?분의\s?\d+|\d[\d,.]*(?:\s?[~∼]\s?\d[\d,.]*)?(?:(?:\s?(?:천|만|억))+(?:\s?원)?|\s?(?:원|일|개월|년|월|시간|명|인|%|퍼센트|㎡|제곱미터|미터|층|배|회|개|세대|가구|필지|킬로미터))(?:\s?(?:이내|이상|이하|초과|미만))?/g;
+const numB=h=>h.replace(NUMRE,(m,y)=>y?m:`<b class="nm">${m}</b>`);
+function md(t,num){
+  const h=esc(t).replace(LAWRE,'<span class="lw">$&</span>').replace(/\*\*(.+?)\*\*/g,'<b class="kw">$1</b>').replace(/⟪(.+?)⟫/g,'<span class="cc">$1</span>').replace(/[①-⑳ㄱ-ㅎ]/g,'<span class="cn">$&</span>');
+  return num?numB(h):h;
+}
+// 판단 틀: 줄마다 나눠 줄머리('이름:')를 굵게, '외우기:' 줄은 노란 띠, ' / '는 옅게
+function frameHtml(t,num){
+  const sep=h=>h.replace(/ \/ /g,' <span class="sep">/</span> ');
+  return `<div class="frm">${(t||'').split('\n').filter(l=>l.trim()).map(l=>{
+    const m=l.match(/^\*{0,2}([^:：\n*⟪]{1,24}?)\*{0,2}\s*[:：]\s*(.*)$/);
+    if(!m) return `<div class="fr">${sep(md(l,num))}</div>`;
+    return `<div class="fr${/^외우기/.test(m[1].trim())?' mem':''}"><b class="fl">${md(m[1].trim(),num)}</b>${sep(md(m[2],num))}</div>`;
+  }).join('')}</div>`;
+}
+// 조문 원문에서 결론(⟪⟫)·논점 자리와 같은 말을 찾아 형광. 띄어쓰기는 무시하고 가장 길게 겹치는 곳(6자 이상, 또는 4자 이상이면서 그 말의 절반 이상, 숫자가 있으면 3자)
+function joHtml(c,num){
+  const jo=c.jo||'', P=[...(c.reason||'').matchAll(/⟪(.+?)⟫/g)].map(m=>m[1]);
+  if(c.key&&(c.ox==='O'||c.ox==='Y')) P.push(c.key);
+  if(c.swap&&c.swap.to) P.push(c.swap.to);
+  const idx=[], J=[]; for(let i=0;i<jo.length;i++) if(!/\s/.test(jo[i])){ idx.push(i); J.push(jo[i]); }
+  const spans=[];
+  for(const p of P){
+    const A=p.replace(/\s|\*\*/g,''); let best=0, end=0, prev=new Array(J.length+1).fill(0);
+    for(let i=1;i<=A.length;i++){
+      const cur=new Array(J.length+1).fill(0);
+      for(let j=1;j<=J.length;j++) if(A[i-1]===J[j-1]){ cur[j]=prev[j-1]+1; if(cur[j]>best){ best=cur[j]; end=j; } }
+      prev=cur;
+    }
+    if(best>=6||(best>=4&&best>=A.length/2)||(best>=3&&/\d/.test(J.slice(end-best,end).join('')))) spans.push([idx[end-best], idx[end-1]+1, best]);
+  }
+  spans.sort((a,b)=>b[2]-a[2]); const keep=[];
+  for(const s of spans) if(keep.length<3&&!keep.some(k=>s[0]<k[1]&&k[0]<s[1])) keep.push(s);
+  keep.sort((a,b)=>a[0]-b[0]); let out='', at=0;
+  for(const [s,e] of keep){ out+=esc(jo.slice(at,s))+'<span class="cc">'+esc(jo.slice(s,e))+'</span>'; at=e; }
+  out+=esc(jo.slice(at));
+  return num?numB(out):out;
+}
 function plain(t){ return (t||'').replace(/\*\*|[⟪⟫]/g,''); }
 function header(){
   const p=passInfo();
@@ -899,36 +954,36 @@ function renderCard(){
     }
   }
   if(s.phase!=='ask'){
-    const ok=s.pick===ans;
+    const ok=s.pick===ans, N2=SUBJ_PART[Q.subject]===2, M=t=>md(t,N2);
     html+=`<div class="verdict ${ok?'ok':'bad'}">${ok?'맞음':'틀림'} · 정답은 ${ansLabel(c,ans)}</div>
       ${s.confused?'':streakHtml(s.res)}
-      ${Q.why?`<div class="box issue"><b>제도부터</b> ${md(Q.why)}</div>`:''}
+      ${Q.why?`<div class="box issue"><b>제도부터</b> ${M(Q.why)}</div>`:''}
       ${F.test?flipNote(c,F):''}
-      ${c.revision||Q.revision?`<div class="note amend">⚖ 법 개정 주의: ${md(c.revision||Q.revision)}</div>`:''}
-      ${Q.unverified?`<div class="note unv">❔ 아직 확인 안 됨: ${md(Q.unverified)}</div>`:''}
-      ${c.swap?`${F.flip&&!F.flip.real?'':`<div class="fix">바로잡은 문장: ${c.ed&&c.ed.length?edPair(c.text,c.ed).b:esc(fixedText(c))}</div>`}<div class="kind">출제자의 바꿔치기: ${esc(c.swap.kind||'')}</div>${edLegend(c.ed)}${c.fake?`<div class="fake"><b>그럴듯하게 지어낸 말</b>${md(c.fake)}</div>`:''}`:(c.ox==='X'&&c.fix?`<div class="fix">바로잡기: ${esc(c.fix)}</div>`:'')}
-      ${c.trap?`<div class="trap"><b>출제자가 바꿀 자리</b> <span class="hl">${esc(c.key||'')}</span><br>${md(c.trap)}</div>`:''}
-      ${c.alt?`<div class="note">${md(c.alt)}</div>`:''}
-      ${c.mode==='choose'&&c.opts?`<div class="opts">${c.opts.map(o=>`<div class="opt-r ${o.ok?'ok':''}"><b>${esc(o.n)}</b> ${o.ok?'<span class="tag">정답</span>':''}${md(o.reason||'')}${o.law?`<span class="law"> · ${esc(o.law)}</span>`:''}</div>`).join('')}</div>`:''}
-      <div class="reason">${c.reason?md(c.reason):'<span class="muted">근거 준비 중. 정답 여부만 확인하세요.</span>'}</div>
+      ${c.revision||Q.revision?`<div class="note amend">⚖ 법 개정 주의: ${M(c.revision||Q.revision)}</div>`:''}
+      ${Q.unverified?`<div class="note unv">❔ 아직 확인 안 됨: ${M(Q.unverified)}</div>`:''}
+      ${c.swap?`${F.flip&&!F.flip.real?'':`<div class="fix">바로잡은 문장: ${c.ed&&c.ed.length?edPair(c.text,c.ed).b:esc(fixedText(c))}</div>`}<div class="kind">출제자의 바꿔치기: ${esc(c.swap.kind||'')}</div>${edLegend(c.ed)}${c.fake?`<div class="fake"><b>그럴듯하게 지어낸 말</b>${M(c.fake)}</div>`:''}`:(c.ox==='X'&&c.fix?`<div class="fix">바로잡기: ${esc(c.fix)}</div>`:'')}
+      ${c.trap?`<div class="trap"><b>출제자가 바꿀 자리</b> <span class="hl">${esc(c.key||'')}</span><br>${M(c.trap)}</div>`:''}
+      ${c.alt?`<div class="note">${M(c.alt)}</div>`:''}
+      ${c.mode==='choose'&&c.opts?`<div class="opts">${c.opts.map(o=>`<div class="opt-r ${o.ok?'ok':''}"><b>${esc(o.n)}</b> ${o.ok?'<span class="tag">정답</span>':''}${M(o.reason||'')}${o.law?`<span class="law"> · ${esc(o.law)}</span>`:''}</div>`).join('')}</div>`:''}
+      <div class="reason">${c.reason?M(c.reason):'<span class="muted">근거 준비 중. 정답 여부만 확인하세요.</span>'}</div>
       ${c.law?`<div class="law">${esc(c.law)}</div>`:''}
       ${c.unv?`<div class="unv-s">❔ 확인 안 됨: ${esc(c.unv)}</div>`:''}
-      ${c.jo?`<div class="jo"><b>조문</b>${esc(c.jo)}</div>`:''}
-      ${c.point?`<div class="box issue"><b>이 선지의 논점</b> ${md(c.point)}</div>
-      ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${md(c.aim)}</div>`:''}
+      ${c.jo?`<div class="jo"><b>조문</b>${joHtml(c,N2)}</div>`:''}
+      ${c.point?`<div class="box issue"><b>이 선지의 논점</b> ${M(c.point)}</div>
+      ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${M(c.aim)}</div>`:''}
       ${Q.issue||Q.intent||Q.frame?`<details><summary>문항 전체의 논점·출제 의도 (이 선지와는 다른 주제)</summary>
-        ${Q.issue?`<div class="box issue"><b>논점</b> ${md(Q.issue)}</div>`:''}
-        ${Q.intent?`<div class="box intent"><b>출제 의도</b> ${md(Q.intent)}</div>`:''}
-        ${Q.frame?`<div class="note pre">${md(Q.frame)}</div>`:''}
-        ${Q.tip?`<div class="tip">암기팁: ${md(Q.tip)}</div>`:''}</details>`:''}`:`
-      ${Q.issue?`<div class="box issue"><b>논점</b> ${md(Q.issue)}</div>`:''}
-      ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${md(c.aim)}</div>`:(Q.intent?`<div class="box intent"><b>출제 의도</b> ${md(Q.intent)}</div>`:'')}
-      ${Q.frame?`<details open><summary>판단 틀 (헷갈리는 것 나란히 보기)</summary><div class="note pre">${md(Q.frame)}</div></details>`:''}
-      ${c.aim&&Q.intent?`<details><summary>문항 전체의 출제 의도 (정답 선지 기준)</summary><div class="box intent">${md(Q.intent)}</div></details>`:''}`}
-      ${Q.practice?`<div class="box practice"><b>실무에서는</b> ${md(Q.practice.replace(/^실무에서는[,\s]*/,''))}${Q.practice_src?`<span class="law"> (${esc(Q.practice_src)})</span>`:''}</div>`:''}
-      ${Q.core&&!Q.issue?`<details><summary>이 문제의 핵심</summary><div class="note">${md(Q.core)}</div></details>`:''}
+        ${Q.issue?`<div class="box issue"><b>논점</b> ${M(Q.issue)}</div>`:''}
+        ${Q.intent?`<div class="box intent"><b>출제 의도</b> ${M(Q.intent)}</div>`:''}
+        ${Q.frame?frameHtml(Q.frame,N2):''}
+        ${Q.tip?`<div class="tip">암기팁: ${M(Q.tip)}</div>`:''}</details>`:''}`:`
+      ${Q.issue?`<div class="box issue"><b>논점</b> ${M(Q.issue)}</div>`:''}
+      ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${M(c.aim)}</div>`:(Q.intent?`<div class="box intent"><b>출제 의도</b> ${M(Q.intent)}</div>`:'')}
+      ${Q.frame?`<details open><summary>판단 틀 (헷갈리는 것 나란히 보기)</summary>${frameHtml(Q.frame,N2)}</details>`:''}
+      ${c.aim&&Q.intent?`<details><summary>문항 전체의 출제 의도 (정답 선지 기준)</summary><div class="box intent">${M(Q.intent)}</div></details>`:''}`}
+      ${Q.practice?`<div class="box practice"><b>실무에서는</b> ${M(Q.practice.replace(/^실무에서는[,\s]*/,''))}${Q.practice_src?`<span class="law"> (${esc(Q.practice_src)})</span>`:''}</div>`:''}
+      ${Q.core&&!Q.issue?`<details><summary>이 문제의 핵심</summary><div class="note">${M(Q.core)}</div></details>`:''}
       ${Q.calc?`<details><summary>계산 풀이</summary><div class="calc">${esc(Q.calc)}</div></details>`:''}
-      ${Q.tip&&!c.point?`<div class="tip">암기팁: ${md(Q.tip)}</div>`:''}
+      ${Q.tip&&!c.point?`<div class="tip">암기팁: ${M(Q.tip)}</div>`:''}
       ${Q.tsx?tsxBack(c,Q):''}${patLinks(c.id)}${bookLinks(c.q)}
       ${Q.related&&Q.related.length?`<details><summary>같은 논점 기출 ${Q.related.length}문항</summary><div class="note">${Q.related.map(x=>`${x.r}회 ${x.n}번 · ${esc(x.q)}`).join('<br>')}</div></details>`:''}
       ${Q.tsx&&!(Q.choices&&Q.choices.length)?'':`<details><summary>문제 전체 보기</summary><div class="note">${esc(Q.question)}${Q.passage&&Q.passage.length?'\n'+passageHtml(Q.passage):''}<br>${Q.choices.map((t,i)=>`${CIRC[i]} ${esc(t)}`).join('<br>')}<br><b>정답 ${Q.all_correct?'모두 정답(이의신청으로 전항정답 처리)':Q.answers?Q.answers.map(a=>CIRC[a-1]).join('·')+' (확정답안 복수정답)':CIRC[Q.answer-1]}</b></div></details>`}
@@ -1620,7 +1675,7 @@ function renderPatDetail(id){
     ${p.sig?`<div class="psig"><small>이런 문제가 나오면</small>${p.sig.map(x=>`<span class="sg">${ptInline(x)}</span>`).join('')}</div>`:`<div class="pwhen"><small>이런 문제가 나오면</small>${md(p.when)}</div>`}
     ${p.pts?p.pts.map((b,j)=>`<div class="pblk" data-psec="b${j}">${b.h?`<div class="ph"><span>${esc(b.h)}</span>${secBtn('b'+j)}</div>`:''}<ul>${b.li.map((x,i)=>`<li>${ptLine(x)}${b.s&&b.s[i]?`<span class="pf">${esc(b.s[i])}</span>`:''}</li>`).join('')}</ul></div>`).join(''):`<ul class="prule">${p.rule.map(r=>`<li>${md(r)}</li>`).join('')}</ul>`}
     ${p.table?tableHtml(p.table):''}
-    ${p.exceptions&&p.exceptions.length?`<div class="pexc"><b>예외</b>${p.exceptions.map(md).join('<br>')}</div>`:''}
+    ${p.exceptions&&p.exceptions.length?`<div class="pexc"><b>예외</b>${p.exceptions.map(x=>md(x)).join('<br>')}</div>`:''}
     <div class="sech"><h3>기출로 확인 ${p.ex.length}개</h3>${secBtn('ex')}${patRdCnt(id,p)}<button class="chipbtn ${pt.hide?'on':''}" id="hideAns">${pt.hide?'답 가림':'답 가리기'}</button></div>
     <p class="muted" style="font-size:12px;margin:0 0 2px">${pt.hide?'위 규칙으로 O/X를 먼저 정하고 지문을 눌러 확인하세요. 하나씩 다 눌러 보면 ✓ 읽었어요.':`빨간 줄은 출제자가 바꾼 말, 주황 칸은 그럴듯하게 지어낸 말, 회색 줄은 연결만 다듬은 곳, 초록은 바로잡은 말.${patReadToday(id)?'':' ✓ 읽었어요는 답을 가리고 하나씩 눌러 봐야 켜집니다.'}`}</p>
     <ul class="oxl ${pt.hide?'hideans':''}" id="oxl">${p.ex.map((o,i,a)=>patOxHtml(o,i,a).replace('<li class="oxi"',`<li class="oxi${patOpenSet(id).has(i)?' did':''}"`)).join('')}</ul>
