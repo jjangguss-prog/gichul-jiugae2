@@ -345,6 +345,8 @@ mark.tk{background:linear-gradient(transparent 40%,#fff3a3 40%,#fff3a3 92%,trans
 .subj .sr.none{color:var(--muted);grid-template-columns:1.15fr 2.25fr}
 .subj .sr .muted{font-size:12.5px;text-align:right}
 .note.amend{border-left:3px solid var(--x)}
+.note.unv{border-left:3px solid var(--muted)}
+.unv-s{font-size:13px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
@@ -903,12 +905,14 @@ function renderCard(){
       ${Q.why?`<div class="box issue"><b>제도부터</b> ${md(Q.why)}</div>`:''}
       ${F.test?flipNote(c,F):''}
       ${c.revision||Q.revision?`<div class="note amend">⚖ 법 개정 주의: ${md(c.revision||Q.revision)}</div>`:''}
+      ${Q.unverified?`<div class="note unv">❔ 아직 확인 안 됨: ${md(Q.unverified)}</div>`:''}
       ${c.swap?`${F.flip&&!F.flip.real?'':`<div class="fix">바로잡은 문장: ${c.ed&&c.ed.length?edPair(c.text,c.ed).b:esc(fixedText(c))}</div>`}<div class="kind">출제자의 바꿔치기: ${esc(c.swap.kind||'')}</div>${edLegend(c.ed)}${c.fake?`<div class="fake"><b>그럴듯하게 지어낸 말</b>${md(c.fake)}</div>`:''}`:(c.ox==='X'&&c.fix?`<div class="fix">바로잡기: ${esc(c.fix)}</div>`:'')}
       ${c.trap?`<div class="trap"><b>출제자가 바꿀 자리</b> <span class="hl">${esc(c.key||'')}</span><br>${md(c.trap)}</div>`:''}
       ${c.alt?`<div class="note">${md(c.alt)}</div>`:''}
       ${c.mode==='choose'&&c.opts?`<div class="opts">${c.opts.map(o=>`<div class="opt-r ${o.ok?'ok':''}"><b>${esc(o.n)}</b> ${o.ok?'<span class="tag">정답</span>':''}${md(o.reason||'')}${o.law?`<span class="law"> · ${esc(o.law)}</span>`:''}</div>`).join('')}</div>`:''}
       <div class="reason">${c.reason?md(c.reason):'<span class="muted">근거 준비 중. 정답 여부만 확인하세요.</span>'}</div>
       ${c.law?`<div class="law">${esc(c.law)}</div>`:''}
+      ${c.unv?`<div class="unv-s">❔ 확인 안 됨: ${esc(c.unv)}</div>`:''}
       ${c.jo?`<div class="jo"><b>조문</b>${esc(c.jo)}</div>`:''}
       ${c.point?`<div class="box issue"><b>이 선지의 논점</b> ${md(c.point)}</div>
       ${c.aim?`<div class="box intent"><b>이 선지의 출제 의도</b> ${md(c.aim)}</div>`:''}
