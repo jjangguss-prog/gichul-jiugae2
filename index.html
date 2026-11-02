@@ -752,38 +752,62 @@ normalize(); SNAP=units(S);
 
 function cardState(id){ return S.cards[id]||(S.cards[id]={st:0,k:[],last:'',due:'',miss:0,seen:0}); }
 
-/* ===== 큐 만들기 ===== */
+/* ===== 큐 만들기 =====
+   11-02 PD: "오늘 탭을 반복하면 모든 학습이 완료되게". 하루 분량을 시간(분)으로 정하지 않고 시험일에서 거꾸로 정한다.
+   · 새 카드: 남은 새 카드를 새 카드 마감일(시험 NEW_GAP일 전)까지 남은 날로 나눈 몫이 그날 분량이다. '시작'을 여러 번 누르거나 다른 기기에서 해도
+     그날 이미 본 새 카드를 빼고 낸다. 못 한 날이 있으면 남은 날로 다시 나눠 다음 날부터 조금씩 늘어나고, 앞서 본 만큼은 줄어든다.
+   · 복습: 그날 나올 카드를 전부 낸다. 예전엔 '시작'마다 0.7×분으로 잘리고 틀린 수 많은 것부터라, 한 번에 맞힌 카드는 뒤로 밀려 지워지지 않았다.
+   · 지운 카드 검사: 하루 3장(여러 번 시작해도 그날 검사한 수를 뺀다).
+   시뮬레이션(카드 10,067장, 11-02부터 매일 한 번): 예전 방식은 60분이면 시험 전날까지 37%, 2시간이어도 86%만 지웠다.
+   바꾼 뒤엔 열흘에 하루를 빠져도 9월 하순(시험 5주 전)에 전부 지운다. 하루 130~170장꼴 */
+const NEW_GAP=45;
+function newEnd(){ return addDays(EXAM_DAY,-NEW_GAP); }
+// 새 카드 하루 몫. all = 남은 새 카드, done = 오늘 본 새 카드(모든 기기), per = 오늘 몫, left = 오늘 더 볼 수.
+// all+done은 하루 동안 그대로라(새 카드를 보면 all이 줄고 done이 는다) 몫이 하루 안에서 바뀌지 않는다
+function newPlan(fb){
+  fb=fb||freshBy(); const t=today(), all=Object.values(fb).reduce((a,b)=>a+b,0);
+  const done=(allDaily()[t]||{}).new||0, days=Math.max(1,dayDiff(t,newEnd())+1);
+  const per=all?Math.ceil((all+done)/days):0;
+  return {all, done, per, days, left:Math.min(all,Math.max(0,per-done))};
+}
+// 카드 한 장에 드는 시간(초): 최근 14일 기록(모든 기기)으로. 기록이 적으면 40초
+function secPerCard(){
+  const dd=allDaily(); let s=0, n=0;
+  for(const k of Object.keys(dd).sort().slice(-14)){ const v=dd[k], c=(v.new||0)+(v.rev||0); if(v.sec>0&&c>0){ s+=v.sec; n+=c; } }
+  return n>=30?Math.min(120,Math.max(15,Math.round(s/n))):40;
+}
 // five = '5문제만'(10-24 PD: 15분 29장은 정오 판단하고 해설까지 읽으면 택도 없다). 한 번에 5장, 복습 2·새 카드 3이고 모자라면 서로 채운다.
-// 지운 카드 검사는 오늘 검사한 게 3장이 될 때까지만 그중 한 자리에 끼운다(하루 시간 분량은 '시작'마다 3장).
-function buildQueue(five){
+// ahead = 오늘 몫을 다 한 뒤 새 카드를 앞서 보기(그만큼 남은 날 몫이 줄어든다)
+function buildQueue(five,ahead){
   const t=today(), now=Date.now(); const d=S.daily[t]||(S.daily[t]={new:0,rev:0,sec:0});
-  const review=[], fresh=[], audit=[]; let wait=0, next=0;
-  const fs=focusSubj();
+  const review=[], audit=[], by={}; let wait=0, next=0;
+  const fb=freshBy(), fs=focusSubj(fb);
   for(const c of D.cards){
     const s=cardState(c.id);
     if(s.st===2){ audit.push(c); continue; }
     // 1/3·2/3 카드는 마지막으로 맞힌 다음 날부터 나온다. 0/3은 due 날짜대로
     if(s.st===1){ if(!s.k.length){ if(s.due<=t) review.push(c); } else { const at=readyAt(s); if(at<=now) review.push(c); else { wait++; if(!next||at<next) next=at; } } }
-    else if(D.questions[c.q].subject===fs) fresh.push(c);
+    else { const k=D.questions[c.q].subject; (by[k]||(by[k]=[])).push(c); }
   }
-  mixTsx(fresh);
+  // 새 카드: 지금 과목부터. 오늘 몫이 그 과목에 남은 것보다 많으면 과목 순서대로 다음 과목에서 잇는다
+  const fresh=[]; for(const k of [...new Set([fs,...SUBJ_ORDER,...Object.keys(by)])]) if(by[k]) fresh.push(...mixTsx(by[k]));
+  const P=newPlan(fb), nNew=ahead?Math.min(fresh.length,Math.max(P.per,5)):P.left;
   // 복습: 틀린 수 많은 것 먼저
   review.sort((a,b)=>cardState(b.id).miss-cardState(a.id).miss);
   // 지운 카드 몰래 검사: 하루 3장
-  shuffle(audit); const auditPick=audit.slice(0,3);
+  shuffle(audit); const auditPick=audit.slice(0,Math.max(0,3-auditToday()));
+  const info={review:review.length, fresh:fresh.length, newToday:nNew, plan:P, deleted:audit.length, aud:auditPick.length, wait, next, fs};
   if(five){
-    const aud=auditPick.length&&auditToday()<3?1:0, n=5-aud;
-    const f=Math.min(fresh.length, n-Math.min(review.length,2)), r=Math.min(review.length, n-f);
+    const aud=auditPick.length?1:0, n=5-aud;
+    const f=Math.min(nNew, n-Math.min(review.length,2)), r=Math.min(review.length, n-f);
     const q=[...review.slice(0,r), ...fresh.slice(0,f)];
     if(aud) q.splice(Math.min(q.length,2),0,auditPick[0]);
-    return {q, review:review.length, fresh:fresh.length, deleted:audit.length, wait, next, fs};
+    return Object.assign(info,{q});
   }
-  // 분량: 60분이면 복습 최대 45 + 새 카드 35 정도. 시간에 비례
-  const m=S.minutes; const revN=Math.round(m*0.7), newN=Math.round(m*1.0);
-  const q=[...review.slice(0,revN), ...fresh.slice(0,newN)];
+  const q=[...review, ...fresh.slice(0,nNew)];
   // 검사 카드는 중간중간 끼움
   auditPick.forEach((c,i)=>q.splice(Math.min(q.length, 5+i*8),0,c));
-  return {q, review:review.length, fresh:fresh.length, deleted:audit.length, wait, next, fs};
+  return Object.assign(info,{q});
 }
 // 타시험 OX 카드(사본 10-31, 타시험/ox카드.py): 다른 시험이 올해 낸 논점을 옳은 문장(O)·틀린 문장(X) 한 쌍으로.
 // 안 본 카드에서 기출 카드 사이사이에 고르게 끼운다(기출 n장 : 타시험 m장이면 그 비율대로). 타시험 카드끼리는 파일 순서 그대로:
@@ -922,27 +946,26 @@ function renderToday(){
   const acc=accuracy();
   const pi=passInfo(); if(pi.live&&pi.pass>(S.passMax||1)){ S.notice=(S.notice?S.notice+' ':'')+`🎉 ${pi.pass-1}회독 끝! 이제 ${pi.pass}회독째입니다.`; S.passMax=pi.pass; }
   if(S.notice){ NOTE=(NOTE?NOTE+' ':'')+S.notice; delete S.notice; save(); } // 개념서·패턴을 늦게 불러와 다시 그려도 알림이 남게, 공부를 시작할 때까지 띄운다
+  // 오늘 할 것을 다 했으면(복습·오늘 몫 새 카드·검사 모두 0) 새 카드를 앞서 보는 버튼만 남긴다
+  const n=info.q.length, ah=n?null:buildQueue(false,true), mins=Math.max(1,Math.round(n*secPerCard()/60));
   main.innerHTML=`${NOTE?`<div class="card note pre" style="margin-top:0">${esc(NOTE)}</div>`:''}
   ${progressHtml(pi)}
   <div class="card">
-    <div class="row"><b style="font-size:20px">오늘 ${S.minutes}분</b><span class="muted">${t}</span></div>
+    <div class="row"><b style="font-size:20px">오늘 할 것</b><span class="muted">${t}</span></div>
     <div class="stat">
-      <div><b>${info.review}</b><span>복습할 카드</span></div>
-      <div><b>${info.fresh}</b><span>새 카드${info.fs?` (${SUBJ[info.fs]})`:''}</span></div>
-      <div><b>${info.deleted}</b><span>지운 카드</span></div>
+      <div><b>${info.review}</b><span>복습</span></div>
+      <div><b>${info.newToday}</b><span>새 카드${info.newToday&&info.fs?` (${SUBJ[info.fs]})`:''}</span></div>
+      <div><b>${info.aud}</b><span>지운 카드 검사</span></div>
     </div>
     <p class="muted">오늘 한 것: 새 카드 ${d.new}장, 복습 ${d.rev}장, ${Math.round(d.sec/60)}분</p>
     ${info.wait?`<p class="muted" style="font-size:13px;margin-top:-4px">오늘 맞힌 카드 ${info.wait}장은 내일부터 복습에 나옵니다(하루에 한 번만 셉니다).</p>`:''}
-    <div class="btns"><button class="btn n" id="start">▶ 시작 (${info.q.length}장)</button></div>
+    ${n?`<div class="btns"><button class="btn n" id="start">▶ 시작 (${n}장 · 약 ${mins}분)</button></div>
     <div class="btns" style="margin-top:8px"><button class="btn n" id="start5">▶ 5문제만</button></div>
-    <p class="muted" style="margin:8px 0 0">5문제만: 복습 2장 + 새 카드 3장. 끝나면 '5문제 더'로 이어 갑니다.</p>
-    <div class="btns" style="margin-top:8px">
-      <button class="btn ghost small" data-m="15">15분</button>
-      <button class="btn ghost small" data-m="30">30분</button>
-      <button class="btn ghost small" data-m="60">60분</button>
-      <button class="btn ghost small" data-m="90">90분</button>
-      <button class="btn ghost small" data-m="120">2시간</button>
-    </div>
+    <p class="muted" style="margin:8px 0 0">하루 분량은 시험일에서 거꾸로 정합니다. 이것만 매일 하면 시험 전에 모든 카드를 지웁니다. 중간에 '그만'해도 남은 것은 다음 '시작'에 그대로 나옵니다. 5문제만: 오늘 할 것에서 복습 2장 + 새 카드 3장씩.</p>`
+    :`<div class="verdict ok" style="margin:6px 0">✓ 오늘 할 것을 다 했습니다</div>
+    <p class="muted" style="margin:0 0 8px">내일 다시 열면 내일 분량이 나옵니다.${ah&&ah.q.length?' 더 하고 싶으면 새 카드를 앞서 볼 수 있습니다. 앞서 본 만큼 남은 날 하루 새 카드가 줄어듭니다.':''}</p>
+    ${ah&&ah.q.length?`<div class="btns"><button class="btn ghost" id="ahead">▶ 새 카드 앞서 보기 (${ah.q.length}장)</button></div>
+    <div class="btns" style="margin-top:8px"><button class="btn ghost" id="start5">▶ 5문제만 앞서 보기</button></div>`:''}`}
   </div>
   ${D.pilot&&D.pilot.length?`<div class="card" style="border-color:var(--acc)"><b>새 해설 시안 ${D.pilot.length}문항</b><p class="muted" style="margin:4px 0 8px">논점·출제 의도·판단 틀, 바꿔친 말에만 삭선. 검토용이라 기록에는 남지만 오늘 분량과 따로 돕니다.</p><div class="btns"><button class="btn n small" id="pilot">시안 보기</button></div></div>`:''}
   <div class="card">
@@ -953,6 +976,7 @@ function renderToday(){
   <div class="card">
     <b>하는 법</b>
     <ol style="padding-left:18px;margin:6px 0;font-size:15px">
+      <li><b>오늘 할 것</b>만 매일 끝내면 된다. 새 카드는 ${mdw(newEnd())}까지 남은 날로 나눠 하루 몫을 정하고, 복습은 그날 나올 카드를 전부 낸다. 못 한 날이 있으면 다음 날부터 저절로 조금씩 늘어난다. 그 뒤 시험까지 ${NEW_GAP}일은 남은 카드 지우기와 지운 카드 검사만 한다.</li>
       <li><b>옳은 말 카드</b>: 문장이 맞으면 <b>O</b>, 틀리면 <b>X</b>. 발문이 '틀린 것은?'이어도 문장 자체만 본다.</li>
       <li><b>예/아니오 카드</b>(해당하는 것·아닌 것을 묻는 문제): 위에 적힌 질문에 <b>예 / 아니오</b>만 답한다. 발문의 '않는 것'은 신경 쓰지 않는다.</li>
       <li>근거를 읽고 <b>다음 →</b>. 아는지 모르는지 고를 필요 없다. 이해 안 되면 🤔 버튼을 누르고 넘어간다(내일 다시 나온다).</li>
@@ -966,10 +990,10 @@ function renderToday(){
       <li>패턴·개념·논점·타시험 목록·실전은 <b>자료</b> 탭에 있다. 카드 뒷면의 📖·★ 버튼으로도 바로 간다.</li>
     </ol>
   </div>`;
-  main.querySelector('#start').onclick=()=>startSession(info.q);
-  main.querySelector('#start5').onclick=()=>startSession(buildQueue(true).q,true);
+  const sb=main.querySelector('#start'); if(sb) sb.onclick=()=>startSession(info.q,false,false,true);
+  const s5=main.querySelector('#start5'); if(s5) s5.onclick=()=>startSession(buildQueue(true,!n).q,true,!n);
+  const ab=main.querySelector('#ahead'); if(ab) ab.onclick=()=>startSession(buildQueue(false,true).q,false,true);
   const pb=main.querySelector('#pilot'); if(pb) pb.onclick=()=>startSession(D.cards.filter(c=>D.pilot.includes(c.q)));
-  main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ S.minutes=+b.dataset.m; save(); render(); });
   main.querySelectorAll('[data-focus]').forEach(b=>b.onclick=()=>{ S.focus=b.dataset.focus; S.focusUser=1; save(); render(); });
 }
 // 오늘 탭 '전체 진도': 몇 회독째인지, 그 회독이 몇 % 됐는지
@@ -999,17 +1023,16 @@ function subjHtml(){
     const on=x.id===fs, can=!on&&fb[x.id], tg=can?`button data-focus="${x.id}"`:'div';
     return `<${tg} class="sr${on?' on':''}"><span class="nm">${on?'▶ ':''}${x.name}<i>${x.part}차</i></span><span>${pass?`${pass}회독 ${pct(pc)}`:'다 지움'}</span><span class="muted">${on?`새 카드 ${fb[x.id]} · `:''}지움 ${o.del}/${o.t}</span></${can?'button':'div'}>`; }).join('')}</div>`;
 }
-// 지금 속도로 새 카드를 언제 다 보나. 새 카드는 '시작' 한 번에 하루 시간(분)만큼 나온다
+// 완주 계획(11-02): 새 카드 하루 몫과 지금 과목·전부 끝나는 날. 몫은 newPlan이 새 카드 마감일에서 거꾸로 정한다
 function paceHtml(p){
   const t=today(), lastDay=addDays(EXAM_DAY,-1); if(t>lastDay) return '';
-  const fb=freshBy(), all=Object.values(fb).reduce((a,b)=>a+b,0), fs=focusSubj(fb);
+  const fb=freshBy(), P=newPlan(fb), fs=focusSubj(fb), ne=newEnd();
   const empty=SUBJECTS.filter(x=>!D.cards.some(c=>D.questions[c.q].subject===x.id)).map(x=>x.name);
-  const note=`<div class="muted" style="font-size:12.5px;margin-top:2px">새 카드는 ▶ 과목에서만, 복습은 모든 과목에서 나옵니다.${empty.length?` ${empty.join('·')} 카드는 만드는 중이라 들어오면 새 카드가 늘어납니다.`:''}</div>`;
-  if(!all) return `<div class="pace">새 카드는 다 봤습니다. 회독은 복습 카드로 저절로 채워집니다.${note}</div>`;
-  const per=Math.round(S.minutes*1.0), todayLeft=Math.max(0,per-((allDaily()[t]||{}).new||0));
-  const fin=rem=>rem<=todayLeft?t:addDays(t,Math.ceil((rem-todayLeft)/per));
-  const endAll=fin(all);
-  return `<div class="pace">하루 새 카드 ${per}장이면 ${fs?`${SUBJ[fs]} <b>${mdw(fin(fb[fs]))}</b> · `:''}있는 카드 전부 <b>${mdw(endAll)}</b>${endAll<=lastDay?' · 시험 전 ✓':''}${note}</div>`;
+  const note=`<div class="muted" style="font-size:12.5px;margin-top:2px">새 카드는 ▶ 과목부터, 복습은 모든 과목에서 나옵니다.${empty.length?` ${empty.join('·')} 카드는 만드는 중이라 들어오면 새 카드가 늘어납니다.`:''}</div>`;
+  if(!P.all) return `<div class="pace">새 카드는 다 봤습니다. 이제 오늘 할 것은 복습과 지운 카드 검사뿐이고, 매일 하면 남은 카드도 시험 전에 다 지워집니다.${note}</div>`;
+  if(t>=ne) return `<div class="pace">새 카드 마감(${mdw(ne)})${t>ne?'이 지났습니다':'입니다'}. 남은 새 카드 <b>${P.all}장</b>을 오늘 할 것에 모두 넣었습니다.${note}</div>`;
+  const fin=rem=>rem<=P.left?t:addDays(t,Math.ceil((rem-P.left)/P.per));
+  return `<div class="pace">완주 계획: 새 카드 하루 <b>${P.per}장</b>${fs?` · ${SUBJ[fs]} <b>${mdw(fin(fb[fs]))}</b>`:''} · 전부 <b>${mdw(fin(P.all))}</b> · 그 뒤 시험까지 ${NEW_GAP}일은 남은 카드 지우기${note}</div>`;
 }
 // 카드에서 많이 틀린 논점을 개념서 섹션으로 묶어 보여 준다
 function weakHtml(){
@@ -1041,15 +1064,16 @@ function scoreHtml(acc,k){
 }
 
 let timerId=null, startAt=0;
-function startSession(q,five){
+// five = 5문제만, ahead = 새 카드 앞서 보기, daily = 오늘 할 것('시작'). 셋 다 아니면 따로 고른 카드(논점·지운 카드 점검·이해 안 된 카드·시안)
+function startSession(q,five,ahead,daily){
   NOTE='';
-  session={q, i:0, phase:'ask', pick:null, startAt:Date.now(), sec:0, five:!!five, hist:[]}; // hist = 되돌리기 쌓기(pushUndo)
+  session={q, i:0, phase:'ask', pick:null, startAt:Date.now(), sec:0, five:!!five, ahead:!!ahead, daily:!!daily, hist:[]}; // hist = 되돌리기 쌓기(pushUndo)
   startAt=Date.now();
-  clearInterval(timerId); timerId=setInterval(()=>{ const el=document.getElementById('timer'); if(!el||!session) return; el.textContent=timerText(); if(!session.five&&S.minutes*60===Math.floor((Date.now()-session.startAt)/1000)){ try{navigator.vibrate&&navigator.vibrate(200);}catch(e){} } },1000);
+  clearInterval(timerId); timerId=setInterval(()=>{ const el=document.getElementById('timer'); if(!el||!session) return; el.textContent=timerText(); },1000);
   renderCard();
 }
-// 하루 시간 분량은 남은 시간, 5문제만은 걸린 시간
-function timerText(){ const e=Math.floor((Date.now()-session.startAt)/1000); if(session.five) return '걸린 '+fmt(e); const left=S.minutes*60-e; return (left>=0?'남은 ':'초과 ')+fmt(Math.abs(left)); }
+// 걸린 시간(11-02: 분량을 시간으로 정하지 않아 남은 시간 대신)
+function timerText(){ return '걸린 '+fmt(Math.floor((Date.now()-session.startAt)/1000)); }
 function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
 function endSession(){
   if(session){ const t=today(); const d=S.daily[t]||(S.daily[t]={new:0,rev:0,sec:0}); d.sec+=Math.floor((Date.now()-session.startAt)/1000); save(); }
@@ -1071,12 +1095,17 @@ function markChoice(text, wrong){
 function renderCard(){
   const s=session; if(!s) return renderToday();
   const backBtn=s.hist.length?`<div class="btns" style="margin-top:10px"><button class="btn ghost small" data-undo>↶ 마지막 카드로 돌아가기</button></div>`:'';
-  if(s.i>=s.q.length&&s.five){
-    main.innerHTML=`<div class="card center"><div class="verdict ok">${s.q.length}문제 끝</div><p class="muted">${fmt(Math.floor((Date.now()-s.startAt)/1000))} 걸렸습니다.</p><div class="btns"><button class="btn n" id="more">▶ 5문제 더</button><button class="btn ghost" id="done">마치기</button></div>${backBtn}</div>`;
-    main.querySelector('#more').onclick=()=>{ endSession(); startSession(buildQueue(true).q,true); };
+  // 끝 화면(11-02): 오늘 할 것이 남았으면(틀린 카드는 그날 한 번 더 나온다) 이어서, 다 했으면 그렇다고 알린다. 앞서 보기 중이면 앞서 보기를 잇는다.
+  // 논점 돌리기·지운 카드 점검처럼 따로 고른 카드(daily 아님)를 다 보면 오늘 할 것으로 잇는다
+  if(s.i>=s.q.length){
+    const N=buildQueue(s.five,s.ahead).q.length, took=fmt(Math.floor((Date.now()-s.startAt)/1000));
+    const title=s.five?`${s.q.length}문제 끝`:s.ahead?'앞서 보기 끝':s.daily?'오늘 분량 끝':'다 봤습니다';
+    const go=!N?'':s.five?(s.ahead?'▶ 5문제 더 (앞서 보기)':'▶ 5문제 더'):s.ahead?`▶ 더 앞서 보기 (${N}장)`:s.daily?`▶ 이어서 (${N}장)`:`▶ 오늘 할 것 (${N}장)`;
+    const msg=s.ahead?'앞서 본 만큼 남은 날 하루 새 카드가 줄어듭니다.':!N?'✓ 오늘 할 것을 다 했습니다. 내일 또 봅시다.':s.daily?`오늘 할 것이 ${N}장 남았습니다(오늘 틀린 카드는 그날 한 번 더 나옵니다).`:'';
+    main.innerHTML=`<div class="card center"><div class="verdict ok">${title}</div><p class="muted">${s.q.length}장 · ${took} 걸렸습니다.${msg?' '+msg:''}</p><div class="btns">${go?`<button class="btn n" id="more">${go}</button>`:''}<button class="btn ghost" id="done">마치기</button></div>${backBtn}</div>`;
+    const mb=main.querySelector('#more'); if(mb) mb.onclick=()=>{ endSession(); startSession(buildQueue(s.five,s.ahead).q,s.five,s.ahead,!s.five&&!s.ahead); };
     main.querySelector('#done').onclick=endSession; bindUndo(); return;
   }
-  if(s.i>=s.q.length){ main.innerHTML=`<div class="card center"><div class="verdict ok">오늘 분량 끝</div><p class="muted">${s.q.length}장을 봤습니다. 내일 또 봅시다.</p><div class="btns"><button class="btn n" id="done">마치기</button></div>${backBtn}</div>`; main.querySelector('#done').onclick=endSession; bindUndo(); return; }
   const c=s.q[s.i], Q=D.questions[c.q], st=cardState(c.id);
   const subj=SUBJ[Q.subject]||Q.subject;
   if(s.phase==='ask'&&!s.form) s.form=testForm(c,st); // 판정 뒤엔 st가 바뀌므로 문제를 낼 때 정해 둔다
@@ -1508,7 +1537,7 @@ function renderSettings(){
   <div class="card"><b>진행 상태 옮기기 (손으로)</b><p class="muted" style="margin:4px 0">동기화를 안 쓸 때의 예비 방법입니다. 아래 글을 복사해 다른 기기에서 붙여 넣으면 그 기기 기록이 이것으로 바뀝니다${SY.token?'(동기화 중이면 다른 기기 기록도 모두 이것으로 바뀝니다)':''}.</p>
     <textarea id="dump" readonly>${esc(JSON.stringify(S))}</textarea>
     <div class="btns" style="margin-top:8px"><button class="btn ghost small" id="copy">복사</button><button class="btn ghost small" id="paste">붙여넣어 불러오기</button></div></div>
-  <div class="card"><b>하루 시간</b><div class="btns" style="margin-top:8px">${[15,30,45,60].map(m=>`<button class="btn ${S.minutes===m?'n':'ghost'} small" data-m="${m}">${m}분</button>`).join('')}</div></div>
+  <div class="card"><b>하루 분량</b><p class="muted" style="margin:4px 0 0">시간을 고르지 않습니다(11-02). 새 카드는 ${mdw(newEnd())}(시험 ${NEW_GAP}일 전)까지 남은 날로 나눠 하루 몫을 정하고, 복습은 그날 나올 카드를 전부 냅니다. 못 한 날이 있으면 다음 날부터 저절로 조금씩 늘고, 앞서 본 만큼은 줄어듭니다. 오늘 탭만 매일 끝내면 시험 전에 모든 카드를 지웁니다.</p></div>
   <div class="card"><b>처음부터</b><p class="muted">모든 기록을 지웁니다. 되돌릴 수 없습니다.${SY.token?' 동기화 중이라 다른 기기 기록도 함께 지워집니다.':''}</p><div class="btns"><button class="btn x small" id="reset">기록 전부 지우기</button></div></div>
   <div class="card muted" style="font-size:13px">문제: 한국산업인력공단 큐넷 공개 기출문제(공공누리 출처표시). 36회 문제 그림은 큐넷 PDF가 그림이라 전자문제집 CBT(comcbt.com) 학생용 판에서 잘랐다. 정답: 큐넷 기출을 두 출처로 대조. 선지 근거: 이 앱을 위해 직접 작성한 것으로, 틀린 곳이 있으면 PD가 '문제 전체 보기'로 원문을 확인하세요. 카드 ${D.summary.total}장.</div>`;
   main.querySelector('#copy').onclick=()=>{ const ta=main.querySelector('#dump'); ta.select(); try{ navigator.clipboard.writeText(ta.value); alert('복사했습니다'); }catch(e){ document.execCommand('copy'); } };
@@ -1520,7 +1549,6 @@ function renderSettings(){
     S=o; delete S.dataver; S._epoch=Date.now(); normalize(); SNAP=units(S); migrate(); syncNow(); alert('가져왔습니다'); render();
   };
   main.querySelector('#paste').onclick=()=>{ const v=prompt('복사해 둔 글을 붙여 넣으세요'); if(!v) return; try{ const o=JSON.parse(v); if(!o.cards) throw 0; S=o; S._epoch=Date.now(); normalize(); SNAP=units(S); save(); syncNow(); alert('불러왔습니다'); render(); }catch(e){ alert('형식이 맞지 않습니다'); } };
-  main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ S.minutes=+b.dataset.m; save(); renderSettings(); });
   main.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{ try{ if(b.dataset.th==='auto') localStorage.removeItem('jiugae2-theme'); else localStorage.setItem('jiugae2-theme',b.dataset.th); }catch(e){} applyTheme(); renderSettings(); });
   main.querySelector('#reset').onclick=()=>{ if(confirm('정말 전부 지울까요?')&&confirm('한 번 더: 모든 카드 기록이 사라집니다.')){ S={cards:{},log:[],exam:{},minutes:60,daily:{},_epoch:Date.now(),_ts:{}}; normalize(); SNAP=units(S); save(); syncNow(); render(); } };
   const q=s=>main.querySelector(s);
